@@ -1,68 +1,88 @@
-# FitFeed — Accessible Movement & Mindful Breaks
+# FitFeed — Accessible Low-Impact Movement Feed
 
-**FitFeed** is a lightweight, responsive, accessible web application designed to encourage gentle physical movement, desk mobility, and mindful breathing throughout the day. Built with clean semantic HTML5, modern CSS custom properties, and modular vanilla JavaScript, it runs entirely client-side without heavy frameworks, package managers, or server dependencies.
+**Congressional App Challenge Project**  
+*Built by Naihrit & Co-Developer*
 
----
-
-## 🌟 Key Features
-
-### 1. Interactive Movement Player
-- **Precision Countdown Timer & Rep Counter:** High-precision SVG circular countdown timer with pause, resume, reset, and quick 15-second adjustments. For rep-based activities, an intuitive increment stepper is provided.
-- **Evidence-Based Exercise Catalog:** 16 movements across Seated & Desk Mobility, Posture & Spine Alignment, Supported Strength, and Breathwork.
-- **Form & Ergonomics Checkpoints:** Every exercise includes step-by-step movement cues, target muscle groups, required equipment, and a safety/coaching note.
-
-### 2. Guided Workday Routines
-- **Curated Multi-Step Sequences:** Pre-structured routines including *5-Min Desk Worker Reset*, *Morning Gentle Wake-Up*, *Spine & Posture Booster*, and *Bedtime Calm & Cool-Down*.
-- **Seamless Routine Runner:** Automatically tracks step progress (e.g., "Step 2 of 4") and guides the user through each sequence.
-
-### 3. Exercise Library & Real-Time Search
-- **Instant Search & Category Filters:** Quickly filter by focus (All, Seated Only, Mobility & Spine, Supported Strength, Breathwork) or search by muscle group and keywords.
-
-### 4. Privacy-First Analytics & Tracking
-- **Local-First Architecture:** All session history, streaks, and preferences are stored exclusively on your device using `localStorage`. No tracking, accounts, or telemetry.
-- **Interactive 7-Day Activity Chart:** Visual weekly breakdown showing completed movements per day.
-- **Data Portability:** Export your entire activity history as JSON or restore from a backup anytime.
-
-### 5. Accessibility & Ergonomics
-- **Visual Themes:** Full Dark and Light mode support with automatic system preference detection.
-- **Typographic Scaling:** Standard, Large, and Extra Large font size options.
-- **Motion Sensitivity:** Native support for `prefers-reduced-motion` plus a dedicated toggle in settings.
-- **Audio Synthesizer (Web Audio API):** Harmonically pleasant completion chimes (Zen Singing Bowl, Soft Bell, Modern Ding) without external audio file assets.
-- **Full Keyboard Navigation:** Complete keyboard shortcut support (`Space` to start/pause, `←`/`→` to navigate, `R` to reset, `F` to favorite, `?` for shortcuts).
+FitFeed is a responsive, accessible, low-impact interactive fitness application designed specifically for **beginners, elderly individuals, or people with high BMI** who need simple, gentle exercise routines presented in a fun, swipeable card feed.
 
 ---
 
-## 🚀 Getting Started
+## 🏛️ Congressional App Challenge Focus
 
-No build tools, compilation, or npm installs are required:
-
-1. Clone or download this repository.
-2. Open `index.html` directly in any modern web browser, or serve it using any local HTTP server:
-
-```bash
-# Using Python
-python -m http.server 8000
-
-# Using Node (npx)
-npx serve .
-```
-
-3. Visit `http://localhost:8000` in your browser.
+- **Community Problem:** Over 40% of American adults and 70% of seniors struggle with traditional fitness applications that feature high-impact jumping, floor exercises (difficult to get up from), or intimidating gym workouts.
+- **Our Solution:** FitFeed delivers 100% chair-friendly, zero-joint-pounding, and wall-supported movements. Designed with high contrast, large typography, body-positive messaging, an interactive 3D movement avatar, and a gentle voice coach.
 
 ---
 
-## 📁 Project Structure
+## ✨ Key Features
+
+### 1. 🎴 Swipeable 3D Card Feed View
+- **One Movement at a Time:** Clean card interface displaying one low-impact exercise at a time with clear visual focus.
+- **Interactive 3D Physics:** Smooth mouse-tilt glare, 3D perspective, and touch swipe gestures (swipe left for Next, swipe right for Previous).
+- **3D Card Flip (Anatomy & Adaptations):** Flip the card in 3D to reveal muscle group targeting, wheelchair accommodations, and safety pointers.
+
+### 2. 🤖 Interactive 3D Human Movement Avatar (Three.js)
+- **Real-Time 3D Kinematics:** A sleek, stylized 3D avatar demonstrates each movement in real-time (arm swings, chair marches, cat-cow waves, wall push-ups, breathing pulse).
+- **Interactive 360° Camera:** Click and drag on the 3D viewport to inspect the exercise posture from any angle, or use the quick "Front" and "Side" angle buttons.
+- **Graceful Fallback:** If WebGL or Three.js is unavailable, an animated 2D vector skeleton canvas seamlessly takes over.
+
+### 3. ⏱️ Interactive Timer & Tap Rep Stepper
+- **Circular Countdown Timer:** High-visibility animated progress ring with start, pause, resume, and quick `+15s` / `−15s` adjustments.
+- **Interactive Tap Rep Counter:** Large, satisfying tap-to-count stepper with subtle haptic vibration for rep-based exercises.
+
+### 4. 🗣️ Accessible Voice Coach (Web Speech API)
+- Real-time vocal encouragement for seniors or visually impaired users:
+  - Movement announcements ("Starting Seated Arm Swings...")
+  - Halfway motivation check-ins
+  - 10-second countdown cues
+  - Celebration feedback upon completion
+
+### 5. 📊 Progress Tracker & Gamification
+- **Metrics Dashboard:** Tracks total exercises completed, gentle calorie burn (calculated using scientifically validated MET values), FitPoints earned, and consistency streak.
+- **3D Confetti Celebration:** Interactive tumbling 3D particle explosion upon exercise completion.
+- **Daily Target Ring:** Visual daily check-in (3 moves per day).
+- **Local-First Privacy:** All progress is stored exclusively in the browser (`localStorage`). No accounts, no data collection.
+
+### 6. ♿ Accessible UI/UX
+- **WCAG AAA High-Contrast Mode:** High-contrast toggle for low-vision users.
+- **Jumbo Font Scaler:** Instant toggle for extra-large readable fonts.
+- **Keyboard Shortcuts:** `Space` (Start/Count Rep), `←`/`→` (Previous/Next), `F` (Flip 3D Card).
+- **Seated-Only Filter:** Instantly filter out standing exercises for zero knee impact.
+
+---
+
+## 📂 File Architecture
 
 ```
 FitFeed/
-├── index.html       # Semantic HTML5 layout, accessible dialogs & ARIA landmarks
-├── styles.css       # Design system, CSS variables (light/dark), layout & responsive queries
-├── script.js        # Core application engine, exercises database, state & audio synthesizer
-└── README.md        # Documentation and usage guide
+├── index.html       # Layout, semantic landmarks, Tailwind CDN & Three.js CDN
+├── styles.css       # 3D perspective, card flips, timer animations & high-contrast themes
+├── script.js        # Core logic, 3D avatar engine, voice coach, timer & state tracking
+└── README.md        # Documentation and Congressional App Challenge guide
 ```
 
 ---
 
-## 🛡️ License
+## 🚀 How to Run & Test Locally
 
-MIT License — Feel free to use, modify, and build upon this project.
+No build tools, package managers, or compilation steps required:
+
+1. Clone or extract this folder into VS Code.
+2. Open `index.html` directly in any web browser, or right-click `index.html` and select **"Open with Live Server"**.
+3. Alternatively, run using Python:
+   ```bash
+   python -m http.server 8000
+   ```
+4. Test keyboard shortcuts, 3D avatar drag-to-rotate, swipe gestures, voice coaching, and timer completions!
+
+---
+
+## 🌐 Deploying to Vercel
+
+FitFeed is 100% static and zero-configuration:
+
+1. Push this repository to GitHub: `git push origin main`
+2. Go to [vercel.com](https://vercel.com) and click **"Add New Project"**.
+3. Import the `FitFeed` repository.
+4. Leave all build settings as default (Framework Preset: **Other**, Root Directory: `./`).
+5. Click **Deploy** — your application will be live in seconds with a custom HTTPS URL for the Congressional App Challenge submission!

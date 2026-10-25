@@ -1,891 +1,1155 @@
 /**
- * FitFeed — Accessible Movement & Mindful Breaks Application
- * Production Architecture & Logic Engine
+ * ============================================================================
+ * FitFeed — Accessible Low-Impact Fitness Web Application
+ * Congressional App Challenge Project
+ * Developed by: Naihrit & Team
+ *
+ * Architecture:
+ * 1. Exercises Database (Specialized for Beginners, Seniors, High BMI)
+ * 2. Three.js 3D Human Movement Avatar & Canvas Fallback
+ * 3. 3D Card Physics, Tilt & Swipe Gesture Engine
+ * 4. Interactive Countdown Timer & Tap Rep Counter
+ * 5. Web Speech API Voice Coach
+ * 6. Calorie & FitPoints Gamification System
+ * 7. 3D Confetti Celebration Particle Engine
+ * 8. Accessibility Engine (High Contrast, Jumbo Text, Screen-Reader Live Regions)
+ * ============================================================================
  */
 
 "use strict";
 
 /* ==========================================================================
-   EXERCISE CATALOG & ROUTINES DATA
+   1. EXERCISES DATABASE (Tailored for Seniors, High BMI & Limited Mobility)
    ========================================================================== */
 
-const EXERCISES_DATABASE = [
+const EXERCISES_DATA = [
   {
     id: "seated-arm-swings",
     title: "Seated Arm Swings",
-    category: "Desk & Seated",
-    level: "Gentle",
+    tagline: "Relieves shoulder stiffness and stimulates upper-body circulation.",
+    category: "Seated Only",
+    badgeClass: "badge-seated",
     mode: "timer",
     duration: 30,
-    targetMuscles: "Shoulders, Upper Back & Chest",
-    equipment: "Sturdy Chair",
-    isSeated: true,
-    description: "A gentle rhythmic swing to release upper body stiffness and encourage circulation.",
+    met: 2.3, // Metabolic Equivalent of Task for gentle seated activity
+    points: 50,
+    targetMuscles: "Deltoids, Upper Trapezius & Pectorals",
+    impactLevel: "Zero Joint Impact",
+    suitableFor: "Wheelchair accessible, seniors, high BMI, arthritis relief",
     instructions: [
-      "Sit tall with your feet flat on the floor and back supported.",
-      "Relax your neck and allow both arms to hang naturally at your sides.",
-      "Gently swing your arms forward and backward in a smooth, easy cadence.",
-      "Keep the motion fluid and comfortable without forcing any height."
+      "Sit tall in a sturdy chair with your feet flat on the floor.",
+      "Let both arms hang relaxed at your sides.",
+      "Gently swing both arms forward to shoulder height, then allow them to softly swing back.",
+      "Maintain a smooth, rhythmic cadence without forcing the range."
     ],
-    coachingTip: "Focus on soft, continuous breathing and keep your shoulders relaxed away from your ears.",
-    iconSvg: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 10h-1.26A8 8 0 1 0 9 20h9a5 5 0 0 0 0-10z"/><polyline points="12 6 12 12 16 14"/></svg>`
+    modifications: [
+      "Wheelchair Users: Perform from any seated wheelchair with footrests engaged.",
+      "High BMI / Joint Pain: Keep arm swings low (below chest level) to minimize shoulder load.",
+      "Limited Range: Move one arm at a time if dual-arm movement feels fatiguing."
+    ],
+    safetyNote: "Never strain through shoulder pain; stop if you feel pinching or numbness.",
+    animType: "arm_swing"
   },
   {
     id: "seated-cat-cow",
-    title: "Seated Cat-Cow Stretch",
-    category: "Posture & Spine",
-    level: "Gentle",
+    title: "Seated Cat-Cow Waves",
+    tagline: "Decompresses the lumbar spine and eases prolonged sitting stiffness.",
+    category: "Spine & Posture",
+    badgeClass: "badge-seated",
     mode: "timer",
     duration: 35,
-    targetMuscles: "Spine, Thoracic Mobility & Abdominals",
-    equipment: "Sturdy Chair",
-    isSeated: true,
-    description: "Mobilizes the entire vertebral column to relieve desk stiffness and improve spinal fluid movement.",
+    met: 2.2,
+    points: 55,
+    targetMuscles: "Erector Spinae, Latissimus & Abdominal Wall",
+    impactLevel: "Zero Joint Impact",
+    suitableFor: "Lower back tension, desk workers, postural restoration",
     instructions: [
-      "Place your hands gently on your knees with feet grounded.",
-      "Inhale, roll your shoulders back, and gently arch your spine forward (Cow).",
-      "Exhale, round your spine softly, tucking your chin slightly toward your chest (Cat).",
-      "Flow between the two postures smoothly with your natural breathing."
+      "Rest both hands gently on your thighs, feet planted hip-width apart.",
+      "Inhale slowly, roll your shoulders back, and lift your chest forward (Cow pose).",
+      "Exhale softly, round your upper back, and tilt your chin gently toward your chest (Cat pose).",
+      "Flow between the two postures smoothly in sync with your breath."
     ],
-    coachingTip: "Move only within a comfortable, pain-free range. Avoid over-arching your lower back.",
-    iconSvg: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>`
+    modifications: [
+      "High BMI: Position your knees wider apart for comfortable abdominal clearance.",
+      "Spinal Fusion / Osteoporosis: Keep movements small without forcing deep flexion."
+    ],
+    safetyNote: "Move only through a pain-free range. Avoid sudden jerky snaps in the neck.",
+    animType: "cat_cow"
   },
   {
-    id: "neck-releases",
-    title: "Gentle Neck Tilts & Rolls",
-    category: "Desk & Seated",
-    level: "Very Gentle",
-    mode: "timer",
-    duration: 30,
-    targetMuscles: "Cervical Spine & Upper Trapezius",
-    equipment: "None",
-    isSeated: true,
-    description: "Eases tension in the neck and upper shoulders from sustained computer screen focus.",
-    instructions: [
-      "Sit upright and let your shoulders drop down naturally.",
-      "Slowly tilt your right ear toward your right shoulder until a gentle stretch is felt.",
-      "Hold for two breaths, return to center, and repeat smoothly on the left side.",
-      "Optionally make gentle half-circles chin to chest."
-    ],
-    coachingTip: "Never yank or pull on your head. Use only gravity and gentle intent.",
-    iconSvg: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="7" r="4"/><path d="M6 21v-2a4 4 0 0 1 4-4h4a4 4 0 0 1 4 4v2"/></svg>`
-  },
-  {
-    id: "wrist-forearm",
-    title: "Wrist & Forearm Release",
-    category: "Desk & Seated",
-    level: "Gentle",
-    mode: "timer",
-    duration: 30,
-    targetMuscles: "Wrist Flexors, Extensors & Carpal Area",
-    equipment: "None",
-    isSeated: true,
-    description: "Relieves keyboard and smartphone fatigue while increasing synovial fluid in the wrists.",
-    instructions: [
-      "Extend one arm in front of you at shoulder height, palm facing away with fingers pointing down.",
-      "Gently apply light pressure to your fingers with your opposite hand.",
-      "Hold for 10-15 seconds, shake out gently, and repeat with palm facing toward you.",
-      "Switch to the opposite wrist."
-    ],
-    coachingTip: "Keep your elbow soft and avoid locking joints.",
-    iconSvg: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 11V6a2 2 0 0 0-2-2v0a2 2 0 0 0-2 2v0"/><path d="M14 10V4a2 2 0 0 0-2-2v0a2 2 0 0 0-2 2v2"/><path d="M10 10.5V6a2 2 0 0 0-2-2v0a2 2 0 0 0-2 2v8"/><path d="M18 8a2 2 0 1 1 4 0v6a8 8 0 0 1-8 8h-2c-2.8 0-4.5-.86-5.99-2.34l-3.6-3.6a2 2 0 0 1 2.83-2.82L7 15"/></svg>`
-  },
-  {
-    id: "seated-marches",
-    title: "Seated Low-Impact Marches",
-    category: "Mobility",
-    level: "Gentle",
+    id: "chair-marches",
+    title: "Seated Chair Marches",
+    tagline: "Builds hip flexor strength and venous blood return with zero knee pounding.",
+    category: "Seated Only",
+    badgeClass: "badge-seated",
     mode: "reps",
     target: 16,
-    targetMuscles: "Hip Flexors, Quadriceps & Lower Abdominals",
-    equipment: "Sturdy Chair",
-    isSeated: true,
-    description: "Promotes venous blood return from the lower legs and activates the hip flexors safely.",
+    met: 2.8,
+    points: 60,
+    targetMuscles: "Iliopsoas, Quadriceps & Lower Abdominals",
+    impactLevel: "Zero Knee/Ankle Pounding",
+    suitableFor: "Cardio for high BMI, knee osteoarthritis, rehabilitation",
     instructions: [
-      "Sit toward the front edge of your chair with a tall spine.",
-      "Engage your abdominal wall lightly for core stability.",
-      "Lift one knee upward in a controlled march, then lower it with care.",
-      "Alternate legs in a steady, rhythmic pattern."
+      "Sit toward the front edge of your chair with a straight, supported spine.",
+      "Hold the chair frame lightly with your hands for stability.",
+      "Lift your right knee comfortably upward, then lower it softly to the floor.",
+      "Repeat with your left knee, alternating in a steady, gentle walking rhythm."
     ],
-    coachingTip: "Focus on controlled lowering rather than stomping your feet.",
-    iconSvg: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>`
-  },
-  {
-    id: "seated-torso-twist",
-    title: "Gentle Seated Torso Twist",
-    category: "Posture & Spine",
-    level: "Gentle",
-    mode: "timer",
-    duration: 30,
-    targetMuscles: "Obliques, Thoracic Spine & Ribcage",
-    equipment: "Sturdy Chair",
-    isSeated: true,
-    description: "Restores rotational flexibility and helps release mid-back tension.",
-    instructions: [
-      "Sit upright with both feet firmly planted on the floor.",
-      "Place your right hand on the outside of your left thigh or chair armrest.",
-      "Gently rotate your torso to the left, initiating the turn from your mid-back.",
-      "Hold for 3 comfortable breaths, return slowly, and rotate to the right side."
+    modifications: [
+      "Low Energy: Lift your heels only while keeping toes grounded on the floor.",
+      "Heavy Legs: Lift only 1 to 2 inches off the floor to protect hip joints."
     ],
-    coachingTip: "Keep your pelvis anchored square to the chair; twist only through the upper body.",
-    iconSvg: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21.5 2v6h-6M21.34 15.57a10 10 0 1 1-.57-8.38l5.67-5.67"/></svg>`
+    safetyNote: "Avoid stomping your feet down. Lower each foot gently to protect joints.",
+    animType: "march"
   },
   {
     id: "wall-push-ups",
-    title: "Wall-Supported Push-ups",
-    category: "Supported Strength",
-    level: "Moderate",
+    title: "Supported Wall Push-ups",
+    tagline: "Builds upper-body pushing power without floor strain or wrist compression.",
+    category: "Supported Standing",
+    badgeClass: "badge-standing",
     mode: "reps",
     target: 10,
+    met: 3.2,
+    points: 65,
     targetMuscles: "Pectorals, Anterior Deltoids & Triceps",
-    equipment: "Clear Wall Space",
-    isSeated: false,
-    description: "A joint-friendly upper-body strength movement that reduces wrist and shoulder strain.",
+    impactLevel: "Low Impact - Wall Supported",
+    suitableFor: "Difficulty getting on/off floor, gentle strength building",
     instructions: [
       "Stand facing an empty wall, roughly arm's length away.",
-      "Place your palms flat on the wall at shoulder height and shoulder-width apart.",
-      "Keeping your body in a straight plank line, bend your elbows and lower your chest toward the wall.",
-      "Press through your palms to return to the starting position."
+      "Place palms flat on the wall at shoulder height and shoulder-width apart.",
+      "Keeping your body aligned from heels to head, bend your elbows and lean in.",
+      "Press through your palms to gently return to the starting position."
     ],
-    coachingTip: "Keep your core gently braced and do not let your lower back sag.",
-    iconSvg: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"/><line x1="3" y1="9" x2="21" y2="9"/><line x1="9" y1="21" x2="9" y2="9"/></svg>`
+    modifications: [
+      "Beginners: Stand closer to the wall to minimize resistance.",
+      "Wrist Discomfort: Use soft closed fists or place palms on a rolled towel."
+    ],
+    safetyNote: "Wear non-slip footwear and ensure the floor is dry before starting.",
+    animType: "wall_push"
   },
   {
     id: "ankle-circles",
-    title: "Ankle & Foot Mobilizer",
-    category: "Mobility",
-    level: "Very Gentle",
+    title: "Seated Ankle Circles & Alphabet",
+    tagline: "Stimulates calf muscle pumps to prevent swelling and improve balance.",
+    category: "Seated Only",
+    badgeClass: "badge-seated",
     mode: "timer",
     duration: 30,
-    targetMuscles: "Ankles, Calves & Tibialis Anterior",
-    equipment: "Sturdy Chair",
-    isSeated: true,
-    description: "Prevents ankle stiffness and stimulates healthy lymph flow in the lower extremities.",
+    met: 2.0,
+    points: 45,
+    targetMuscles: "Gastrocnemius, Soleus & Tibialis Anterior",
+    impactLevel: "Zero Joint Impact",
+    suitableFor: "Edema prevention, neuropathy care, seniors, airplane travel",
     instructions: [
-      "Extend your right leg slightly off the floor while comfortably seated.",
-      "Slowly trace wide, deliberate circles with your toes clockwise for 15 seconds.",
-      "Reverse direction counter-clockwise for 15 seconds.",
-      "Switch to your left leg and repeat."
+      "Sit comfortably and extend your right leg slightly forward.",
+      "Draw slow, wide circles in the air with your big toe clockwise for 15s.",
+      "Switch direction counter-clockwise for 15s.",
+      "Repeat the sequence with your left foot."
     ],
-    coachingTip: "Move slowly to explore the full perimeter of your ankle's range of motion.",
-    iconSvg: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>`
+    modifications: [
+      "Resting Foot: Keep your heel on the floor and swivel toes left and right.",
+      "Alphabet Fun: Trace capital letters (A, B, C) in the air with your toes."
+    ],
+    safetyNote: "If you experience sharp cramping, pause and gently flex your toes toward you.",
+    animType: "ankle_circle"
+  },
+  {
+    id: "seated-torso-twist",
+    title: "Seated Gentle Torso Twist",
+    tagline: "Restores ribcage mobility and digestive comfort with gentle rotation.",
+    category: "Spine & Posture",
+    badgeClass: "badge-seated",
+    mode: "timer",
+    duration: 30,
+    met: 2.2,
+    points: 50,
+    targetMuscles: "Internal & External Obliques, Mid-Thoracic Spine",
+    impactLevel: "Zero Joint Impact",
+    suitableFor: "Stiff mid-back, digestive stimulation, seniors",
+    instructions: [
+      "Sit tall with your feet flat and firmly grounded on the floor.",
+      "Cross your right hand across your body to rest on your left outer thigh.",
+      "Gently rotate your torso to the left, gazing softly over your left shoulder.",
+      "Hold for 3 calm breaths, return to center, and repeat on the right side."
+    ],
+    modifications: [
+      "Limited Spinal Flexibility: Keep rotation under 20 degrees; focus on tall posture.",
+      "Chair Arms: Hold onto the chair armrest to gently support the stretch."
+    ],
+    safetyNote: "Never torque or twist with momentum. Move only with slow, deliberate breathing.",
+    animType: "torso_twist"
+  },
+  {
+    id: "seated-knee-extensions",
+    title: "Seated Gentle Knee Extensions",
+    tagline: "Strengthens thigh quadriceps to stabilize knees and assist standing.",
+    category: "Seated Only",
+    badgeClass: "badge-seated",
+    mode: "reps",
+    target: 12,
+    met: 2.4,
+    points: 55,
+    targetMuscles: "Quadriceps & Patellar Tendon Support",
+    impactLevel: "Zero Impact",
+    suitableFor: "Knee osteoarthritis, sit-to-stand strength, seniors",
+    instructions: [
+      "Sit back firmly in your chair with thighs fully supported.",
+      "Slowly straighten your right leg forward until comfortable.",
+      "Hold for 1 count at the top, feeling your thigh muscle engage.",
+      "Lower under control and alternate with your left leg."
+    ],
+    modifications: [
+      "Knee Pain: Extend the leg only halfway without locking the knee joint.",
+      "Beginners: Place a cushion under your knees for added comfort."
+    ],
+    safetyNote: "Do not lock or hyperextend the knee joint at full extension.",
+    animType: "knee_ext"
   },
   {
     id: "seated-side-reach",
-    title: "Side Body Reach & Lengthen",
-    category: "Mobility",
-    level: "Gentle",
+    title: "Seated Side Reach & Lengthen",
+    tagline: "Opens up intercostal rib muscles for deeper breaths and lateral mobility.",
+    category: "Spine & Posture",
+    badgeClass: "badge-seated",
     mode: "reps",
     target: 8,
-    targetMuscles: "Latissimus Dorsi, Intercostals & Quadratus Lumborum",
-    equipment: "Sturdy Chair",
-    isSeated: true,
-    description: "Expands lateral ribcage capacity for deeper breathing and releases side torso tightness.",
+    met: 2.3,
+    points: 50,
+    targetMuscles: "Latissimus, Quadratus Lumborum & Intercostals",
+    impactLevel: "Zero Joint Impact",
+    suitableFor: "Shallow breathing, side torso tightness, wheelchair users",
     instructions: [
-      "Ground both sit bones firmly into the seat.",
-      "Sweep your left arm up overhead and gently lean your torso toward the right.",
-      "Feel an open stretch along your left side ribs.",
-      "Return to center and repeat on the opposite side."
+      "Anchor both hips firmly and evenly into the chair seat.",
+      "Raise your right arm overhead (or to shoulder height if comfortable).",
+      "Gently curve your torso toward the left, opening the right side ribs.",
+      "Return to center and switch to the left arm."
     ],
-    coachingTip: "Avoid collapsing into the supporting side; think of lifting up and over.",
-    iconSvg: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v18M18 9l-6-6-6 6"/></svg>`
-  },
-  {
-    id: "shoulder-retractions",
-    title: "Shoulder Blade Squeeze",
-    category: "Posture & Spine",
-    level: "Gentle",
-    mode: "reps",
-    target: 10,
-    targetMuscles: "Rhomboids, Middle Trapezius & Postural Stabilizers",
-    equipment: "None",
-    isSeated: true,
-    description: "Counteracts forward-slumped posture by activating the mid-back postural retractors.",
-    instructions: [
-      "Sit tall with your elbows bent 90 degrees at your sides like a goalpost.",
-      "Draw your shoulder blades toward each other gently as if holding a pencil between them.",
-      "Pause for 2 seconds at the peak of the squeeze.",
-      "Release smoothly back to neutral."
+    modifications: [
+      "Shoulder Pain: Keep your hand on your shoulder rather than reaching overhead.",
+      "Balance Support: Keep your non-reaching hand firmly gripping the chair seat."
     ],
-    coachingTip: "Keep your neck long and avoid shrugging your shoulders upward.",
-    iconSvg: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>`
+    safetyNote: "Keep both sit bones anchored to the chair; avoid leaning so far that you tip.",
+    animType: "side_reach"
   },
   {
     id: "box-breathing",
-    title: "4-4-4-4 Box Breathing",
-    category: "Breathwork",
-    level: "Very Gentle",
+    title: "4-4-4-4 Box Breathing Reset",
+    tagline: "Clinically proven nervous system downregulator that lowers heart rate.",
+    category: "Breath & Rest",
+    badgeClass: "badge-breath",
     mode: "timer",
     duration: 48,
-    targetMuscles: "Autonomic Nervous System & Diaphragm",
-    equipment: "None",
-    isSeated: true,
-    description: "A clinically proven breathing cadence that stimulates the vagus nerve and downregulates stress.",
+    met: 1.5,
+    points: 40,
+    targetMuscles: "Diaphragm & Vagus Nerve Stimulation",
+    impactLevel: "Restorative",
+    suitableFor: "Anxiety reduction, blood pressure management, cool-down",
     instructions: [
       "Inhale slowly through your nose for a count of 4 seconds.",
       "Hold your breath gently for a count of 4 seconds.",
-      "Exhale smoothly through your mouth for a count of 4 seconds.",
-      "Hold empty for 4 seconds before the next breath cycle."
+      "Exhale softly through your mouth for a count of 4 seconds.",
+      "Hold empty for 4 seconds before beginning the next cycle."
     ],
-    coachingTip: "Keep your chest still and let your belly naturally expand on every inhale.",
-    iconSvg: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"/></svg>`
+    modifications: [
+      "Shortness of Breath: Shorten counts to 3-3-3-3 if 4 seconds feels too long.",
+      "Hypertension / COPD: Skip the breath hold and simply inhale 4, exhale 6."
+    ],
+    safetyNote: "Breathe naturally without straining. If you feel lightheaded, resume normal breathing.",
+    animType: "breath"
   },
   {
-    id: "standing-calf-raises",
-    title: "Chair-Assisted Calf Raises",
-    category: "Supported Strength",
-    level: "Moderate",
+    id: "shoulder-blade-pinch",
+    title: "Seated Posture Blade Squeeze",
+    tagline: "Corrects forward-slumped desk posture by activating upper-back retractors.",
+    category: "Spine & Posture",
+    badgeClass: "badge-seated",
     mode: "reps",
-    target: 12,
-    targetMuscles: "Gastrocnemius, Soleus & Balance",
-    equipment: "Chair or Countertop",
-    isSeated: false,
-    description: "Strengthens lower leg muscles and promotes circulation back to the heart.",
+    target: 10,
+    met: 2.1,
+    points: 50,
+    targetMuscles: "Rhomboids, Mid-Trapezius & Infraspinatus",
+    impactLevel: "Zero Joint Impact",
+    suitableFor: "Rounded shoulders, neck tension, desk fatigue",
     instructions: [
-      "Stand behind a stable chair, lightly resting your fingertips on the backrest.",
-      "Keep your feet hip-width apart and knees soft.",
-      "Rise smoothly up onto the balls of both feet, lifting your heels.",
-      "Pause for a second at the top, then lower under control."
+      "Sit tall with elbows bent at 90 degrees by your sides like a goalpost.",
+      "Gently pull your elbows and shoulder blades backward as if pinching a pencil.",
+      "Hold the gentle squeeze for 2 seconds while breathing out.",
+      "Release smoothly back to starting position."
     ],
-    coachingTip: "Maintain light support on the chair for balance rather than leaning heavily.",
-    iconSvg: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 19V5M5 12l7-7 7 7"/></svg>`
-  },
-  {
-    id: "hand-finger-glides",
-    title: "Hand & Finger Openers",
-    category: "Desk & Seated",
-    level: "Very Gentle",
-    mode: "reps",
-    target: 8,
-    targetMuscles: "Intrinsic Hand Muscles & Finger Tendons",
-    equipment: "None",
-    isSeated: true,
-    description: "Restores mobility to fingers cramped by typing, writing, or mouse usage.",
-    instructions: [
-      "Bring both hands in front of your chest and form a gentle, relaxed fist.",
-      "Slowly extend all fingers outward wide like an open star.",
-      "Hold the open hand position for 2 seconds.",
-      "Slowly return to a soft fist without squeezing tightly."
+    modifications: [
+      "Tight Shoulders: Keep elbows lower by your ribcage instead of up at shoulder height.",
+      "Seated: Can be performed supported against a chair backrest."
     ],
-    coachingTip: "Avoid snapping fingers open; prioritize smooth, gradual articulation.",
-    iconSvg: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 9V5a3 3 0 0 0-3-3l-4 9v11h11.28a2 2 0 0 0 2-1.7l1.38-9a2 2 0 0 0-2-2.3zM7 22H4a2 2 0 0 1-2-2v-7a2 2 0 0 1 2-2h3"/></svg>`
-  },
-  {
-    id: "diaphragmatic-breathing",
-    title: "Mindful Belly Breathing",
-    category: "Breathwork",
-    level: "Very Gentle",
-    mode: "timer",
-    duration: 40,
-    targetMuscles: "Diaphragm & Parasympathetic System",
-    equipment: "Comfortable Seat",
-    isSeated: true,
-    description: "Calms mental chatter and lowers cortisol through deep diaphragmatic expansion.",
-    instructions: [
-      "Place one hand on your chest and one hand on your abdomen.",
-      "Breathe in slowly through your nose, feeling only the belly hand rise.",
-      "Exhale softly through parted lips, feeling the belly settle inward.",
-      "Keep your chest and shoulders steady and relaxed throughout."
-    ],
-    coachingTip: "Let your breath find an easy, unforced rhythm like gentle ocean waves.",
-    iconSvg: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17.5 19H9a7 7 0 1 1 6.71-9h1.79a4.5 4.5 0 1 1 0 9Z"/></svg>`
-  },
-  {
-    id: "seated-hamstring-stretch",
-    title: "Seated Hamstring Lengthener",
-    category: "Mobility",
-    level: "Gentle",
-    mode: "timer",
-    duration: 30,
-    targetMuscles: "Hamstrings, Calves & Lower Back",
-    equipment: "Sturdy Chair",
-    isSeated: true,
-    description: "Releases posterior chain stiffness caused by prolonged sedentary periods.",
-    instructions: [
-      "Perch on the front third of your chair.",
-      "Extend your right leg forward with the heel grounded and toes pointed upward.",
-      "Hinge forward slightly at your hips with a flat back until a comfortable stretch appears.",
-      "Hold for 15 seconds, then switch smoothly to your left leg."
-    ],
-    coachingTip: "Never round your lower back; hinge cleanly from the hip crease.",
-    iconSvg: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="7 13 12 18 17 13"/><polyline points="7 6 12 11 17 6"/></svg>`
-  }
-];
-
-const GUIDED_ROUTINES = [
-  {
-    id: "desk-worker-reset",
-    title: "5-Min Desk Worker Reset",
-    duration: "4-5 mins",
-    description: "Targeted desk mobility to unfreeze neck stiffness, open wrists, and mobilize the mid-spine.",
-    exercises: ["neck-releases", "wrist-forearm", "seated-cat-cow", "shoulder-retractions"]
-  },
-  {
-    id: "morning-mobility",
-    title: "Morning Gentle Wake-Up",
-    duration: "5 mins",
-    description: "Awaken your neuromuscular system with energizing breath, upper body swings, and torso rotation.",
-    exercises: ["box-breathing", "seated-arm-swings", "seated-torso-twist", "ankle-circles"]
-  },
-  {
-    id: "spine-posture-booster",
-    title: "Spine & Posture Tune-Up",
-    duration: "5-6 mins",
-    description: "An active restorative sequence to open chest muscles and activate the upper back postural chain.",
-    exercises: ["seated-cat-cow", "wall-push-ups", "shoulder-retractions", "seated-side-reach"]
-  },
-  {
-    id: "evening-wind-down",
-    title: "Bedtime Calm & Cool-Down",
-    duration: "4 mins",
-    description: "Gentle stretches and diaphragmatic breathing to prepare your body and nervous system for restful sleep.",
-    exercises: ["seated-hamstring-stretch", "hand-finger-glides", "diaphragmatic-breathing"]
+    safetyNote: "Keep your neck relaxed; do not shrug your shoulders up into your ears.",
+    animType: "posture_squeeze"
   }
 ];
 
 /* ==========================================================================
-   STORAGE & STATE ENGINE
+   2. APP STATE & PERSISTENCE ENGINE
    ========================================================================== */
 
-const STORAGE_KEYS = {
-  progress: "fitfeed_progress_v3",
-  favorites: "fitfeed_favorites_v3",
-  settings: "fitfeed_settings_v3"
-};
-
-const DEFAULT_SETTINGS = {
-  theme: "system",
-  textSize: "normal",
-  reducedMotion: false,
-  seatedOnly: false,
-  soundProfile: "zen", // zen, bell, ding, mute
-  dailyGoal: 3,
-  longerTimer: false
-};
-
-class StateManager {
+class AppState {
   constructor() {
-    this.progress = this.loadProgress();
-    this.favorites = new Set(this.loadFavorites());
-    this.settings = this.loadSettings();
-    this.activeRoutine = null;
-    this.routineStepIndex = 0;
+    this.STORAGE_KEY = "fitfeed_cac_state_v1";
+    this.data = this.load();
   }
 
-  loadProgress() {
+  getDefaults() {
+    return {
+      totalCompleted: 0,
+      totalCalories: 0,
+      totalPoints: 0,
+      streak: 0,
+      lastActiveDate: null,
+      history: [],
+      favorites: [],
+      settings: {
+        theme: "light",
+        highContrast: false,
+        jumboText: false,
+        reducedMotion: false,
+        seatedOnly: false,
+        voiceCoach: true,
+        speechSpeed: 1.0,
+        userWeightKg: 85 // Average baseline for calorie calculation
+      }
+    };
+  }
+
+  load() {
     try {
-      const data = localStorage.getItem(STORAGE_KEYS.progress);
-      if (data) {
-        const parsed = JSON.parse(data);
-        return {
-          totalCompleted: parsed.totalCompleted || 0,
-          totalMinutes: parsed.totalMinutes || 0,
-          dates: Array.isArray(parsed.dates) ? parsed.dates : [],
-          history: Array.isArray(parsed.history) ? parsed.history : []
-        };
+      const raw = localStorage.getItem(this.STORAGE_KEY);
+      if (raw) {
+        return { ...this.getDefaults(), ...JSON.parse(raw) };
       }
     } catch (e) {
-      console.warn("Could not read progress from localStorage", e);
+      console.warn("Storage load warning:", e);
     }
-    return { totalCompleted: 0, totalMinutes: 0, dates: [], history: [] };
+    return this.getDefaults();
   }
 
-  saveProgress() {
+  save() {
     try {
-      localStorage.setItem(STORAGE_KEYS.progress, JSON.stringify(this.progress));
+      localStorage.setItem(this.STORAGE_KEY, JSON.stringify(this.data));
     } catch (e) {
-      console.warn("Could not save progress to localStorage", e);
+      console.warn("Storage save warning:", e);
     }
   }
 
-  loadFavorites() {
-    try {
-      const data = localStorage.getItem(STORAGE_KEYS.favorites);
-      return data ? JSON.parse(data) : [];
-    } catch (e) {
-      return [];
-    }
-  }
+  recordCompletion(exercise, durationSecs) {
+    const today = this.getTodayStr();
+    
+    // Calorie calculation: Calories = MET * 3.5 * weightKg / 200 * durationMins
+    const durationMins = durationSecs / 60;
+    const caloriesBurned = Math.round((exercise.met * 3.5 * this.data.settings.userWeightKg / 200) * durationMins * 10) / 10;
+    
+    this.data.totalCompleted++;
+    this.data.totalCalories = Math.round((this.data.totalCalories + caloriesBurned) * 10) / 10;
+    this.data.totalPoints += exercise.points;
 
-  saveFavorites() {
-    try {
-      localStorage.setItem(STORAGE_KEYS.favorites, JSON.stringify([...this.favorites]));
-    } catch (e) {
-      console.warn("Could not save favorites", e);
-    }
-  }
-
-  loadSettings() {
-    try {
-      const data = localStorage.getItem(STORAGE_KEYS.settings);
-      return data ? { ...DEFAULT_SETTINGS, ...JSON.parse(data) } : { ...DEFAULT_SETTINGS };
-    } catch (e) {
-      return { ...DEFAULT_SETTINGS };
-    }
-  }
-
-  saveSettings() {
-    try {
-      localStorage.setItem(STORAGE_KEYS.settings, JSON.stringify(this.settings));
-    } catch (e) {
-      console.warn("Could not save settings", e);
-    }
-  }
-
-  addCompletion(exerciseId, durationSeconds) {
-    const today = this.getTodayDateString();
-    this.progress.totalCompleted++;
-    const minutesAdded = Math.max(1, Math.round(durationSeconds / 60));
-    this.progress.totalMinutes += minutesAdded;
-
-    if (!this.progress.dates.includes(today)) {
-      this.progress.dates.push(today);
+    // Streak Calculation
+    if (this.data.lastActiveDate !== today) {
+      const yesterday = this.getYesterdayStr();
+      if (this.data.lastActiveDate === yesterday) {
+        this.data.streak++;
+      } else if (!this.data.lastActiveDate) {
+        this.data.streak = 1;
+      } else {
+        this.data.streak = 1;
+      }
+      this.data.lastActiveDate = today;
     }
 
-    const ex = EXERCISES_DATABASE.find(item => item.id === exerciseId);
-    this.progress.history.unshift({
+    // Append to History Log
+    this.data.history.unshift({
       id: Date.now().toString(),
-      exerciseId,
-      exerciseTitle: ex ? ex.title : "Movement Session",
-      durationSeconds,
+      exerciseId: exercise.id,
+      title: exercise.title,
+      category: exercise.category,
+      durationSecs,
+      calories: caloriesBurned,
+      points: exercise.points,
       timestamp: new Date().toISOString()
     });
 
-    // Keep history manageable
-    if (this.progress.history.length > 200) {
-      this.progress.history = this.progress.history.slice(0, 200);
+    if (this.data.history.length > 100) {
+      this.data.history = this.data.history.slice(0, 100);
     }
 
-    this.saveProgress();
+    this.save();
+    return { caloriesBurned, points: exercise.points };
   }
 
-  getTodayDateString(d = new Date()) {
-    const year = d.getFullYear();
-    const month = String(d.getMonth() + 1).padStart(2, "0");
-    const day = String(d.getDate()).padStart(2, "0");
-    return `${year}-${month}-${day}`;
+  getTodayStr() {
+    const d = new Date();
+    return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}-${String(d.getDate()).padStart(2, "0")}`;
   }
 
-  calculateStreak() {
-    const dates = new Set(this.progress.dates);
-    const today = this.getTodayDateString();
-    
-    // Check if user moved today or yesterday
-    const checkDate = (offsetDays) => {
-      const date = new Date();
-      date.setDate(date.getDate() - offsetDays);
-      return this.getTodayDateString(date);
+  getYesterdayStr() {
+    const d = new Date();
+    d.setDate(d.getDate() - 1);
+    return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}-${String(d.getDate()).padStart(2, "0")}`;
+  }
+
+  getTodayCount() {
+    const today = this.getTodayStr();
+    return this.data.history.filter(item => item.timestamp.startsWith(today)).length;
+  }
+}
+
+/* ==========================================================================
+   3. THREE.JS 3D MOVEMENT AVATAR ENGINE
+   ========================================================================== */
+
+class Avatar3DEngine {
+  constructor(canvasElement) {
+    this.canvas = canvasElement;
+    this.scene = null;
+    this.camera = null;
+    this.renderer = null;
+    this.avatar = null;
+    this.chair = null;
+    this.animType = "arm_swing";
+    this.clock = null;
+    this.isDragging = false;
+    this.previousMousePosition = { x: 0, y: 0 };
+    this.autoRotate = true;
+    this.isThreeAvailable = typeof THREE !== "undefined";
+
+    if (this.isThreeAvailable) {
+      this.initThree();
+    } else {
+      this.initCanvasFallback();
+    }
+  }
+
+  initThree() {
+    try {
+      const width = this.canvas.clientWidth || 360;
+      const height = this.canvas.clientHeight || 280;
+
+      // Scene & Camera
+      this.scene = new THREE.Scene();
+      this.camera = new THREE.PerspectiveCamera(45, width / height, 0.1, 100);
+      this.camera.position.set(0, 1.4, 3.8);
+
+      // Renderer
+      this.renderer = new THREE.WebGLRenderer({
+        canvas: this.canvas,
+        alpha: true,
+        antialias: true
+      });
+      this.renderer.setSize(width, height);
+      this.renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+
+      // Lighting
+      const ambientLight = new THREE.AmbientLight(0xffffff, 0.7);
+      this.scene.add(ambientLight);
+
+      const dirLight = new THREE.DirectionalLight(0x059669, 1.2);
+      dirLight.position.set(3, 6, 4);
+      this.scene.add(dirLight);
+
+      const fillLight = new THREE.DirectionalLight(0x0284c7, 0.6);
+      fillLight.position.set(-3, 2, -2);
+      this.scene.add(fillLight);
+
+      // Ground Shadow Plane
+      const shadowGeo = new THREE.CircleGeometry(1.2, 32);
+      const shadowMat = new THREE.MeshBasicMaterial({ color: 0x000000, transparent: true, opacity: 0.1 });
+      const shadowMesh = new THREE.Mesh(shadowGeo, shadowMat);
+      shadowMesh.rotation.x = -Math.PI / 2;
+      shadowMesh.position.y = -0.05;
+      this.scene.add(shadowMesh);
+
+      // Build 3D Humanoid Model
+      this.buildHumanoidModel();
+
+      // Clock & Render Loop
+      this.clock = new THREE.Clock();
+      this.bindMouseControls();
+      this.animate();
+
+      window.addEventListener("resize", () => this.onResize());
+    } catch (e) {
+      console.warn("WebGL initialization failed, falling back to 2D Canvas:", e);
+      this.isThreeAvailable = false;
+      this.initCanvasFallback();
+    }
+  }
+
+  buildHumanoidModel() {
+    this.avatar = new THREE.Group();
+
+    // Material Styling (Friendly, Modern Matte Emerald & Clean Porcelain)
+    const bodyMat = new THREE.MeshStandardMaterial({
+      color: 0x10b981,
+      roughness: 0.35,
+      metalness: 0.1
+    });
+
+    const jointMat = new THREE.MeshStandardMaterial({
+      color: 0x0284c7,
+      roughness: 0.4
+    });
+
+    const chairMat = new THREE.MeshStandardMaterial({
+      color: 0x94a3b8,
+      roughness: 0.6
+    });
+
+    // 1. Torso
+    const torsoGeo = new THREE.CylinderGeometry(0.24, 0.2, 0.55, 16);
+    this.torso = new THREE.Mesh(torsoGeo, bodyMat);
+    this.torso.position.y = 0.95;
+    this.avatar.add(this.torso);
+
+    // 2. Head
+    const headGeo = new THREE.SphereGeometry(0.16, 20, 20);
+    this.head = new THREE.Mesh(headGeo, bodyMat);
+    this.head.position.y = 1.42;
+    this.avatar.add(this.head);
+
+    // 3. Left Arm Group (Pivoting at Shoulder)
+    this.leftArmGroup = new THREE.Group();
+    this.leftArmGroup.position.set(-0.32, 1.15, 0);
+    const leftArmGeo = new THREE.CylinderGeometry(0.06, 0.05, 0.45, 12);
+    const leftArmMesh = new THREE.Mesh(leftArmGeo, bodyMat);
+    leftArmMesh.position.y = -0.22;
+    this.leftArmGroup.add(leftArmMesh);
+    this.avatar.add(this.leftArmGroup);
+
+    // 4. Right Arm Group
+    this.rightArmGroup = new THREE.Group();
+    this.rightArmGroup.position.set(0.32, 1.15, 0);
+    const rightArmGeo = new THREE.CylinderGeometry(0.06, 0.05, 0.45, 12);
+    const rightArmMesh = new THREE.Mesh(rightArmGeo, bodyMat);
+    rightArmMesh.position.y = -0.22;
+    this.rightArmGroup.add(rightArmMesh);
+    this.avatar.add(this.rightArmGroup);
+
+    // 5. Left Thigh & Leg Group
+    this.leftLegGroup = new THREE.Group();
+    this.leftLegGroup.position.set(-0.16, 0.65, 0.1);
+    const thighGeo = new THREE.CylinderGeometry(0.08, 0.07, 0.45, 12);
+    const leftThigh = new THREE.Mesh(thighGeo, jointMat);
+    leftThigh.position.y = -0.22;
+    this.leftLegGroup.add(leftThigh);
+    this.avatar.add(this.leftLegGroup);
+
+    // 6. Right Thigh & Leg Group
+    this.rightLegGroup = new THREE.Group();
+    this.rightLegGroup.position.set(0.16, 0.65, 0.1);
+    const rightThigh = new THREE.Mesh(thighGeo, jointMat);
+    rightThigh.position.y = -0.22;
+    this.rightLegGroup.add(rightThigh);
+    this.avatar.add(this.rightLegGroup);
+
+    // 7. Chair (for Seated movements)
+    this.chair = new THREE.Group();
+    const seatGeo = new THREE.BoxGeometry(0.65, 0.06, 0.6);
+    const seatMesh = new THREE.Mesh(seatGeo, chairMat);
+    seatMesh.position.set(0, 0.62, 0);
+    this.chair.add(seatMesh);
+
+    const backGeo = new THREE.BoxGeometry(0.65, 0.6, 0.05);
+    const backMesh = new THREE.Mesh(backGeo, chairMat);
+    backMesh.position.set(0, 0.95, -0.28);
+    this.chair.add(backMesh);
+
+    // 4 Chair Legs
+    const legGeo = new THREE.CylinderGeometry(0.03, 0.03, 0.62, 8);
+    const offsets = [[-0.28, 0.25], [0.28, 0.25], [-0.28, -0.25], [0.28, -0.25]];
+    offsets.forEach(([x, z]) => {
+      const leg = new THREE.Mesh(legGeo, chairMat);
+      leg.position.set(x, 0.31, z);
+      this.chair.add(leg);
+    });
+    this.avatar.add(this.chair);
+
+    this.scene.add(this.avatar);
+  }
+
+  setMovementAnimation(animType) {
+    this.animType = animType;
+    if (this.chair) {
+      // Hide chair for wall push-ups
+      this.chair.visible = animType !== "wall_push";
+    }
+  }
+
+  animate() {
+    if (!this.isThreeAvailable || !this.renderer) return;
+
+    requestAnimationFrame(() => this.animate());
+
+    const t = this.clock ? this.clock.getElapsedTime() : 0;
+
+    // Apply Real-time 3D Kinematics based on current movement
+    if (this.animType === "arm_swing") {
+      const angle = Math.sin(t * 3.5) * 0.7;
+      this.leftArmGroup.rotation.x = angle;
+      this.rightArmGroup.rotation.x = -angle;
+      this.torso.rotation.y = Math.sin(t * 3.5) * 0.08;
+    } else if (this.animType === "cat_cow") {
+      const arch = Math.sin(t * 2) * 0.25;
+      this.torso.rotation.x = arch;
+      this.head.rotation.x = arch * 1.5;
+    } else if (this.animType === "march") {
+      const legAngle = Math.sin(t * 4) * 0.6;
+      this.leftLegGroup.rotation.x = Math.max(0, legAngle);
+      this.rightLegGroup.rotation.x = Math.max(0, -legAngle);
+    } else if (this.animType === "wall_push") {
+      const push = (Math.sin(t * 2.5) + 1) * 0.5;
+      this.avatar.position.z = -push * 0.4;
+      this.leftArmGroup.rotation.x = -Math.PI / 2 + push * 0.35;
+      this.rightArmGroup.rotation.x = -Math.PI / 2 + push * 0.35;
+    } else if (this.animType === "breath") {
+      const breathe = 1 + Math.sin(t * 1.8) * 0.08;
+      this.torso.scale.set(breathe, 1, breathe);
+      this.head.position.y = 1.42 + Math.sin(t * 1.8) * 0.03;
+    } else if (this.animType === "torso_twist") {
+      const twist = Math.sin(t * 2) * 0.55;
+      this.torso.rotation.y = twist;
+      this.leftArmGroup.rotation.y = twist;
+      this.rightArmGroup.rotation.y = twist;
+    } else if (this.animType === "side_reach") {
+      const lean = Math.sin(t * 2) * 0.35;
+      this.torso.rotation.z = lean;
+      this.rightArmGroup.rotation.z = Math.PI / 1.2 + lean;
+    } else if (this.animType === "knee_ext") {
+      const ext = Math.sin(t * 3) * 0.5;
+      this.rightLegGroup.rotation.x = Math.max(0, ext);
+    } else if (this.animType === "posture_squeeze") {
+      const squeeze = Math.sin(t * 2.5) * 0.4;
+      this.leftArmGroup.rotation.y = -squeeze;
+      this.rightArmGroup.rotation.y = squeeze;
+    }
+
+    // Gentle Auto-Rotation if user is not actively dragging
+    if (this.autoRotate && !this.isDragging) {
+      this.avatar.rotation.y += 0.004;
+    }
+
+    this.renderer.render(this.scene, this.camera);
+  }
+
+  bindMouseControls() {
+    const handleStart = (clientX, clientY) => {
+      this.isDragging = true;
+      this.autoRotate = false;
+      this.previousMousePosition = { x: clientX, y: clientY };
     };
 
-    let streak = 0;
-    let dayCursor = 0;
+    const handleMove = (clientX, clientY) => {
+      if (!this.isDragging || !this.avatar) return;
+      const deltaX = clientX - this.previousMousePosition.x;
+      const deltaY = clientY - this.previousMousePosition.y;
 
-    // If no activity today, check if yesterday was completed
-    if (!dates.has(today)) {
-      dayCursor = 1;
-      if (!dates.has(checkDate(dayCursor))) {
-        return 0;
-      }
-    }
+      this.avatar.rotation.y += deltaX * 0.01;
+      this.previousMousePosition = { x: clientX, y: clientY };
+    };
 
-    while (dates.has(checkDate(dayCursor))) {
-      streak++;
-      dayCursor++;
-    }
+    const handleEnd = () => {
+      this.isDragging = false;
+      // Resume gentle auto rotate after 4 seconds of inactivity
+      clearTimeout(this.resumeRotateTimer);
+      this.resumeRotateTimer = setTimeout(() => {
+        this.autoRotate = true;
+      }, 4000);
+    };
 
-    return streak;
+    // Mouse Listeners
+    this.canvas.addEventListener("mousedown", (e) => handleStart(e.clientX, e.clientY));
+    window.addEventListener("mousemove", (e) => handleMove(e.clientX, e.clientY));
+    window.addEventListener("mouseup", handleEnd);
+
+    // Touch Listeners for mobile/tablets
+    this.canvas.addEventListener("touchstart", (e) => {
+      if (e.touches.length === 1) handleStart(e.touches[0].clientX, e.touches[0].clientY);
+    }, { passive: true });
+    window.addEventListener("touchmove", (e) => {
+      if (e.touches.length === 1) handleMove(e.touches[0].clientX, e.touches[0].clientY);
+    }, { passive: true });
+    window.addEventListener("touchend", handleEnd);
   }
 
-  getTodayCompletedCount() {
-    const today = this.getTodayDateString();
-    return this.progress.history.filter(item => {
-      return item.timestamp.startsWith(today);
-    }).length;
+  setCameraAngle(angle) {
+    if (!this.avatar) return;
+    this.autoRotate = false;
+    if (angle === "front") {
+      this.avatar.rotation.set(0, 0, 0);
+    } else if (angle === "side") {
+      this.avatar.rotation.set(0, Math.PI / 2, 0);
+    } else if (angle === "diagonal") {
+      this.avatar.rotation.set(0, Math.PI / 4, 0);
+    }
   }
 
-  get7DayData() {
-    const days = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
-    const now = new Date();
-    // Normalize to current week's Monday
-    const currentDayOfWeek = (now.getDay() + 6) % 7; // Mon=0, Sun=6
-    const weekData = [];
+  onResize() {
+    if (!this.canvas || !this.renderer || !this.camera) return;
+    const width = this.canvas.clientWidth;
+    const height = this.canvas.clientHeight;
+    this.camera.aspect = width / height;
+    this.camera.updateProjectionMatrix();
+    this.renderer.setSize(width, height);
+  }
 
-    for (let i = 0; i < 7; i++) {
-      const date = new Date(now);
-      date.setDate(now.getDate() - currentDayOfWeek + i);
-      const dateStr = this.getTodayDateString(date);
-      const count = this.progress.history.filter(item => item.timestamp.startsWith(dateStr)).length;
-      weekData.push({
-        dayName: days[i],
-        dateStr,
-        count,
-        isToday: i === currentDayOfWeek
+  initCanvasFallback() {
+    // 2D Canvas Fallback if WebGL/Three.js CDN is unavailable
+    const ctx = this.canvas.getContext("2d");
+    let angle = 0;
+    const loop = () => {
+      if (!ctx) return;
+      ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
+      ctx.save();
+      ctx.translate(this.canvas.width / 2, this.canvas.height / 2);
+
+      // Draw stylized animated avatar skeleton
+      ctx.strokeStyle = "#059669";
+      ctx.lineWidth = 6;
+      ctx.lineCap = "round";
+
+      // Head
+      ctx.beginPath();
+      ctx.arc(0, -60, 24, 0, Math.PI * 2);
+      ctx.stroke();
+
+      // Torso
+      ctx.beginPath();
+      ctx.moveTo(0, -36);
+      ctx.lineTo(0, 40);
+      ctx.stroke();
+
+      // Arms
+      const armSwing = Math.sin(angle) * 35;
+      ctx.beginPath();
+      ctx.moveTo(-40, -10 + armSwing);
+      ctx.lineTo(0, -20);
+      ctx.lineTo(40, -10 - armSwing);
+      ctx.stroke();
+
+      // Chair Base
+      ctx.strokeStyle = "#94a3b8";
+      ctx.lineWidth = 4;
+      ctx.strokeRect(-45, 38, 90, 8);
+
+      ctx.restore();
+      angle += 0.05;
+      requestAnimationFrame(loop);
+    };
+    loop();
+  }
+}
+
+/* ==========================================================================
+   4. VOICE COACH (Web Speech API)
+   ========================================================================== */
+
+class VoiceCoach {
+  constructor() {
+    this.synth = window.speechSynthesis || null;
+    this.enabled = true;
+    this.rate = 1.0;
+  }
+
+  speak(text) {
+    if (!this.synth || !this.enabled) return;
+    try {
+      this.synth.cancel(); // Stop any pending utterance
+      const utterance = new SpeechSynthesisUtterance(text);
+      utterance.rate = this.rate;
+      utterance.pitch = 1.05;
+
+      // Select natural English voice if available
+      const voices = this.synth.getVoices();
+      const naturalVoice = voices.find(v => v.lang.startsWith("en") && (v.name.includes("Natural") || v.name.includes("Google") || v.name.includes("Samantha")));
+      if (naturalVoice) utterance.voice = naturalVoice;
+
+      this.synth.speak(utterance);
+    } catch (e) {
+      console.warn("Speech synthesis error:", e);
+    }
+  }
+
+  announceStart(title) {
+    this.speak(`Starting ${title}. Take your time, breathe gently, and move within your comfort.`);
+  }
+
+  announceHalfway() {
+    this.speak("Halfway through! Great job showing up for your health.");
+  }
+
+  announceTenSeconds() {
+    this.speak("Ten seconds remaining. Keep moving at your own pace.");
+  }
+
+  announceComplete(points) {
+    this.speak(`Exercise complete! Awesome effort. You earned ${points} FitPoints.`);
+  }
+}
+
+/* ==========================================================================
+   5. 3D CONFETTI CELEBRATION ENGINE
+   ========================================================================== */
+
+class CelebrationConfetti {
+  constructor(canvasElement) {
+    this.canvas = canvasElement;
+    this.ctx = this.canvas.getContext("2d");
+    this.particles = [];
+    this.isRunning = false;
+    this.resize();
+    window.addEventListener("resize", () => this.resize());
+  }
+
+  resize() {
+    if (!this.canvas) return;
+    this.canvas.width = window.innerWidth;
+    this.canvas.height = window.innerHeight;
+  }
+
+  launch() {
+    this.resize();
+    const colors = ["#059669", "#10b981", "#0284c7", "#38bdf8", "#f59e0b", "#fbbf24", "#ec4899"];
+    this.particles = [];
+
+    // Create 90 festive 3D tumbling confetti particles
+    for (let i = 0; i < 90; i++) {
+      this.particles.push({
+        x: this.canvas.width / 2 + (Math.random() - 0.5) * 80,
+        y: this.canvas.height * 0.45,
+        vx: (Math.random() - 0.5) * 14,
+        vy: -Math.random() * 16 - 6,
+        size: Math.random() * 9 + 6,
+        color: colors[Math.floor(Math.random() * colors.length)],
+        rotation: Math.random() * 360,
+        rSpeed: (Math.random() - 0.5) * 12,
+        tilt: Math.random() * 10,
+        tiltSpeed: Math.random() * 0.1 + 0.05,
+        alpha: 1
       });
     }
 
-    return weekData;
-  }
-}
-
-/* ==========================================================================
-   WEB AUDIO SOUND SYNTHESIZER
-   ========================================================================== */
-
-class SoundSynthesizer {
-  constructor() {
-    this.audioCtx = null;
-  }
-
-  init() {
-    if (!this.audioCtx) {
-      const AudioContextClass = window.AudioContext || window.webkitAudioContext;
-      if (AudioContextClass) {
-        this.audioCtx = new AudioContextClass();
-      }
-    }
-    if (this.audioCtx && this.audioCtx.state === "suspended") {
-      this.audioCtx.resume();
+    if (!this.isRunning) {
+      this.isRunning = true;
+      this.render();
     }
   }
 
-  playChime(profile = "zen") {
-    if (profile === "mute") return;
-    this.init();
-    if (!this.audioCtx) return;
+  render() {
+    if (!this.ctx) return;
+    this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
 
-    try {
-      const now = this.audioCtx.currentTime;
+    for (let i = this.particles.length - 1; i >= 0; i--) {
+      const p = this.particles[i];
+      p.x += p.vx;
+      p.y += p.vy;
+      p.vy += 0.42; // Gravity
+      p.rotation += p.rSpeed;
+      p.tilt += p.tiltSpeed;
+      p.alpha -= 0.007;
 
-      if (profile === "zen") {
-        // Singing bowl warm harmonics (G4, D5, G5)
-        const freqs = [392.00, 587.33, 783.99];
-        freqs.forEach((freq, i) => {
-          const osc = this.audioCtx.createOscillator();
-          const gain = this.audioCtx.createGain();
-          osc.type = "sine";
-          osc.frequency.setValueAtTime(freq, now);
+      this.ctx.save();
+      this.ctx.translate(p.x, p.y);
+      this.ctx.rotate((p.rotation * Math.PI) / 180);
+      this.ctx.scale(Math.cos(p.tilt), 1);
+      this.ctx.fillStyle = p.color;
+      this.ctx.globalAlpha = Math.max(0, p.alpha);
+      this.ctx.fillRect(-p.size / 2, -p.size / 2, p.size, p.size * 1.4);
+      this.ctx.restore();
 
-          gain.gain.setValueAtTime(0.0001, now);
-          gain.gain.exponentialRampToValueAtTime(0.08 / (i + 1), now + 0.05);
-          gain.gain.exponentialRampToValueAtTime(0.0001, now + 1.8 + i * 0.4);
-
-          osc.connect(gain);
-          gain.connect(this.audioCtx.destination);
-          osc.start(now);
-          osc.stop(now + 2.4);
-        });
-      } else if (profile === "bell") {
-        // Soft chime chord (A5, C#6, E6)
-        const notes = [880.00, 1108.73, 1318.51];
-        notes.forEach((freq, idx) => {
-          const osc = this.audioCtx.createOscillator();
-          const gain = this.audioCtx.createGain();
-          osc.type = "sine";
-          osc.frequency.setValueAtTime(freq, now + idx * 0.08);
-
-          gain.gain.setValueAtTime(0.0001, now + idx * 0.08);
-          gain.gain.exponentialRampToValueAtTime(0.1, now + idx * 0.08 + 0.02);
-          gain.gain.exponentialRampToValueAtTime(0.0001, now + idx * 0.08 + 1.2);
-
-          osc.connect(gain);
-          gain.connect(this.audioCtx.destination);
-          osc.start(now + idx * 0.08);
-          osc.stop(now + idx * 0.08 + 1.3);
-        });
-      } else {
-        // Crisp Modern Ding
-        const osc = this.audioCtx.createOscillator();
-        const gain = this.audioCtx.createGain();
-        osc.type = "triangle";
-        osc.frequency.setValueAtTime(523.25, now); // C5
-        osc.frequency.exponentialRampToValueAtTime(1046.50, now + 0.15); // C6
-
-        gain.gain.setValueAtTime(0.0001, now);
-        gain.gain.exponentialRampToValueAtTime(0.12, now + 0.02);
-        gain.gain.exponentialRampToValueAtTime(0.0001, now + 0.6);
-
-        osc.connect(gain);
-        gain.connect(this.audioCtx.destination);
-        osc.start(now);
-        osc.stop(now + 0.65);
+      if (p.alpha <= 0 || p.y > this.canvas.height + 50) {
+        this.particles.splice(i, 1);
       }
-    } catch (err) {
-      console.warn("Audio playback failed", err);
+    }
+
+    if (this.particles.length > 0) {
+      requestAnimationFrame(() => this.render());
+    } else {
+      this.isRunning = false;
+      this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
     }
   }
 }
 
 /* ==========================================================================
-   MAIN APPLICATION CONTROLLER
+   6. MAIN FITFEED CONTROLLER (UI, Timer, Swipe & Accessibility)
    ========================================================================== */
 
-class FitFeedApp {
+class FitFeedController {
   constructor() {
-    this.state = new StateManager();
-    this.synth = new SoundSynthesizer();
+    this.state = new AppState();
+    this.voice = new VoiceCoach();
+    this.avatar = null;
+    this.confetti = null;
 
-    // Runtime Player State
-    this.currentExerciseIndex = 0;
+    // Active Exercise Navigation
+    this.currentIndex = 0;
+
+    // Timer State
     this.timerRunning = false;
-    this.timerSecondsRemaining = 30;
-    this.timerTotalSeconds = 30;
+    this.timerSeconds = 30;
+    this.timerTotal = 30;
     this.timerInterval = null;
-    this.currentReps = 0;
-    this.sessionDone = false;
+    this.halfwayAnnounced = false;
 
-    // Elements
+    // Reps State
+    this.currentReps = 0;
+    this.repsTarget = 10;
+
+    this.initDOM();
+  }
+
+  initDOM() {
+    // Canvas References
+    const threeCanvas = document.getElementById("threejs-canvas");
+    if (threeCanvas) {
+      this.avatar = new Avatar3DEngine(threeCanvas);
+    }
+
+    const confCanvas = document.getElementById("celebration-canvas");
+    if (confCanvas) {
+      this.confetti = new CelebrationConfetti(confCanvas);
+    }
+
     this.cacheElements();
-    this.init();
+    this.bindEvents();
+    this.bindSwipeGesture();
+    this.applySettings();
+    this.renderCurrentExercise();
+    this.updateDashboard();
   }
 
   cacheElements() {
     this.el = {
-      // Navigation
-      navTabs: document.querySelectorAll(".nav-tab-btn"),
-      tabViews: document.querySelectorAll(".tab-view"),
-      mobileToggle: document.getElementById("mobile-menu-toggle"),
-      sidebar: document.getElementById("app-sidebar"),
-      todayPill: document.getElementById("topbar-today-pill"),
+      cardWrapper: document.getElementById("card-3d-wrapper"),
+      cardScene: document.getElementById("card-scene-3d"),
+      btnFlipCard: document.getElementById("btn-flip-card"),
+      btnFlipBack: document.getElementById("btn-flip-back"),
       
-      // Top actions
-      themeToggle: document.getElementById("theme-toggle-btn"),
-      soundToggle: document.getElementById("sound-toggle-btn"),
-      settingsOpen: document.getElementById("settings-modal-btn"),
-      shortcutsOpen: document.getElementById("shortcuts-modal-btn"),
-
-      // Workout View
-      exerciseBanner: document.getElementById("exercise-banner"),
-      exerciseIcon: document.getElementById("exercise-icon-slot"),
-      badgeCategory: document.getElementById("exercise-category-badge"),
-      badgeLevel: document.getElementById("exercise-level-badge"),
-      badgeEquipment: document.getElementById("exercise-equip-badge"),
-      muscleTarget: document.getElementById("exercise-muscle-target"),
-      favoriteBtn: document.getElementById("exercise-favorite-btn"),
-      exerciseTitle: document.getElementById("exercise-title"),
-      exerciseDesc: document.getElementById("exercise-desc"),
-      instructionsList: document.getElementById("exercise-instructions-list"),
-      coachingText: document.getElementById("exercise-coaching-text"),
+      // Exercise Details Front
+      badgeCategory: document.getElementById("ex-badge-category"),
+      badgeImpact: document.getElementById("ex-badge-impact"),
+      title: document.getElementById("ex-title"),
+      tagline: document.getElementById("ex-tagline"),
+      instructionsList: document.getElementById("ex-instructions-list"),
+      suitableForText: document.getElementById("ex-suitable-for"),
       
-      // Timer / Rep Controls
-      timerWrapper: document.getElementById("timer-interactive-wrapper"),
-      timerRingActive: document.getElementById("timer-ring-active"),
-      timerDisplay: document.getElementById("timer-time-display"),
-      repsWrapper: document.getElementById("reps-interactive-wrapper"),
-      repsCountDisplay: document.getElementById("reps-count-display"),
-      repsTargetText: document.getElementById("reps-target-text"),
-      repDecrementBtn: document.getElementById("rep-decrement-btn"),
-      repIncrementBtn: document.getElementById("rep-increment-btn"),
-      timerNudgeRow: document.getElementById("timer-nudge-row"),
-      nudgeMinusBtn: document.getElementById("nudge-minus-btn"),
-      nudgePlusBtn: document.getElementById("nudge-plus-btn"),
-      primaryActionBtn: document.getElementById("player-primary-btn"),
-      resetActionBtn: document.getElementById("player-reset-btn"),
-      
-      // Feed Nav
-      prevExerciseBtn: document.getElementById("feed-prev-btn"),
-      nextExerciseBtn: document.getElementById("feed-next-btn"),
-      feedDotsTrack: document.getElementById("feed-dots-track"),
-      
-      // Routine Banner
-      activeRoutineBanner: document.getElementById("active-routine-banner"),
-      routineBannerTitle: document.getElementById("routine-banner-title"),
-      routineBannerStep: document.getElementById("routine-banner-step"),
-      routineEndBtn: document.getElementById("routine-end-btn"),
+      // Exercise Details Back (Flip Side)
+      musclesText: document.getElementById("ex-muscles-target"),
+      modificationsList: document.getElementById("ex-modifications-list"),
+      safetyText: document.getElementById("ex-safety-text"),
 
-      // Daily Goal Widget
-      goalPercentText: document.getElementById("goal-percent-text"),
-      goalBarFill: document.getElementById("goal-bar-fill"),
-      goalCaptionText: document.getElementById("goal-caption-text"),
+      // Timer & Rep HUD
+      timerHud: document.getElementById("hud-timer-container"),
+      repsHud: document.getElementById("hud-reps-container"),
+      timerRing: document.getElementById("timer-circle-animated"),
+      timerDisplay: document.getElementById("timer-display-val"),
+      btnStartTimer: document.getElementById("btn-start-timer"),
+      btnResetTimer: document.getElementById("btn-reset-timer"),
+      btnPlus15: document.getElementById("btn-plus-15"),
+      btnMinus15: document.getElementById("btn-minus-15"),
+      repCountDisplay: document.getElementById("rep-count-val"),
+      repTargetDisplay: document.getElementById("rep-target-val"),
+      repTapArea: document.getElementById("rep-tap-area"),
 
-      // Library View
-      librarySearch: document.getElementById("library-search-input"),
-      filterChips: document.querySelectorAll(".filter-chip"),
-      libraryGrid: document.getElementById("library-cards-grid"),
+      // Feed Navigation
+      btnPrev: document.getElementById("btn-prev-card"),
+      btnNext: document.getElementById("btn-next-card"),
+      feedIndicator: document.getElementById("feed-counter-indicator"),
 
-      // Routines View
-      routinesGrid: document.getElementById("routines-cards-grid"),
+      // 3D Angle buttons
+      btnAngleFront: document.getElementById("btn-angle-front"),
+      btnAngleSide: document.getElementById("btn-angle-side"),
 
-      // Analytics View
-      metricStreak: document.getElementById("metric-streak-count"),
-      metricTotalSessions: document.getElementById("metric-total-sessions"),
-      metricTotalMinutes: document.getElementById("metric-total-minutes"),
-      metricThisWeek: document.getElementById("metric-this-week"),
-      chartBarsWrap: document.getElementById("chart-bars-wrap"),
-      historyList: document.getElementById("history-list-items"),
-      exportDataBtn: document.getElementById("export-data-btn"),
-      importDataInput: document.getElementById("import-data-file"),
-      importDataTrigger: document.getElementById("import-data-trigger"),
-      resetDataBtn: document.getElementById("reset-data-btn"),
+      // Progress Tracker Dashboard
+      statCompleted: document.getElementById("stat-total-completed"),
+      statCalories: document.getElementById("stat-total-calories"),
+      statPoints: document.getElementById("stat-total-points"),
+      statStreak: document.getElementById("stat-streak-days"),
+      goalBarFill: document.getElementById("dashboard-goal-fill"),
+      goalText: document.getElementById("dashboard-goal-text"),
+      historyContainer: document.getElementById("dashboard-history-list"),
 
-      // Modals
-      settingsModal: document.getElementById("settings-modal"),
-      shortcutsModal: document.getElementById("shortcuts-modal"),
-      toastNotice: document.getElementById("toast-notice")
+      // Header Actions
+      btnThemeToggle: document.getElementById("btn-toggle-theme"),
+      btnVoiceToggle: document.getElementById("btn-toggle-voice"),
+      btnContrastToggle: document.getElementById("btn-toggle-contrast"),
+      btnTextSizeToggle: document.getElementById("btn-toggle-text-size"),
+      toast: document.getElementById("accessible-toast")
     };
   }
 
-  init() {
-    this.applyTheme(this.state.settings.theme);
-    this.applyTextSize(this.state.settings.textSize);
-    this.applyReducedMotion(this.state.settings.reducedMotion);
-    this.updateSoundIcon();
-
-    this.bindEvents();
-    this.renderTodayPill();
-    this.renderExercise();
-    this.renderDailyGoal();
-    this.renderLibrary();
-    this.renderRoutines();
-    this.renderAnalytics();
-  }
-
-  /* ==========================================================================
-     EVENT LISTENERS & KEYBOARD SHORTCUTS
-     ========================================================================== */
   bindEvents() {
-    // Navigation Tabs
-    this.el.navTabs.forEach(btn => {
-      btn.addEventListener("click", () => {
-        const targetView = btn.dataset.view;
-        this.switchView(targetView);
-      });
-    });
+    // 3D Card Flip
+    this.el.btnFlipCard.addEventListener("click", () => this.flipCard(true));
+    this.el.btnFlipBack.addEventListener("click", () => this.flipCard(false));
 
-    // Mobile Sidebar Drawer
-    if (this.el.mobileToggle) {
-      this.el.mobileToggle.addEventListener("click", () => {
-        this.el.sidebar.classList.toggle("mobile-open");
-      });
-    }
+    // Timer Controls
+    this.el.btnStartTimer.addEventListener("click", () => this.toggleTimer());
+    this.el.btnResetTimer.addEventListener("click", () => this.resetCurrentExercise());
+    this.el.btnPlus15.addEventListener("click", () => this.adjustTimer(15));
+    this.el.btnMinus15.addEventListener("click", () => this.adjustTimer(-15));
 
-    // Top action buttons
-    this.el.themeToggle.addEventListener("click", () => this.toggleTheme());
-    this.el.soundToggle.addEventListener("click", () => this.cycleSoundProfile());
-    this.el.settingsOpen.addEventListener("click", () => this.openSettingsModal());
-    this.el.shortcutsOpen.addEventListener("click", () => this.el.shortcutsModal.showModal());
-
-    // Exercise Player Controls
-    this.el.primaryActionBtn.addEventListener("click", () => this.handlePrimaryAction());
-    this.el.resetActionBtn.addEventListener("click", () => this.resetExerciseState());
-    this.el.repIncrementBtn.addEventListener("click", () => this.adjustReps(1));
-    this.el.repDecrementBtn.addEventListener("click", () => this.adjustReps(-1));
-    this.el.nudgePlusBtn.addEventListener("click", () => this.nudgeTimer(15));
-    this.el.nudgeMinusBtn.addEventListener("click", () => this.nudgeTimer(-15));
-    this.el.favoriteBtn.addEventListener("click", () => this.toggleCurrentFavorite());
+    // Rep Tap Stepper
+    this.el.repTapArea.addEventListener("click", () => this.incrementRep());
 
     // Feed Navigation
-    this.el.prevExerciseBtn.addEventListener("click", () => this.previousExercise());
-    this.el.nextExerciseBtn.addEventListener("click", () => this.nextExercise());
+    this.el.btnNext.addEventListener("click", () => this.nextCard());
+    this.el.btnPrev.addEventListener("click", () => this.prevCard());
 
-    // Routine Cancel
-    this.el.routineEndBtn.addEventListener("click", () => this.endActiveRoutine());
+    // 3D Angle Buttons
+    this.el.btnAngleFront.addEventListener("click", () => this.avatar && this.avatar.setCameraAngle("front"));
+    this.el.btnAngleSide.addEventListener("click", () => this.avatar && this.avatar.setCameraAngle("side"));
 
-    // Library Search & Filters
-    this.el.librarySearch.addEventListener("input", () => this.renderLibrary());
-    this.el.filterChips.forEach(chip => {
-      chip.addEventListener("click", () => {
-        this.el.filterChips.forEach(c => c.classList.remove("active"));
-        chip.classList.add("active");
-        this.renderLibrary();
-      });
-    });
+    // Header Accessibility Toggles
+    this.el.btnThemeToggle.addEventListener("click", () => this.toggleTheme());
+    this.el.btnVoiceToggle.addEventListener("click", () => this.toggleVoiceCoach());
+    this.el.btnContrastToggle.addEventListener("click", () => this.toggleHighContrast());
+    this.el.btnTextSizeToggle.addEventListener("click", () => this.toggleJumboText());
 
-    // Data Portability
-    this.el.exportDataBtn.addEventListener("click", () => this.exportUserData());
-    this.el.importDataTrigger.addEventListener("click", () => this.el.importDataInput.click());
-    this.el.importDataInput.addEventListener("change", (e) => this.importUserData(e));
-    this.el.resetDataBtn.addEventListener("click", () => this.promptResetData());
-
-    // Settings Modal Form Save
-    document.getElementById("settings-form").addEventListener("submit", (e) => {
-      e.preventDefault();
-      this.saveSettingsFromModal();
-    });
-
-    // Keyboard Shortcuts
+    // Keyboard Shortcuts (Space: Timer/Rep, Left/Right: Navigate, F: Flip)
     window.addEventListener("keydown", (e) => {
-      // Ignore if user is inside an input or textarea
-      if (["INPUT", "TEXTAREA", "SELECT"].includes(document.activeElement.tagName)) return;
-
       if (e.code === "Space") {
         e.preventDefault();
-        this.handlePrimaryAction();
+        const ex = this.getCurrentExercise();
+        if (ex.mode === "timer") this.toggleTimer();
+        else this.incrementRep();
       } else if (e.code === "ArrowRight") {
         e.preventDefault();
-        this.nextExercise();
+        this.nextCard();
       } else if (e.code === "ArrowLeft") {
         e.preventDefault();
-        this.previousExercise();
-      } else if (e.key === "r" || e.key === "R") {
-        e.preventDefault();
-        this.resetExerciseState();
+        this.prevCard();
       } else if (e.key === "f" || e.key === "F") {
         e.preventDefault();
-        this.toggleCurrentFavorite();
-      } else if (e.key === "?") {
-        e.preventDefault();
-        this.el.shortcutsModal.showModal();
+        const isFlipped = this.el.cardWrapper.classList.contains("is-flipped");
+        this.flipCard(!isFlipped);
       }
     });
   }
 
-  switchView(viewId) {
-    this.el.navTabs.forEach(t => t.classList.toggle("active", t.dataset.view === viewId));
-    this.el.tabViews.forEach(v => v.classList.toggle("active", v.id === `view-${viewId}`));
-    if (this.el.sidebar.classList.contains("mobile-open")) {
-      this.el.sidebar.classList.remove("mobile-open");
-    }
+  /* ==========================================================================
+     SWIPE & 3D TILT ENGINE
+     ========================================================================== */
+  bindSwipeGesture() {
+    let startX = 0;
+    let startY = 0;
+    let currentX = 0;
+    let isSwiping = false;
 
-    if (viewId === "analytics") {
-      this.renderAnalytics();
-    }
+    const onStart = (x, y) => {
+      startX = x;
+      startY = y;
+      currentX = x;
+      isSwiping = true;
+    };
+
+    const onMove = (x, y) => {
+      if (!isSwiping) return;
+      const dx = x - startX;
+      const dy = y - startY;
+
+      // Ensure horizontal swipe intent
+      if (Math.abs(dx) > Math.abs(dy)) {
+        this.el.cardWrapper.style.transform = `translateX(${dx * 0.7}px) rotateZ(${dx * 0.04}deg)`;
+      }
+    };
+
+    const onEnd = (x) => {
+      if (!isSwiping) return;
+      isSwiping = false;
+      const dx = x - startX;
+
+      this.el.cardWrapper.style.transform = "";
+
+      if (dx < -75) {
+        // Swiped Left -> Next Card
+        this.el.cardWrapper.classList.add("swipe-exit-left");
+        setTimeout(() => {
+          this.el.cardWrapper.classList.remove("swipe-exit-left");
+          this.nextCard();
+          this.el.cardWrapper.classList.add("swipe-enter-card");
+          setTimeout(() => this.el.cardWrapper.classList.remove("swipe-enter-card"), 350);
+        }, 250);
+      } else if (dx > 75) {
+        // Swiped Right -> Previous Card
+        this.el.cardWrapper.classList.add("swipe-exit-right");
+        setTimeout(() => {
+          this.el.cardWrapper.classList.remove("swipe-exit-right");
+          this.prevCard();
+          this.el.cardWrapper.classList.add("swipe-enter-card");
+          setTimeout(() => this.el.cardWrapper.classList.remove("swipe-enter-card"), 350);
+        }, 250);
+      }
+    };
+
+    // Touch Support
+    this.el.cardScene.addEventListener("touchstart", (e) => {
+      onStart(e.touches[0].clientX, e.touches[0].clientY);
+    }, { passive: true });
+    window.addEventListener("touchmove", (e) => {
+      if (e.touches.length === 1) onMove(e.touches[0].clientX, e.touches[0].clientY);
+    }, { passive: true });
+    window.addEventListener("touchend", (e) => {
+      if (e.changedTouches.length > 0) onEnd(e.changedTouches[0].clientX);
+    });
+
+    // 3D Mouse Hover Tilt
+    this.el.cardScene.addEventListener("mousemove", (e) => {
+      if (isSwiping || this.el.cardWrapper.classList.contains("is-flipped")) return;
+      const rect = this.el.cardScene.getBoundingClientRect();
+      const x = e.clientX - rect.left - rect.width / 2;
+      const y = e.clientY - rect.top - rect.height / 2;
+
+      const tiltX = (y / (rect.height / 2)) * -6;
+      const tiltY = (x / (rect.width / 2)) * 6;
+
+      this.el.cardWrapper.style.transform = `rotateX(${tiltX}deg) rotateY(${tiltY}deg)`;
+    });
+
+    this.el.cardScene.addEventListener("mouseleave", () => {
+      if (!this.el.cardWrapper.classList.contains("is-flipped")) {
+        this.el.cardWrapper.style.transform = "";
+      }
+    });
   }
 
   /* ==========================================================================
-     ACTIVE EXERCISE & PLAYER ENGINE
+     EXERCISE RENDERING & NAVIGATION
      ========================================================================== */
-  getVisibleExercises() {
-    let list = EXERCISES_DATABASE;
-    if (this.state.settings.seatedOnly) {
-      list = list.filter(item => item.isSeated);
+  getExerciseList() {
+    if (this.state.data.settings.seatedOnly) {
+      return EXERCISES_DATA.filter(e => e.category === "Seated Only");
     }
-    return list;
+    return EXERCISES_DATA;
   }
 
   getCurrentExercise() {
-    if (this.state.activeRoutine) {
-      const routine = GUIDED_ROUTINES.find(r => r.id === this.state.activeRoutine);
-      if (routine) {
-        const exId = routine.exercises[this.state.routineStepIndex];
-        const match = EXERCISES_DATABASE.find(e => e.id === exId);
-        if (match) return match;
-      }
-    }
-    const list = this.getVisibleExercises();
-    if (this.currentExerciseIndex >= list.length) {
-      this.currentExerciseIndex = 0;
-    }
-    return list[this.currentExerciseIndex];
+    const list = this.getExerciseList();
+    if (this.currentIndex >= list.length) this.currentIndex = 0;
+    return list[this.currentIndex];
   }
 
-  renderExercise() {
-    this.resetExerciseState(false);
+  renderCurrentExercise() {
+    this.flipCard(false);
+    this.resetTimer();
+
     const ex = this.getCurrentExercise();
-    if (!ex) return;
+    const list = this.getExerciseList();
 
-    // Render Banner Details
-    this.el.exerciseIcon.innerHTML = ex.iconSvg;
+    // Front Details
     this.el.badgeCategory.textContent = ex.category;
-    this.el.badgeLevel.textContent = ex.level;
-    this.el.badgeEquipment.textContent = ex.equipment;
-    this.el.muscleTarget.textContent = ex.targetMuscles;
-    this.el.exerciseTitle.textContent = ex.title;
-    this.el.exerciseDesc.textContent = ex.description;
+    this.el.badgeCategory.className = `badge-gentle ${ex.badgeClass}`;
+    this.el.badgeImpact.textContent = ex.impactLevel;
+    this.el.title.textContent = ex.title;
+    this.el.tagline.textContent = ex.tagline;
+    this.el.suitableForText.textContent = ex.suitableFor;
 
-    // Coaching Tip
-    this.el.coachingText.textContent = ex.coachingTip;
-
-    // Instructions
+    // Front Instructions
     this.el.instructionsList.innerHTML = "";
     ex.instructions.forEach(step => {
       const li = document.createElement("li");
@@ -893,110 +1157,104 @@ class FitFeedApp {
       this.el.instructionsList.appendChild(li);
     });
 
-    // Favorite Status
-    const isFav = this.state.favorites.has(ex.id);
-    this.el.favoriteBtn.classList.toggle("favorited", isFav);
-    this.el.favoriteBtn.setAttribute("aria-label", isFav ? "Remove from favorites" : "Save to favorites");
-    this.el.favoriteBtn.innerHTML = isFav 
-      ? `<svg viewBox="0 0 24 24" fill="currentColor" stroke="currentColor" stroke-width="2"><path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z"/></svg>`
-      : `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z"/></svg>`;
-
-    // Mode: Timer vs Reps
-    if (ex.mode === "timer") {
-      this.el.timerWrapper.classList.remove("hidden");
-      this.el.timerNudgeRow.classList.remove("hidden");
-      this.el.repsWrapper.classList.add("hidden");
-
-      let duration = ex.duration;
-      if (this.state.settings.longerTimer) duration += 15;
-      this.timerTotalSeconds = duration;
-      this.timerSecondsRemaining = duration;
-      this.updateTimerRing();
-      this.el.timerDisplay.textContent = this.timerSecondsRemaining;
-    } else {
-      this.el.timerWrapper.classList.add("hidden");
-      this.el.timerNudgeRow.classList.add("hidden");
-      this.el.repsWrapper.classList.remove("hidden");
-
-      this.currentReps = 0;
-      this.el.repsCountDisplay.textContent = "0";
-      this.el.repsTargetText.textContent = `Target: ${ex.target} gentle reps`;
-    }
-
-    // Feed Navigation Dots
-    this.renderFeedNavigation();
-    this.renderRoutineBanner();
-  }
-
-  renderFeedNavigation() {
-    const list = this.getVisibleExercises();
-    this.el.prevExerciseBtn.disabled = this.currentExerciseIndex === 0;
-    this.el.nextExerciseBtn.disabled = this.currentExerciseIndex === list.length - 1;
-
-    this.el.feedDotsTrack.innerHTML = "";
-    list.forEach((_, idx) => {
-      const pill = document.createElement("button");
-      pill.type = "button";
-      pill.className = `feed-dot-pill ${idx === this.currentExerciseIndex ? "active" : ""}`;
-      pill.setAttribute("aria-label", `Go to exercise ${idx + 1}`);
-      pill.addEventListener("click", () => {
-        this.currentExerciseIndex = idx;
-        this.renderExercise();
-      });
-      this.el.feedDotsTrack.appendChild(pill);
+    // Back Details (3D Anatomy & Accessibility Modifications)
+    this.el.musclesText.textContent = ex.targetMuscles;
+    this.el.safetyText.textContent = ex.safetyNote;
+    this.el.modificationsList.innerHTML = "";
+    ex.modifications.forEach(mod => {
+      const li = document.createElement("li");
+      li.textContent = mod;
+      this.el.modificationsList.appendChild(li);
     });
+
+    // Feed Counter Indicator
+    this.el.feedIndicator.textContent = `Move ${this.currentIndex + 1} of ${list.length}`;
+    this.el.btnPrev.disabled = this.currentIndex === 0;
+
+    // Mode Setup: Timer vs Reps
+    if (ex.mode === "timer") {
+      this.el.timerHud.classList.remove("hidden");
+      this.el.repsHud.classList.add("hidden");
+      this.timerSeconds = ex.duration;
+      this.timerTotal = ex.duration;
+      this.el.timerDisplay.textContent = this.timerSeconds;
+      this.updateTimerRing();
+    } else {
+      this.el.timerHud.classList.add("hidden");
+      this.el.repsHud.classList.remove("hidden");
+      this.currentReps = 0;
+      this.repsTarget = ex.target;
+      this.el.repCountDisplay.textContent = "0";
+      this.el.repTargetDisplay.textContent = `Suggested Target: ${ex.target} reps`;
+    }
+
+    // Update 3D Avatar Movement
+    if (this.avatar) {
+      this.avatar.setMovementAnimation(ex.animType);
+    }
   }
 
-  renderRoutineBanner() {
-    if (this.state.activeRoutine) {
-      const routine = GUIDED_ROUTINES.find(r => r.id === this.state.activeRoutine);
-      if (routine) {
-        this.el.activeRoutineBanner.classList.remove("hidden");
-        this.el.routineBannerTitle.textContent = routine.title;
-        this.el.routineBannerStep.textContent = `Exercise ${this.state.routineStepIndex + 1} of ${routine.exercises.length}`;
-        return;
-      }
+  flipCard(showBack) {
+    if (showBack) {
+      this.el.cardWrapper.classList.add("is-flipped");
+    } else {
+      this.el.cardWrapper.classList.remove("is-flipped");
+      this.el.cardWrapper.style.transform = "";
     }
-    this.el.activeRoutineBanner.classList.add("hidden");
+  }
+
+  nextCard() {
+    const list = this.getExerciseList();
+    if (this.currentIndex < list.length - 1) {
+      this.currentIndex++;
+      this.renderCurrentExercise();
+    }
+  }
+
+  prevCard() {
+    if (this.currentIndex > 0) {
+      this.currentIndex--;
+      this.renderCurrentExercise();
+    }
   }
 
   /* ==========================================================================
      TIMER ENGINE
      ========================================================================== */
-  handlePrimaryAction() {
-    if (this.sessionDone) {
-      this.nextExercise();
-      return;
-    }
-
-    const ex = this.getCurrentExercise();
-    if (ex.mode === "timer") {
-      if (this.timerRunning) {
-        this.pauseTimer();
-      } else {
-        this.startTimer();
-      }
+  toggleTimer() {
+    if (this.timerRunning) {
+      this.pauseTimer();
     } else {
-      // Rep mode primary action adds rep
-      this.adjustReps(1);
+      this.startTimer();
     }
   }
 
   startTimer() {
     if (this.timerRunning) return;
     this.timerRunning = true;
-    this.el.primaryActionBtn.innerHTML = `
-      <svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor"><rect x="6" y="4" width="4" height="16"/><rect x="14" y="4" width="4" height="16"/></svg>
-      Pause Timer
-    `;
+    this.halfwayAnnounced = false;
+    this.el.btnStartTimer.innerHTML = `<svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor"><rect x="6" y="4" width="4" height="16"/><rect x="14" y="4" width="4" height="16"/></svg> Pause Timer`;
+    this.el.btnStartTimer.classList.remove("bg-emerald-600");
+    this.el.btnStartTimer.classList.add("bg-amber-600");
+
+    const ex = this.getCurrentExercise();
+    this.voice.announceStart(ex.title);
 
     this.timerInterval = setInterval(() => {
-      this.timerSecondsRemaining--;
+      this.timerSeconds--;
+      this.el.timerDisplay.textContent = Math.max(0, this.timerSeconds);
       this.updateTimerRing();
-      this.el.timerDisplay.textContent = Math.max(0, this.timerSecondsRemaining);
 
-      if (this.timerSecondsRemaining <= 0) {
-        this.completeExercise();
+      // Voice cues at halfway and final countdown
+      if (this.timerSeconds === Math.floor(this.timerTotal / 2) && !this.halfwayAnnounced) {
+        this.halfwayAnnounced = true;
+        this.voice.announceHalfway();
+      } else if (this.timerSeconds === 10) {
+        this.voice.announceTenSeconds();
+      }
+
+      if (this.timerSeconds <= 0) {
+        this.finishExercise();
       }
     }, 1000);
   }
@@ -1005,536 +1263,210 @@ class FitFeedApp {
     if (!this.timerRunning) return;
     this.timerRunning = false;
     clearInterval(this.timerInterval);
-    this.el.primaryActionBtn.innerHTML = `
-      <svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor"><polygon points="5 3 19 12 5 21 5 3"/></svg>
-      Resume Timer
-    `;
+    this.el.btnStartTimer.innerHTML = `<svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor"><polygon points="5 3 19 12 5 21 5 3"/></svg> Resume Timer`;
+    this.el.btnStartTimer.classList.remove("bg-amber-600");
+    this.el.btnStartTimer.classList.add("bg-emerald-600");
   }
 
-  nudgeTimer(delta) {
-    if (this.sessionDone) return;
-    this.timerSecondsRemaining = Math.max(5, this.timerSecondsRemaining + delta);
-    if (this.timerSecondsRemaining > this.timerTotalSeconds) {
-      this.timerTotalSeconds = this.timerSecondsRemaining;
+  resetTimer() {
+    this.timerRunning = false;
+    clearInterval(this.timerInterval);
+    const ex = this.getCurrentExercise();
+    if (ex && ex.mode === "timer") {
+      this.timerSeconds = ex.duration;
+      this.timerTotal = ex.duration;
+      this.el.timerDisplay.textContent = this.timerSeconds;
+      this.updateTimerRing();
     }
-    this.el.timerDisplay.textContent = this.timerSecondsRemaining;
+    this.el.btnStartTimer.innerHTML = `<svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor"><polygon points="5 3 19 12 5 21 5 3"/></svg> Start Exercise`;
+    this.el.btnStartTimer.classList.remove("bg-amber-600");
+    this.el.btnStartTimer.classList.add("bg-emerald-600");
+  }
+
+  adjustTimer(delta) {
+    this.timerSeconds = Math.max(5, this.timerSeconds + delta);
+    if (this.timerSeconds > this.timerTotal) {
+      this.timerTotal = this.timerSeconds;
+    }
+    this.el.timerDisplay.textContent = this.timerSeconds;
     this.updateTimerRing();
+    this.showToast(`Timer adjusted: ${this.timerSeconds}s`);
   }
 
   updateTimerRing() {
-    const circumference = 2 * Math.PI * 52; // r = 52
-    const progress = Math.max(0, Math.min(1, this.timerSecondsRemaining / this.timerTotalSeconds));
-    const offset = circumference * (1 - progress);
-    this.el.timerRingActive.style.strokeDasharray = `${circumference}`;
-    this.el.timerRingActive.style.strokeDashoffset = `${offset}`;
+    const circumference = 2 * Math.PI * 44; // r=44
+    const fraction = Math.max(0, Math.min(1, this.timerSeconds / this.timerTotal));
+    const offset = circumference * (1 - fraction);
+    this.el.timerRing.style.strokeDasharray = `${circumference}`;
+    this.el.timerRing.style.strokeDashoffset = `${offset}`;
   }
 
   /* ==========================================================================
      REPS ENGINE
      ========================================================================== */
-  adjustReps(delta) {
-    if (this.sessionDone) return;
-    this.currentReps = Math.max(0, this.currentReps + delta);
-    this.el.repsCountDisplay.textContent = this.currentReps;
-
+  incrementRep() {
     const ex = this.getCurrentExercise();
-    if (this.currentReps >= ex.target) {
-      this.completeExercise();
+    if (ex.mode !== "reps") return;
+
+    this.currentReps++;
+    this.el.repCountDisplay.textContent = this.currentReps;
+
+    // Small vibration on supported mobile devices
+    if (navigator.vibrate) navigator.vibrate(35);
+
+    if (this.currentReps >= this.repsTarget) {
+      this.finishExercise();
     }
   }
 
   /* ==========================================================================
-     COMPLETION & PROGRESS RECORDING
+     EXERCISE COMPLETION & PROGRESS
      ========================================================================== */
-  completeExercise() {
-    if (this.sessionDone) return;
-    this.sessionDone = true;
+  finishExercise() {
     this.pauseTimer();
-
     const ex = this.getCurrentExercise();
-    const duration = ex.mode === "timer" ? this.timerTotalSeconds : 45;
+    const durationSecs = ex.mode === "timer" ? this.timerTotal : 45;
 
-    // Record session in state
-    this.state.addCompletion(ex.id, duration);
+    const result = this.state.recordCompletion(ex, durationSecs);
 
-    // Audio cue
-    this.synth.playChime(this.state.settings.soundProfile);
+    // 3D Confetti Particle Explosion
+    if (this.confetti) {
+      this.confetti.launch();
+    }
 
-    // UI Updates
-    this.el.primaryActionBtn.innerHTML = `
-      <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
-      Completed! Next Movement →
-    `;
-    this.el.primaryActionBtn.classList.add("btn-completed");
+    // Voice Celebration
+    this.voice.announceComplete(result.points);
 
-    this.showToast(`Completed ${ex.title}! Recorded in your daily progress.`);
-    this.renderDailyGoal();
+    // Show Toast
+    this.showToast(`🎉 Completed ${ex.title}! +${result.points} pts & ${result.caloriesBurned} cal`);
 
-    // Check if in active routine
-    if (this.state.activeRoutine) {
-      const routine = GUIDED_ROUTINES.find(r => r.id === this.state.activeRoutine);
-      if (routine) {
-        if (this.state.routineStepIndex < routine.exercises.length - 1) {
-          setTimeout(() => {
-            this.state.routineStepIndex++;
-            this.renderExercise();
-          }, 1200);
-        } else {
-          setTimeout(() => {
-            this.showToast(`🎉 You finished the entire "${routine.title}" routine!`);
-            this.endActiveRoutine();
-          }, 1000);
-        }
+    // Update Dashboard Metrics
+    this.updateDashboard();
+
+    // Auto Advance Prompt after brief pause
+    setTimeout(() => {
+      const list = this.getExerciseList();
+      if (this.currentIndex < list.length - 1) {
+        this.nextCard();
+      } else {
+        this.showToast("🌟 Incredible! You finished every movement in the feed!");
       }
-    }
+    }, 1800);
   }
 
-  resetExerciseState(render = true) {
-    this.timerRunning = false;
-    clearInterval(this.timerInterval);
-    this.sessionDone = false;
-    this.el.primaryActionBtn.classList.remove("btn-completed");
-
-    const ex = this.getCurrentExercise();
-    if (!ex) return;
-
-    if (ex.mode === "timer") {
-      let duration = ex.duration;
-      if (this.state.settings.longerTimer) duration += 15;
-      this.timerTotalSeconds = duration;
-      this.timerSecondsRemaining = duration;
-      this.el.timerDisplay.textContent = this.timerSecondsRemaining;
-      this.updateTimerRing();
-      this.el.primaryActionBtn.innerHTML = `
-        <svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor"><polygon points="5 3 19 12 5 21 5 3"/></svg>
-        Start Timer
-      `;
-    } else {
-      this.currentReps = 0;
-      this.el.repsCountDisplay.textContent = "0";
-      this.el.primaryActionBtn.innerHTML = `
-        <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
-        Count Repetition
-      `;
-    }
-
-    if (render) {
-      this.showToast("Exercise session reset.");
-    }
+  resetCurrentExercise() {
+    this.resetTimer();
+    this.currentReps = 0;
+    this.el.repCountDisplay.textContent = "0";
+    this.showToast("Exercise reset.");
   }
 
-  nextExercise() {
-    const list = this.getVisibleExercises();
-    if (this.currentExerciseIndex < list.length - 1) {
-      this.currentExerciseIndex++;
-      this.renderExercise();
-    }
-  }
+  updateDashboard() {
+    this.el.statCompleted.textContent = this.state.data.totalCompleted;
+    this.el.statCalories.textContent = `${this.state.data.totalCalories} kcal`;
+    this.el.statPoints.textContent = this.state.data.totalPoints;
+    this.el.statStreak.textContent = `${this.state.data.streak} days`;
 
-  previousExercise() {
-    if (this.currentExerciseIndex > 0) {
-      this.currentExerciseIndex--;
-      this.renderExercise();
-    }
-  }
+    // Daily Goal Bar (3 exercises default target)
+    const todayCount = this.state.getTodayCount();
+    const goalTarget = 3;
+    const goalPercent = Math.min(100, Math.round((todayCount / goalTarget) * 100));
 
-  toggleCurrentFavorite() {
-    const ex = this.getCurrentExercise();
-    if (!ex) return;
-    if (this.state.favorites.has(ex.id)) {
-      this.state.favorites.delete(ex.id);
-      this.showToast(`Removed ${ex.title} from favorites.`);
-    } else {
-      this.state.favorites.add(ex.id);
-      this.showToast(`Added ${ex.title} to saved favorites.`);
-    }
-    this.state.saveFavorites();
-    this.renderExercise();
-  }
-
-  /* ==========================================================================
-     ROUTINE ENGINE
-     ========================================================================== */
-  startRoutine(routineId) {
-    const routine = GUIDED_ROUTINES.find(r => r.id === routineId);
-    if (!routine) return;
-
-    this.state.activeRoutine = routineId;
-    this.state.routineStepIndex = 0;
-    this.switchView("workout");
-    this.renderExercise();
-    this.showToast(`Starting guided routine: ${routine.title}`);
-  }
-
-  endActiveRoutine() {
-    this.state.activeRoutine = null;
-    this.state.routineStepIndex = 0;
-    this.renderExercise();
-    this.showToast("Exited guided routine.");
-  }
-
-  /* ==========================================================================
-     VIEWS RENDERING
-     ========================================================================== */
-  renderTodayPill() {
-    const now = new Date();
-    const options = { weekday: "short", month: "short", day: "numeric" };
-    this.el.todayPill.textContent = now.toLocaleDateString(undefined, options);
-  }
-
-  renderDailyGoal() {
-    const doneToday = this.state.getTodayCompletedCount();
-    const target = this.state.settings.dailyGoal;
-    const percent = Math.min(100, Math.round((doneToday / target) * 100));
-
-    this.el.goalPercentText.textContent = `${percent}%`;
-    this.el.goalBarFill.style.width = `${percent}%`;
-    this.el.goalCaptionText.textContent = `${doneToday} of ${target} completed today`;
-  }
-
-  renderLibrary() {
-    const query = this.el.librarySearch.value.trim().toLowerCase();
-    const activeChip = document.querySelector(".filter-chip.active");
-    const filter = activeChip ? activeChip.dataset.filter : "all";
-
-    let items = EXERCISES_DATABASE;
-
-    // Apply Filter
-    if (filter === "seated") {
-      items = items.filter(e => e.isSeated);
-    } else if (filter === "mobility") {
-      items = items.filter(e => e.category.toLowerCase().includes("mobility") || e.category.toLowerCase().includes("posture"));
-    } else if (filter === "strength") {
-      items = items.filter(e => e.category.toLowerCase().includes("strength"));
-    } else if (filter === "breathwork") {
-      items = items.filter(e => e.category.toLowerCase().includes("breath"));
-    }
-
-    // Apply Search
-    if (query) {
-      items = items.filter(e => 
-        e.title.toLowerCase().includes(query) ||
-        e.description.toLowerCase().includes(query) ||
-        e.targetMuscles.toLowerCase().includes(query)
-      );
-    }
-
-    this.el.libraryGrid.innerHTML = "";
-    if (items.length === 0) {
-      this.el.libraryGrid.innerHTML = `
-        <div style="grid-column: 1/-1; text-align: center; padding: 40px; color: var(--text-muted);">
-          No movement exercises found matching your search criteria.
-        </div>
-      `;
-      return;
-    }
-
-    items.forEach(ex => {
-      const card = document.createElement("div");
-      card.className = "library-exercise-card";
-      card.innerHTML = `
-        <div class="card-top-row">
-          <div class="card-icon-title">
-            <div class="card-mini-icon">${ex.iconSvg}</div>
-            <div>
-              <h3 class="card-heading">${ex.title}</h3>
-              <span class="badge ${ex.isSeated ? 'badge-emerald' : 'badge-warm'}" style="margin-top: 4px;">
-                ${ex.category}
-              </span>
-            </div>
-          </div>
-        </div>
-        <p class="card-desc-snippet">${ex.description}</p>
-        <div class="card-footer-meta">
-          <div class="card-tags">
-            <span class="badge badge-outline">${ex.mode === 'timer' ? `${ex.duration}s` : `${ex.target} reps`}</span>
-            <span class="badge badge-outline">${ex.level}</span>
-          </div>
-          <button class="start-exercise-btn" type="button">Start Exercise →</button>
-        </div>
-      `;
-
-      card.querySelector(".start-exercise-btn").addEventListener("click", () => {
-        const fullIndex = this.getVisibleExercises().findIndex(e => e.id === ex.id);
-        if (fullIndex !== -1) {
-          this.currentExerciseIndex = fullIndex;
-          this.state.activeRoutine = null;
-          this.switchView("workout");
-          this.renderExercise();
-        } else {
-          this.showToast("This exercise is currently filtered out by your seated-only preference.");
-        }
-      });
-
-      this.el.libraryGrid.appendChild(card);
-    });
-  }
-
-  renderRoutines() {
-    this.el.routinesGrid.innerHTML = "";
-    GUIDED_ROUTINES.forEach(routine => {
-      const card = document.createElement("div");
-      card.className = "routine-card";
-      
-      const stepItems = routine.exercises.map((exId, i) => {
-        const ex = EXERCISES_DATABASE.find(e => e.id === exId);
-        return `
-          <li class="routine-step-item">
-            <span class="routine-step-num">${i + 1}</span>
-            <span>${ex ? ex.title : exId}</span>
-          </li>
-        `;
-      }).join("");
-
-      card.innerHTML = `
-        <div class="routine-header-row">
-          <span class="routine-duration-badge">⏱ ${routine.duration}</span>
-        </div>
-        <h3 class="routine-title">${routine.title}</h3>
-        <p class="routine-description">${routine.description}</p>
-        <div class="routine-steps-preview">
-          <div class="routine-steps-heading">Sequence (${routine.exercises.length} moves)</div>
-          <ul class="routine-steps-list">
-            ${stepItems}
-          </ul>
-        </div>
-        <button class="btn-primary start-routine-btn" type="button">
-          <svg viewBox="0 0 24 24" width="16" height="16" fill="currentColor"><polygon points="5 3 19 12 5 21 5 3"/></svg>
-          Start Guided Routine
-        </button>
-      `;
-
-      card.querySelector(".start-routine-btn").addEventListener("click", () => {
-        this.startRoutine(routine.id);
-      });
-
-      this.el.routinesGrid.appendChild(card);
-    });
-  }
-
-  renderAnalytics() {
-    // Top Metrics
-    this.el.metricStreak.textContent = this.state.calculateStreak();
-    this.el.metricTotalSessions.textContent = this.state.progress.totalCompleted;
-    this.el.metricTotalMinutes.textContent = this.state.progress.totalMinutes;
-
-    const now = new Date();
-    const currentDayOfWeek = (now.getDay() + 6) % 7;
-    const weekData = this.state.get7DayData();
-    const weekTotal = weekData.reduce((acc, curr) => acc + curr.count, 0);
-    this.el.metricThisWeek.textContent = weekTotal;
-
-    // 7-Day Bar Chart
-    this.el.chartBarsWrap.innerHTML = "";
-    const maxVal = Math.max(3, ...weekData.map(d => d.count));
-
-    weekData.forEach(d => {
-      const col = document.createElement("div");
-      col.className = `chart-day-col ${d.isToday ? 'today-col' : ''}`;
-      const heightPercent = (d.count / maxVal) * 100;
-      col.innerHTML = `
-        <div class="chart-bar-fill ${d.count === 0 ? 'empty-day' : ''}" 
-             style="height: ${Math.max(6, heightPercent)}%;" 
-             title="${d.count} activities completed on ${d.dayName}">
-        </div>
-        <span class="chart-day-name">${d.dayName}</span>
-      `;
-      this.el.chartBarsWrap.appendChild(col);
-    });
+    this.el.goalBarFill.style.width = `${goalPercent}%`;
+    this.el.goalText.textContent = `${todayCount} of ${goalTarget} completed today (${goalPercent}%)`;
 
     // History Log
-    this.el.historyList.innerHTML = "";
-    if (this.state.progress.history.length === 0) {
-      this.el.historyList.innerHTML = `
-        <li class="history-empty-message">No activities completed yet. Start your first session in the workout feed!</li>
+    this.el.historyContainer.innerHTML = "";
+    if (this.state.data.history.length === 0) {
+      this.el.historyContainer.innerHTML = `
+        <div class="text-sm text-slate-400 text-center py-6">
+          No exercises recorded yet. Start your first movement above!
+        </div>
       `;
       return;
     }
 
-    this.state.progress.history.slice(0, 15).forEach(item => {
-      const li = document.createElement("li");
-      li.className = "history-item";
-      const dateObj = new Date(item.timestamp);
-      const timeStr = dateObj.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" });
-      const dateStr = dateObj.toLocaleDateString([], { month: "short", day: "numeric" });
-
-      li.innerHTML = `
-        <div class="history-item-left">
-          <div class="history-check-circle">✓</div>
+    this.state.data.history.slice(0, 8).forEach(item => {
+      const row = document.createElement("div");
+      row.className = "flex items-center justify-between p-2.5 rounded-xl bg-slate-50 dark:bg-slate-800/60 border border-slate-100 dark:border-slate-800 text-sm";
+      const time = new Date(item.timestamp).toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" });
+      row.innerHTML = `
+        <div class="flex items-center gap-2.5">
+          <span class="w-6 h-6 rounded-full bg-emerald-100 dark:bg-emerald-950/60 text-emerald-600 dark:text-emerald-400 flex items-center justify-center text-xs font-bold">✓</span>
           <div>
-            <h4 class="history-item-name">${item.exerciseTitle}</h4>
-            <span class="history-item-time">${dateStr} at ${timeStr}</span>
+            <div class="font-semibold text-slate-800 dark:text-slate-100">${item.title}</div>
+            <div class="text-xs text-slate-400">${time} · ${item.category}</div>
           </div>
         </div>
-        <span class="badge badge-outline">${Math.round(item.durationSeconds / 60) || 1}m</span>
+        <div class="text-right">
+          <span class="font-bold text-emerald-600 dark:text-emerald-400">+${item.points} pts</span>
+          <div class="text-xs text-slate-400">${item.calories} kcal</div>
+        </div>
       `;
-      this.el.historyList.appendChild(li);
+      this.el.historyContainer.appendChild(row);
     });
   }
 
   /* ==========================================================================
-     SETTINGS & ACCESSIBILITY
+     ACCESSIBILITY & DISPLAY SETTINGS
      ========================================================================== */
-  applyTheme(theme) {
-    let effectiveTheme = theme;
-    if (theme === "system") {
-      effectiveTheme = window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
-    }
-    document.documentElement.setAttribute("data-theme", effectiveTheme);
+  applySettings() {
+    const s = this.state.data.settings;
+    document.documentElement.setAttribute("data-theme", s.theme);
+    document.body.classList.toggle("high-contrast", s.highContrast);
+    document.body.classList.toggle("jumbo-text", s.jumboText);
+    this.voice.enabled = s.voiceCoach;
   }
 
   toggleTheme() {
-    const currentTheme = document.documentElement.getAttribute("data-theme") || "light";
-    const nextTheme = currentTheme === "dark" ? "light" : "dark";
-    this.state.settings.theme = nextTheme;
-    this.state.saveSettings();
-    this.applyTheme(nextTheme);
-    this.showToast(`Switched to ${nextTheme} mode.`);
+    const current = this.state.data.settings.theme;
+    const next = current === "dark" ? "light" : "dark";
+    this.state.data.settings.theme = next;
+    this.state.save();
+    this.applySettings();
+    this.showToast(`Switched to ${next} theme.`);
   }
 
-  applyTextSize(size) {
-    document.body.classList.remove("font-large", "font-xlarge");
-    if (size === "large") document.body.classList.add("font-large");
-    if (size === "xlarge") document.body.classList.add("font-xlarge");
-  }
-
-  applyReducedMotion(enabled) {
-    document.body.classList.toggle("reduced-motion", Boolean(enabled));
-  }
-
-  cycleSoundProfile() {
-    const profiles = ["zen", "bell", "ding", "mute"];
-    const currentIdx = profiles.indexOf(this.state.settings.soundProfile);
-    const nextProfile = profiles[(currentIdx + 1) % profiles.length];
-    this.state.settings.soundProfile = nextProfile;
-    this.state.saveSettings();
-    this.updateSoundIcon();
-
-    if (nextProfile !== "mute") {
-      this.synth.playChime(nextProfile);
-      this.showToast(`Sound profile set to: ${nextProfile.toUpperCase()}`);
+  toggleVoiceCoach() {
+    this.state.data.settings.voiceCoach = !this.state.data.settings.voiceCoach;
+    this.state.save();
+    this.applySettings();
+    if (this.state.data.settings.voiceCoach) {
+      this.voice.speak("Voice coach enabled. I will guide your movements.");
+      this.showToast("Voice coach enabled.");
     } else {
-      this.showToast("Completion sounds muted.");
+      this.showToast("Voice coach muted.");
     }
   }
 
-  updateSoundIcon() {
-    const isMuted = this.state.settings.soundProfile === "mute";
-    this.el.soundToggle.classList.toggle("active", !isMuted);
-    this.el.soundToggle.innerHTML = isMuted 
-      ? `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="1" y1="1" x2="23" y2="23"/><path d="M9 9v3a3 3 0 0 0 5.12 2.12M15 9.34V4a3 3 0 0 0-5.94-.6"/></svg>`
-      : `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 5L6 9H2v6h4l5 4V5z"/><path d="M15.54 8.46a5 5 0 0 1 0 7.07"/><path d="M19.07 4.93a10 10 0 0 1 0 14.14"/></svg>`;
+  toggleHighContrast() {
+    this.state.data.settings.highContrast = !this.state.data.settings.highContrast;
+    this.state.save();
+    this.applySettings();
+    this.showToast(this.state.data.settings.highContrast ? "High Contrast Mode ON (WCAG AAA)." : "High Contrast Mode OFF.");
   }
 
-  openSettingsModal() {
-    document.getElementById("setting-theme-select").value = this.state.settings.theme;
-    document.getElementById("setting-text-size-select").value = this.state.settings.textSize;
-    document.getElementById("setting-sound-select").value = this.state.settings.soundProfile;
-    document.getElementById("setting-daily-goal-select").value = this.state.settings.dailyGoal;
-    document.getElementById("setting-reduced-motion-toggle").checked = this.state.settings.reducedMotion;
-    document.getElementById("setting-seated-only-toggle").checked = this.state.settings.seatedOnly;
-    document.getElementById("setting-longer-timer-toggle").checked = this.state.settings.longerTimer;
-
-    this.el.settingsModal.showModal();
+  toggleJumboText() {
+    this.state.data.settings.jumboText = !this.state.data.settings.jumboText;
+    this.state.save();
+    this.applySettings();
+    this.showToast(this.state.data.settings.jumboText ? "Large Accessible Font ON." : "Standard Font Size.");
   }
 
-  saveSettingsFromModal() {
-    this.state.settings.theme = document.getElementById("setting-theme-select").value;
-    this.state.settings.textSize = document.getElementById("setting-text-size-select").value;
-    this.state.settings.soundProfile = document.getElementById("setting-sound-select").value;
-    this.state.settings.dailyGoal = parseInt(document.getElementById("setting-daily-goal-select").value, 10);
-    this.state.settings.reducedMotion = document.getElementById("setting-reduced-motion-toggle").checked;
-    this.state.settings.seatedOnly = document.getElementById("setting-seated-only-toggle").checked;
-    this.state.settings.longerTimer = document.getElementById("setting-longer-timer-toggle").checked;
-
-    this.state.saveSettings();
-    this.applyTheme(this.state.settings.theme);
-    this.applyTextSize(this.state.settings.textSize);
-    this.applyReducedMotion(this.state.settings.reducedMotion);
-    this.updateSoundIcon();
-
-    this.renderExercise();
-    this.renderDailyGoal();
-    this.renderLibrary();
-
-    this.el.settingsModal.close();
-    this.showToast("Preferences saved.");
-  }
-
-  /* ==========================================================================
-     DATA PORTABILITY & BACKUP
-     ========================================================================== */
-  exportUserData() {
-    const exportData = {
-      app: "FitFeed",
-      version: 3,
-      exportedAt: new Date().toISOString(),
-      progress: this.state.progress,
-      favorites: [...this.state.favorites],
-      settings: this.state.settings
-    };
-
-    const blob = new Blob([JSON.stringify(exportData, null, 2)], { type: "application/json" });
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement("a");
-    a.href = url;
-    a.download = `fitfeed-backup-${this.state.getTodayDateString()}.json`;
-    document.body.appendChild(a);
-    a.click();
-    document.body.removeChild(a);
-    URL.revokeObjectURL(url);
-    this.showToast("Progress exported successfully.");
-  }
-
-  importUserData(event) {
-    const file = event.target.files[0];
-    if (!file) return;
-
-    const reader = new FileReader();
-    reader.onload = (e) => {
-      try {
-        const data = JSON.parse(e.target.result);
-        if (data.progress) this.state.progress = data.progress;
-        if (Array.isArray(data.favorites)) this.state.favorites = new Set(data.favorites);
-        if (data.settings) this.state.settings = { ...DEFAULT_SETTINGS, ...data.settings };
-
-        this.state.saveProgress();
-        this.state.saveFavorites();
-        this.state.saveSettings();
-
-        this.init();
-        this.showToast("Backup imported successfully!");
-      } catch (err) {
-        alert("Invalid FitFeed backup file format.");
-      }
-    };
-    reader.readAsText(file);
-  }
-
-  promptResetData() {
-    if (confirm("Reset all activity history and progress? This cannot be undone.")) {
-      this.state.progress = { totalCompleted: 0, totalMinutes: 0, dates: [], history: [] };
-      this.state.saveProgress();
-      this.renderDailyGoal();
-      this.renderAnalytics();
-      this.showToast("All progress history has been cleared.");
-    }
-  }
-
-  /* ==========================================================================
-     TOAST NOTIFICATIONS
-     ========================================================================== */
   showToast(message) {
-    this.el.toastNotice.textContent = message;
-    this.el.toastNotice.classList.add("show");
+    if (!this.el.toast) return;
+    this.el.toast.textContent = message;
+    this.el.toast.classList.remove("hidden");
+    this.el.toast.classList.add("opacity-100");
     clearTimeout(this.toastTimer);
     this.toastTimer = setTimeout(() => {
-      this.el.toastNotice.classList.remove("show");
-    }, 2800);
+      this.el.toast.classList.add("hidden");
+      this.el.toast.classList.remove("opacity-100");
+    }, 3000);
   }
 }
 
-// Initialize on DOM Ready
+// Global App Initialization
 document.addEventListener("DOMContentLoaded", () => {
-  window.app = new FitFeedApp();
+  window.fitFeed = new FitFeedController();
 });
