@@ -1,320 +1,536 @@
 /* ==========================================================================
-   FitFeed — Accessible Low-Impact Fitness for Beginners, Seniors & High BMI
-   Congressional App Challenge — Advanced 3D Interactive & Accessible Styles
+   FitFeed — Instagram Reels Style Accessible Fitness Web App
+   Congressional App Challenge Project
    Authors: Naihrit & Co-Developer
    ========================================================================== */
 
-/* Design Tokens & CSS Variables */
 :root {
-  --color-primary: #059669;
-  --color-primary-hover: #047857;
-  --color-primary-light: #ecfdf5;
-  --color-accent: #0284c7;
-  --color-accent-light: #f0f9ff;
-  --color-warm: #f59e0b;
-  --color-warm-light: #fffbeb;
-  
-  --bg-app: #f8fafc;
-  --bg-card: #ffffff;
-  --bg-subtle: #f1f5f9;
-  
-  --text-main: #0f172a;
-  --text-muted: #64748b;
-  --border-subtle: #e2e8f0;
-  
-  --radius-card: 24px;
-  --radius-btn: 14px;
-  
-  --shadow-subtle: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -2px rgba(0, 0, 0, 0.05);
-  --shadow-card: 0 20px 25px -5px rgba(15, 23, 42, 0.08), 0 8px 10px -6px rgba(15, 23, 42, 0.04);
-  --shadow-hover: 0 25px 35px -5px rgba(5, 150, 105, 0.18), 0 12px 16px -6px rgba(5, 150, 105, 0.08);
-
-  --font-body: 'DM Sans', system-ui, -apple-system, sans-serif;
-  --font-heading: 'Manrope', 'DM Sans', sans-serif;
+  --reel-width: 420px;
+  --reel-height: 840px;
+  --color-primary: #10b981;
+  --color-primary-glow: rgba(16, 185, 129, 0.4);
+  --color-heart: #ef4444;
+  --bg-dark: #000000;
+  --bg-card: #090d16;
 }
 
-/* Dark Theme Variables */
-[data-theme="dark"] {
-  --bg-app: #0b1120;
-  --bg-card: #131c31;
-  --bg-subtle: #1e293b;
-  
-  --text-main: #f8fafc;
-  --text-muted: #94a3b8;
-  --border-subtle: #24344d;
-  
-  --color-primary-light: rgba(5, 150, 105, 0.15);
-  --color-accent-light: rgba(2, 132, 199, 0.15);
-  --color-warm-light: rgba(245, 158, 11, 0.15);
-  
-  --shadow-card: 0 20px 25px -5px rgba(0, 0, 0, 0.4), 0 8px 10px -6px rgba(0, 0, 0, 0.3);
-  --shadow-hover: 0 25px 35px -5px rgba(16, 185, 129, 0.25), 0 12px 16px -6px rgba(16, 185, 129, 0.15);
-}
-
-/* Global Reset & Base */
+/* Global Reset */
 *, *::before, *::after {
   box-sizing: border-box;
-}
-
-html {
-  font-family: var(--font-body);
-  scroll-behavior: smooth;
-  font-size: 16px;
-  -webkit-font-smoothing: antialiased;
-}
-
-body {
-  background-color: var(--bg-app);
-  color: var(--text-main);
-  min-height: 100vh;
   margin: 0;
-  overflow-x: hidden;
-  transition: background-color 300ms ease, color 300ms ease;
+  padding: 0;
+}
+
+html, body {
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  background-color: #050508;
+  color: #ffffff;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -webkit-tap-highlight-color: transparent;
+  user-select: none;
+}
+
+/* Hide Scrollbars Everywhere */
+.no-scrollbar::-webkit-scrollbar {
+  display: none !important;
+}
+.no-scrollbar {
+  -ms-overflow-style: none !important;
+  scrollbar-width: none !important;
 }
 
 /* ==========================================================================
-   3D PERSPECTIVE & CARD FLIP STYLES
+   REELS FEED CONTAINER & SNAP SCROLLING
    ========================================================================== */
 
-/* 3D Scene Viewport */
-.card-scene-3d {
-  perspective: 1400px;
+.reels-viewport-container {
   width: 100%;
-}
-
-/* The Flipped Card Container */
-.card-3d-wrapper {
+  height: 100vh;
+  height: 100dvh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
   position: relative;
+  background: radial-gradient(circle at 50% 50%, #111827 0%, #030712 100%);
+}
+
+.reels-feed {
   width: 100%;
-  transition: transform 600ms cubic-bezier(0.2, 0.85, 0.4, 1.2), box-shadow 300ms ease;
-  transform-style: preserve-3d;
-  will-change: transform;
+  max-width: var(--reel-width);
+  height: 100vh;
+  height: 100dvh;
+  max-height: var(--reel-height);
+  overflow-y: scroll;
+  scroll-snap-type: y mandatory;
+  scroll-behavior: smooth;
+  position: relative;
+  background-color: var(--bg-dark);
+  box-shadow: 0 25px 60px -15px rgba(0, 0, 0, 0.9), 0 0 0 1px rgba(255, 255, 255, 0.1);
+  border-radius: 0;
 }
 
-/* When flipped to reveal anatomy and modifications */
-.card-3d-wrapper.is-flipped {
-  transform: rotateY(180deg);
+@media (min-width: 640px) {
+  .reels-feed {
+    border-radius: 36px;
+    height: 94vh;
+    border: 3px solid rgba(255, 255, 255, 0.12);
+  }
 }
 
-/* Front & Back Faces */
-.card-face {
-  backface-visibility: hidden;
-  -webkit-backface-visibility: hidden;
-  border-radius: var(--radius-card);
-  background: var(--bg-card);
-  border: 1px solid var(--border-subtle);
-  box-shadow: var(--shadow-card);
-  overflow: hidden;
+/* Individual Reel Slide */
+.reel-slide {
   width: 100%;
-}
-
-.card-face-back {
-  position: absolute;
-  inset: 0;
-  transform: rotateY(180deg);
+  height: 100vh;
+  height: 100dvh;
+  max-height: var(--reel-height);
+  scroll-snap-align: start;
+  scroll-snap-stop: always;
+  position: relative;
   display: flex;
   flex-direction: column;
-  overflow-y: auto;
+  justify-content: space-between;
+  overflow: hidden;
+  background-color: var(--bg-card);
 }
 
-/* 3D Dynamic Glare Overlay */
-.card-glare-effect {
+@media (min-width: 640px) {
+  .reel-slide {
+    height: 94vh;
+  }
+}
+
+/* Visual Stage / 3D Canvas in Background */
+.reel-canvas-stage {
   position: absolute;
   inset: 0;
-  pointer-events: none;
-  background: radial-gradient(circle at 50% 0%, rgba(255, 255, 255, 0.25) 0%, rgba(255, 255, 255, 0) 70%);
-  opacity: 0;
-  transition: opacity 250ms ease;
-  border-radius: var(--radius-card);
-  mix-blend-mode: overlay;
-  z-index: 10;
-}
-
-.card-scene-3d:hover .card-glare-effect {
-  opacity: 1;
-}
-
-/* ==========================================================================
-   INTERACTIVE 3D AVATAR CANVAS
-   ========================================================================== */
-
-.avatar-3d-container {
-  position: relative;
   width: 100%;
-  height: 290px;
-  background: linear-gradient(135deg, rgba(5, 150, 105, 0.08) 0%, rgba(2, 132, 199, 0.06) 100%);
-  border-radius: 20px;
-  overflow: hidden;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  cursor: grab;
+  height: 100%;
+  z-index: 1;
 }
 
-.avatar-3d-container:active {
-  cursor: grabbing;
-}
-
-#threejs-canvas {
+.reel-canvas-stage canvas {
   width: 100% !important;
   height: 100% !important;
   display: block;
 }
 
-/* 3D Canvas Controls Overlay */
-.avatar-controls-pill {
+/* Dark Ambient Gradient Overlays for Video/Reels Contrast */
+.reel-gradient-top {
   position: absolute;
-  bottom: 12px;
-  left: 50%;
-  transform: translateX(-50%);
-  background: rgba(15, 23, 42, 0.75);
-  backdrop-filter: blur(8px);
-  -webkit-backdrop-filter: blur(8px);
-  color: #ffffff;
-  padding: 6px 14px;
-  border-radius: 9999px;
-  font-size: 11px;
-  font-weight: 600;
-  letter-spacing: 0.5px;
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  pointer-events: auto;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 140px;
+  background: linear-gradient(180deg, rgba(0, 0, 0, 0.85) 0%, rgba(0, 0, 0, 0) 100%);
   z-index: 5;
+  pointer-events: none;
 }
 
-.avatar-angle-btn {
-  background: rgba(255, 255, 255, 0.15);
-  border: none;
-  color: #ffffff;
-  padding: 3px 8px;
-  border-radius: 6px;
-  cursor: pointer;
-  font-size: 11px;
-  transition: background 150ms ease;
+.reel-gradient-bottom {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 280px;
+  background: linear-gradient(0deg, rgba(0, 0, 0, 0.95) 0%, rgba(0, 0, 0, 0.7) 50%, rgba(0, 0, 0, 0) 100%);
+  z-index: 5;
+  pointer-events: none;
 }
 
-.avatar-angle-btn:hover {
+/* ==========================================================================
+   SEGMENTED STORY PROGRESS BAR (TOP)
+   ========================================================================== */
+
+.story-progress-container {
+  position: absolute;
+  top: 14px;
+  left: 14px;
+  right: 14px;
+  display: flex;
+  gap: 4px;
+  z-index: 30;
+}
+
+.story-progress-segment {
+  flex: 1;
+  height: 3px;
+  background: rgba(255, 255, 255, 0.28);
+  border-radius: 9999px;
+  overflow: hidden;
+  position: relative;
+}
+
+.story-progress-segment-fill {
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 100%;
+  width: 0%;
+  background: #ffffff;
+  border-radius: inherit;
+  transition: width 200ms linear;
+}
+
+.story-progress-segment.completed .story-progress-segment-fill {
+  width: 100%;
   background: var(--color-primary);
 }
 
 /* ==========================================================================
-   CIRCULAR PROGRESS TIMER & REP COUNTER
+   TOP REEL NAVIGATION BAR
    ========================================================================== */
 
-.timer-ring-container {
-  position: relative;
-  width: 160px;
-  height: 160px;
-  margin: 0 auto;
-}
-
-.timer-svg {
-  width: 100%;
-  height: 100%;
-  transform: rotate(-90deg);
-}
-
-.timer-track {
-  fill: none;
-  stroke: var(--border-subtle);
-  stroke-width: 8;
-}
-
-.timer-bar-animated {
-  fill: none;
-  stroke: var(--color-primary);
-  stroke-width: 8;
-  stroke-linecap: round;
-  transition: stroke-dashoffset 200ms linear;
-  filter: drop-shadow(0 0 8px rgba(5, 150, 105, 0.4));
-}
-
-.timer-inner-hud {
+.reel-top-bar {
   position: absolute;
-  inset: 0;
+  top: 26px;
+  left: 0;
+  right: 0;
+  padding: 0 16px;
   display: flex;
-  flex-direction: column;
   align-items: center;
-  justify-content: center;
+  justify-content: space-between;
+  z-index: 30;
 }
 
-.timer-time-val {
-  font-family: var(--font-heading);
-  font-size: 40px;
+.reel-brand-tag {
   font-weight: 800;
-  line-height: 1;
-  color: var(--text-main);
-  font-variant-numeric: tabular-nums;
-}
-
-.timer-unit-text {
-  font-size: 11px;
-  font-weight: 700;
-  text-transform: uppercase;
-  letter-spacing: 1.2px;
-  color: var(--text-muted);
-  margin-top: 4px;
-}
-
-/* Pulse Animation while Timer is Active */
-@keyframes timerPulse {
-  0% { transform: scale(1); }
-  50% { transform: scale(1.02); }
-  100% { transform: scale(1); }
-}
-
-.timer-active-running {
-  animation: timerPulse 2s infinite ease-in-out;
-}
-
-/* Rep Tap Stepper */
-.rep-tap-area {
-  position: relative;
-  width: 170px;
-  height: 170px;
-  border-radius: 50%;
-  background: linear-gradient(135deg, var(--color-primary-light), var(--bg-subtle));
-  border: 4px solid var(--color-primary);
+  font-size: 19px;
+  letter-spacing: -0.5px;
   display: flex;
-  flex-direction: column;
   align-items: center;
-  justify-content: center;
-  margin: 0 auto;
+  gap: 6px;
+  color: #ffffff;
+}
+
+.feed-tabs-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.feed-tab-btn {
+  font-size: 14px;
+  font-weight: 700;
+  color: rgba(255, 255, 255, 0.6);
+  background: none;
+  border: none;
+  padding: 4px 6px;
   cursor: pointer;
-  user-select: none;
-  transition: transform 150ms ease, box-shadow 150ms ease;
-  box-shadow: 0 10px 20px -5px rgba(5, 150, 105, 0.2);
+  transition: color 150ms ease;
+  position: relative;
 }
 
-.rep-tap-area:active {
-  transform: scale(0.95);
-  box-shadow: 0 5px 10px -3px rgba(5, 150, 105, 0.3);
+.feed-tab-btn.active {
+  color: #ffffff;
 }
 
-.rep-tap-count {
-  font-family: var(--font-heading);
-  font-size: 46px;
-  font-weight: 800;
-  line-height: 1;
-  color: var(--color-primary);
-}
-
-.rep-tap-sub {
-  font-size: 12px;
-  font-weight: 700;
-  text-transform: uppercase;
-  letter-spacing: 1px;
-  color: var(--text-muted);
-  margin-top: 4px;
+.feed-tab-btn.active::after {
+  content: "";
+  position: absolute;
+  bottom: -2px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 16px;
+  height: 2px;
+  background-color: var(--color-primary);
+  border-radius: 9999px;
 }
 
 /* ==========================================================================
-   CONFETTI & CELEBRATION EFFECTS
+   RIGHT ACTION RAIL (INSTAGRAM REELS STYLE)
    ========================================================================== */
 
-#celebration-canvas {
+.reel-action-rail {
+  position: absolute;
+  right: 12px;
+  bottom: 84px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
+  z-index: 25;
+}
+
+.reel-action-btn-wrap {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+}
+
+.reel-action-btn {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.14);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  color: #ffffff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: transform 180ms cubic-bezier(0.175, 0.885, 0.32, 1.275), background 180ms ease;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
+}
+
+.reel-action-btn:hover {
+  transform: scale(1.12);
+  background: rgba(255, 255, 255, 0.25);
+}
+
+.reel-action-btn:active {
+  transform: scale(0.92);
+}
+
+.reel-action-label {
+  font-size: 11px;
+  font-weight: 700;
+  color: rgba(255, 255, 255, 0.9);
+  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.8);
+}
+
+/* Heart Pop Animation */
+.reel-action-btn.is-liked {
+  color: var(--color-heart);
+  background: rgba(239, 68, 68, 0.25);
+  border-color: rgba(239, 68, 68, 0.5);
+  animation: heartPop 350ms cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+@keyframes heartPop {
+  0% { transform: scale(1); }
+  50% { transform: scale(1.35); }
+  100% { transform: scale(1); }
+}
+
+/* Big Play/Pause Start Button in Action Rail */
+.reel-play-btn {
+  width: 54px;
+  height: 54px;
+  background: var(--color-primary);
+  border-color: rgba(255, 255, 255, 0.4);
+  box-shadow: 0 0 20px var(--color-primary-glow);
+}
+
+.reel-play-btn:hover {
+  background: #059669;
+}
+
+/* Timer Circular Ring on Play Button */
+.play-btn-timer-ring {
+  position: absolute;
+  inset: -3px;
+  width: 60px;
+  height: 60px;
+  transform: rotate(-90deg);
+  pointer-events: none;
+}
+
+.play-btn-timer-ring circle {
+  fill: none;
+  stroke: var(--color-primary);
+  stroke-width: 3.5;
+  stroke-dasharray: 188.4;
+  stroke-dashoffset: 0;
+  transition: stroke-dashoffset 200ms linear;
+}
+
+/* ==========================================================================
+   BOTTOM OVERLAY (CAPTION, AUDIO TICKER & HUD)
+   ========================================================================== */
+
+.reel-bottom-overlay {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 68px; /* Leave space for action rail */
+  padding: 0 16px 20px;
+  z-index: 20;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.reel-badge-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 10px;
+  border-radius: 9999px;
+  background: rgba(16, 185, 129, 0.2);
+  border: 1px solid rgba(16, 185, 129, 0.4);
+  color: #34d399;
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  width: fit-content;
+}
+
+.reel-title-h1 {
+  font-size: 21px;
+  font-weight: 800;
+  letter-spacing: -0.5px;
+  line-height: 1.2;
+  color: #ffffff;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.reel-verified-badge {
+  color: #38bdf8;
+  display: inline-flex;
+}
+
+.reel-caption-text {
+  font-size: 13px;
+  line-height: 1.45;
+  color: rgba(255, 255, 255, 0.88);
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.8);
+}
+
+/* Audio Marquee Ticker */
+.reel-audio-ticker {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 12px;
+  font-weight: 600;
+  color: rgba(255, 255, 255, 0.8);
+}
+
+.reel-audio-disc {
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  border: 2px solid #ffffff;
+  background: radial-gradient(circle, #059669 30%, #0f172a 70%);
+  animation: spinDisc 3s linear infinite;
+}
+
+@keyframes spinDisc {
+  100% { transform: rotate(360deg); }
+}
+
+/* Timer / Reps HUD Pill */
+.reel-hud-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 14px;
+  background: rgba(0, 0, 0, 0.65);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  border-radius: 12px;
+  font-size: 13px;
+  font-weight: 700;
+  width: fit-content;
+  color: #ffffff;
+}
+
+/* ==========================================================================
+   BOTTOM SHEETS (INFO & STATS DRAWERS)
+   ========================================================================== */
+
+.bottom-sheet-backdrop {
+  position: absolute;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.7);
+  backdrop-filter: blur(6px);
+  z-index: 50;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 250ms ease;
+}
+
+.bottom-sheet-backdrop.open {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.bottom-sheet {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: #111827;
+  border-top: 1px solid rgba(255, 255, 255, 0.15);
+  border-radius: 28px 28px 0 0;
+  padding: 24px 20px 32px;
+  z-index: 60;
+  transform: translateY(100%);
+  transition: transform 300ms cubic-bezier(0.2, 0.85, 0.4, 1.15);
+  max-height: 80vh;
+  overflow-y: auto;
+}
+
+.bottom-sheet.open {
+  transform: translateY(0);
+}
+
+.sheet-drag-handle {
+  width: 44px;
+  height: 4px;
+  border-radius: 9999px;
+  background: rgba(255, 255, 255, 0.3);
+  margin: 0 auto 16px;
+}
+
+/* ==========================================================================
+   DESKTOP FLOATING SIDEBAR / CONTROLS
+   ========================================================================== */
+
+.desktop-nav-floater {
+  display: none;
+  position: absolute;
+  right: calc(50% - var(--reel-width) / 2 - 80px);
+  top: 50%;
+  transform: translateY(-50%);
+  flex-direction: column;
+  gap: 12px;
+  z-index: 40;
+}
+
+@media (min-width: 900px) {
+  .desktop-nav-floater {
+    display: flex;
+  }
+}
+
+.desktop-nav-btn {
+  width: 46px;
+  height: 46px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.12);
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  color: #ffffff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 180ms ease;
+}
+
+.desktop-nav-btn:hover {
+  background: var(--color-primary);
+  transform: scale(1.1);
+}
+
+/* ==========================================================================
+   3D CONFETTI & TOAST
+   ========================================================================== */
+
+#confetti-canvas {
   position: fixed;
   inset: 0;
   width: 100vw;
@@ -323,167 +539,26 @@ body {
   z-index: 9999;
 }
 
-/* ==========================================================================
-   BADGES, BUTTONS & MICRO-INTERACTIONS
-   ========================================================================== */
-
-.badge-gentle {
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-  padding: 4px 12px;
+.toast-pill {
+  position: absolute;
+  top: 70px;
+  left: 50%;
+  transform: translateX(-50%) translateY(-20px);
+  background: rgba(16, 185, 129, 0.95);
+  backdrop-filter: blur(8px);
+  color: #ffffff;
+  padding: 8px 18px;
   border-radius: 9999px;
-  font-size: 12px;
+  font-size: 13px;
   font-weight: 700;
-  letter-spacing: 0.3px;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.4);
+  opacity: 0;
+  pointer-events: none;
+  transition: all 250ms cubic-bezier(0.2, 0.85, 0.4, 1.2);
+  z-index: 100;
 }
 
-.badge-seated {
-  background: #ecfdf5;
-  color: #059669;
-  border: 1px solid #a7f3d0;
-}
-
-[data-theme="dark"] .badge-seated {
-  background: rgba(5, 150, 105, 0.2);
-  color: #34d399;
-  border-color: rgba(5, 150, 105, 0.4);
-}
-
-.badge-standing {
-  background: #eff6ff;
-  color: #0284c7;
-  border: 1px solid #bfdbfe;
-}
-
-[data-theme="dark"] .badge-standing {
-  background: rgba(2, 132, 199, 0.2);
-  color: #38bdf8;
-  border-color: rgba(2, 132, 199, 0.4);
-}
-
-.badge-breath {
-  background: #faf5ff;
-  color: #9333ea;
-  border: 1px solid #e9d5ff;
-}
-
-[data-theme="dark"] .badge-breath {
-  background: rgba(147, 51, 234, 0.2);
-  color: #c084fc;
-  border-color: rgba(147, 51, 234, 0.4);
-}
-
-/* Accessible High Contrast Mode */
-body.high-contrast {
-  --bg-app: #000000;
-  --bg-card: #0a0a0a;
-  --bg-subtle: #171717;
-  --text-main: #ffffff;
-  --text-muted: #e5e5e5;
-  --border-subtle: #ffffff;
-  --color-primary: #00ff66;
-  --color-primary-hover: #33ff85;
-}
-
-body.high-contrast button,
-body.high-contrast .card-face,
-body.high-contrast .timer-bar-animated {
-  border-width: 2px !important;
-}
-
-/* Accessible Jumbo Text Mode */
-body.jumbo-text {
-  font-size: 19px;
-}
-
-body.jumbo-text h1 { font-size: 2.4rem !important; }
-body.jumbo-text h2 { font-size: 2.1rem !important; }
-body.jumbo-text h3 { font-size: 1.7rem !important; }
-body.jumbo-text p, body.jumbo-text li { font-size: 1.25rem !important; line-height: 1.7 !important; }
-
-/* Reduced Motion Mode */
-@media (prefers-reduced-motion: reduce) {
-  *, *::before, *::after {
-    animation-duration: 0.001ms !important;
-    animation-iteration-count: 1 !important;
-    transition-duration: 0.001ms !important;
-    scroll-behavior: auto !important;
-  }
-}
-
-body.reduced-motion *,
-body.reduced-motion *::before,
-body.reduced-motion *::after {
-  animation-duration: 0.001ms !important;
-  animation-iteration-count: 1 !important;
-  transition-duration: 0.001ms !important;
-  scroll-behavior: auto !important;
-}
-
-/* ==========================================================================
-   SWIPE DRAG ANIMATION CLASSES
-   ========================================================================== */
-
-.swipe-card-dragging {
-  cursor: grabbing !important;
-  transition: none !important;
-}
-
-.swipe-exit-left {
-  animation: swipeOutLeft 350ms cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
-}
-
-.swipe-exit-right {
-  animation: swipeOutRight 350ms cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
-}
-
-.swipe-enter-card {
-  animation: swipeInNew 350ms cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
-}
-
-@keyframes swipeOutLeft {
-  to {
-    transform: translate3d(-120%, 0, 0) rotateZ(-18deg);
-    opacity: 0;
-  }
-}
-
-@keyframes swipeOutRight {
-  to {
-    transform: translate3d(120%, 0, 0) rotateZ(18deg);
-    opacity: 0;
-  }
-}
-
-@keyframes swipeInNew {
-  from {
-    transform: scale(0.92) translate3d(0, 20px, 0);
-    opacity: 0;
-  }
-  to {
-    transform: scale(1) translate3d(0, 0, 0);
-    opacity: 1;
-  }
-}
-
-/* ==========================================================================
-   CUSTOM SCROLLBAR
-   ========================================================================== */
-::-webkit-scrollbar {
-  width: 8px;
-  height: 8px;
-}
-
-::-webkit-scrollbar-track {
-  background: var(--bg-app);
-}
-
-::-webkit-scrollbar-thumb {
-  background: var(--border-subtle);
-  border-radius: 4px;
-}
-
-::-webkit-scrollbar-thumb:hover {
-  background: var(--text-muted);
+.toast-pill.show {
+  opacity: 1;
+  transform: translateX(-50%) translateY(0);
 }

@@ -1,79 +1,76 @@
-# FitFeed — Accessible Low-Impact Movement Feed
+# FitFeed — Instagram Reels for Accessible Movement 📱🌿
 
-**Congressional App Challenge Project**  
-*Built by Naihrit & Co-Developer*
+**Congressional App Challenge 2026 Submission**  
+*Created by Naihrit & Co-Developer*
 
-FitFeed is a responsive, accessible, low-impact interactive fitness application designed specifically for **beginners, elderly individuals, or people with high BMI** who need simple, gentle exercise routines presented in a fun, swipeable card feed.
-
----
-
-## 🏛️ Congressional App Challenge Focus
-
-- **Community Problem:** Over 40% of American adults and 70% of seniors struggle with traditional fitness applications that feature high-impact jumping, floor exercises (difficult to get up from), or intimidating gym workouts.
-- **Our Solution:** FitFeed delivers 100% chair-friendly, zero-joint-pounding, and wall-supported movements. Designed with high contrast, large typography, body-positive messaging, an interactive 3D movement avatar, and a gentle voice coach.
+FitFeed reimagines daily physical activity by bringing the intuitive, engaging, vertical swipeable format of **Instagram Reels / TikTok** to **seniors, beginners, and individuals with high BMI** who need low-impact, joint-friendly gentle exercises.
 
 ---
 
-## ✨ Key Features
+## 🏛️ The Congressional App Challenge Vision
 
-### 1. 🎴 Swipeable 3D Card Feed View
-- **One Movement at a Time:** Clean card interface displaying one low-impact exercise at a time with clear visual focus.
-- **Interactive 3D Physics:** Smooth mouse-tilt glare, 3D perspective, and touch swipe gestures (swipe left for Next, swipe right for Previous).
-- **3D Card Flip (Anatomy & Adaptations):** Flip the card in 3D to reveal muscle group targeting, wheelchair accommodations, and safety pointers.
+Traditional fitness apps often fail beginners, older adults, and individuals with joint pain:
+- They assume high baseline mobility (burpees, jumping jacks, floor exercises).
+- Getting on and off the floor is a dangerous fall risk for seniors and uncomfortable for high BMI individuals.
+- Complex dashboards with dozens of intimidating metrics cause overwhelm.
+
+**FitFeed solves this** by packaging 100% chair-friendly, zero-knee-pounding movements into a clean, modern, addictive vertical reel format. Just swipe up or down to find your next gentle move!
+
+---
+
+## 🌟 Key Features
+
+### 1. 📱 Instagram Reels / TikTok Style Vertical Feed
+- **Vertical Snap Scrolling (`scroll-snap-type: y mandatory`):** Each exercise fills the screen like an Instagram Reel. Smoothly swipe up/down on touch screens, or use mouse wheel / Up-Down arrow keys on desktop.
+- **Top Segmented Story Progress Bar:** Displays your progress through today's reel queue, with live filling progress bars as you complete exercises.
+- **Classic Right Action Rail:**
+  - **Start / Timer Button:** Displays animated circular countdown ring with live pause/resume.
+  - **Heart / Like Button:** Save favorite moves with heart-pop animation and live community-style like counter.
+  - **Tap Rep Stepper:** Tap `+1` button with subtle haptic feedback for rep-based exercises.
+  - **Info Sheet (ⓘ):** Opens slide-up drawer with anatomical target muscles, senior adaptations, and wheelchair tips.
+  - **Voice Coach Audio Toggle:** Hands-free speech cues.
 
 ### 2. 🤖 Interactive 3D Human Movement Avatar (Three.js)
-- **Real-Time 3D Kinematics:** A sleek, stylized 3D avatar demonstrates each movement in real-time (arm swings, chair marches, cat-cow waves, wall push-ups, breathing pulse).
-- **Interactive 360° Camera:** Click and drag on the 3D viewport to inspect the exercise posture from any angle, or use the quick "Front" and "Side" angle buttons.
-- **Graceful Fallback:** If WebGL or Three.js is unavailable, an animated 2D vector skeleton canvas seamlessly takes over.
+- **Real-Time Kinematics:** Each reel features an active 3D mannequin demonstrating the exact exercise posture and joint cadence (smooth arm swings, spine waves, seated marches, wall pushes, breathing diaphragm expansion).
+- **Interactive 360° Inspection:** Drag directly across the screen to rotate the 3D model and observe movement form from any angle.
 
-### 3. ⏱️ Interactive Timer & Tap Rep Stepper
-- **Circular Countdown Timer:** High-visibility animated progress ring with start, pause, resume, and quick `+15s` / `−15s` adjustments.
-- **Interactive Tap Rep Counter:** Large, satisfying tap-to-count stepper with subtle haptic vibration for rep-based exercises.
-
-### 4. 🗣️ Accessible Voice Coach (Web Speech API)
-- Real-time vocal encouragement for seniors or visually impaired users:
+### 3. 🗣️ Accessible Voice Coach (Web Speech API)
+- Real-time spoken audio guidance:
   - Movement announcements ("Starting Seated Arm Swings...")
   - Halfway motivation check-ins
-  - 10-second countdown cues
-  - Celebration feedback upon completion
+  - Celebratory completion cues
 
-### 5. 📊 Progress Tracker & Gamification
-- **Metrics Dashboard:** Tracks total exercises completed, gentle calorie burn (calculated using scientifically validated MET values), FitPoints earned, and consistency streak.
-- **3D Confetti Celebration:** Interactive tumbling 3D particle explosion upon exercise completion.
-- **Daily Target Ring:** Visual daily check-in (3 moves per day).
-- **Local-First Privacy:** All progress is stored exclusively in the browser (`localStorage`). No accounts, no data collection.
-
-### 6. ♿ Accessible UI/UX
-- **WCAG AAA High-Contrast Mode:** High-contrast toggle for low-vision users.
-- **Jumbo Font Scaler:** Instant toggle for extra-large readable fonts.
-- **Keyboard Shortcuts:** `Space` (Start/Count Rep), `←`/`→` (Previous/Next), `F` (Flip 3D Card).
-- **Seated-Only Filter:** Instantly filter out standing exercises for zero knee impact.
+### 4. 📊 Health Metrics & Gamification Drawer
+- **Gentle Calorie Burn:** Calculated using clinically recognized MET (Metabolic Equivalent of Task) values for gentle seated and wall-supported physical activity.
+- **FitPoints:** Consistency rewards (+50 pts per completed move).
+- **Daily Streak:** Tracks consecutive active days.
+- **3D Confetti Burst:** Full-screen tumbling 3D particle explosion when an exercise is completed.
 
 ---
 
-## 📂 File Architecture
+## 📁 Project Architecture
 
 ```
 FitFeed/
-├── index.html       # Layout, semantic landmarks, Tailwind CDN & Three.js CDN
-├── styles.css       # 3D perspective, card flips, timer animations & high-contrast themes
-├── script.js        # Core logic, 3D avatar engine, voice coach, timer & state tracking
-└── README.md        # Documentation and Congressional App Challenge guide
+├── index.html       # Reels feed markup, story bar, bottom sheets, Tailwind & Three.js CDN
+├── styles.css       # Reels snap-scroll physics, action rail glassmorphism, timer SVG & sheets
+├── script.js        # Reels observer, Three.js 3D avatar, timer, tap stepper, voice coach & state
+└── README.md        # Project overview and Congressional App Challenge documentation
 ```
 
 ---
 
 ## 🚀 How to Run & Test Locally
 
-No build tools, package managers, or compilation steps required:
-
-1. Clone or extract this folder into VS Code.
-2. Open `index.html` directly in any web browser, or right-click `index.html` and select **"Open with Live Server"**.
-3. Alternatively, run using Python:
-   ```bash
-   python -m http.server 8000
-   ```
-4. Test keyboard shortcuts, 3D avatar drag-to-rotate, swipe gestures, voice coaching, and timer completions!
+1. Clone or download this repository.
+2. Open the folder in VS Code.
+3. Open `index.html` directly in any web browser, or use VS Code's **Live Server** extension.
+4. **Keyboard Shortcuts to Try:**
+   - `↓` / `↑` : Scroll to next / previous exercise reel
+   - `Space` : Start / pause timer or count repetition
+   - `M` : Toggle voice coach audio
+   - `I` : Open / close anatomy & modifications drawer
+   - `Esc` : Close bottom sheets
 
 ---
 
@@ -81,8 +78,8 @@ No build tools, package managers, or compilation steps required:
 
 FitFeed is 100% static and zero-configuration:
 
-1. Push this repository to GitHub: `git push origin main`
-2. Go to [vercel.com](https://vercel.com) and click **"Add New Project"**.
-3. Import the `FitFeed` repository.
-4. Leave all build settings as default (Framework Preset: **Other**, Root Directory: `./`).
-5. Click **Deploy** — your application will be live in seconds with a custom HTTPS URL for the Congressional App Challenge submission!
+1. Push to GitHub: `git push origin main`
+2. Open [vercel.com](https://vercel.com) and click **"Add New Project"**.
+3. Import your **`sdatta25/FitFeed`** repository.
+4. Keep default settings (Framework Preset: **Other**, Root Directory: `./`).
+5. Click **Deploy** — your live HTTPS URL will be ready in under 30 seconds!
