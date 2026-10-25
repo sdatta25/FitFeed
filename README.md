@@ -1,7 +1,8 @@
 # FitFeed — Instagram Reels for Accessible Movement 📱🌿
 
 **Congressional App Challenge 2026 Submission**  
-*Created by Naihrit & Co-Developer*
+*Created by Naihrit & Co-Developer*  
+🌐 **Live Application:** [https://fitfeedatlanta.vercel.app](https://fitfeedatlanta.vercel.app)
 
 FitFeed reimagines daily physical activity by bringing the intuitive, engaging, vertical swipeable format of **Instagram Reels / TikTok** to **seniors, beginners, and individuals with high BMI** who need low-impact, joint-friendly gentle exercises.
 
