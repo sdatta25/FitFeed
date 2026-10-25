@@ -1,0 +1,626 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#059669">
+  <meta name="description" content="FitFeed — Accessible, joint-friendly gentle movement, desk mobility, and mindful breathing breaks for everyday life.">
+  <title>FitFeed — Accessible Movement & Mindful Breaks</title>
+  
+  <!-- Modern Font Stack -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400&family=Manrope:wght@600;700;800&display=swap" rel="stylesheet">
+  
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <!-- Keyboard Accessible Skip Link -->
+  <a class="skip-link" href="#main-content">Skip to main content</a>
+
+  <div class="app-container">
+    <!-- Sidebar Navigation -->
+    <aside id="app-sidebar" class="app-sidebar" aria-label="Main Navigation">
+      <div class="sidebar-header">
+        <a class="brand-link" href="#" aria-label="FitFeed Homepage">
+          <div class="brand-icon-box" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M18 10h-1.26A8 8 0 1 0 9 20h9a5 5 0 0 0 0-10z"/>
+              <polyline points="12 6 12 12 16 14"/>
+            </svg>
+          </div>
+          <div class="brand-text-wrap">
+            <span class="brand-title">FitFeed</span>
+            <span class="brand-tagline">Movement & Care</span>
+          </div>
+        </a>
+      </div>
+
+      <div class="sidebar-nav-section">
+        <div class="nav-section-title">Navigation</div>
+        <ul class="nav-list" role="navigation">
+          <li>
+            <button class="nav-tab-btn active" data-view="workout" type="button">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <circle cx="12" cy="12" r="10"/>
+                <polygon points="10 8 16 12 10 16 10 8"/>
+              </svg>
+              <span>Workout Feed</span>
+            </button>
+          </li>
+          <li>
+            <button class="nav-tab-btn" data-view="library" type="button">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <rect x="3" y="3" width="7" height="7"/>
+                <rect x="14" y="3" width="7" height="7"/>
+                <rect x="14" y="14" width="7" height="7"/>
+                <rect x="3" y="14" width="7" height="7"/>
+              </svg>
+              <span>Exercise Library</span>
+              <span class="nav-badge">16</span>
+            </button>
+          </li>
+          <li>
+            <button class="nav-tab-btn" data-view="routines" type="button">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/>
+                <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/>
+              </svg>
+              <span>Guided Routines</span>
+            </button>
+          </li>
+          <li>
+            <button class="nav-tab-btn" data-view="analytics" type="button">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <line x1="18" y1="20" x2="18" y2="10"/>
+                <line x1="12" y1="20" x2="12" y2="4"/>
+                <line x1="6" y1="20" x2="6" y2="14"/>
+              </svg>
+              <span>Activity & Stats</span>
+            </button>
+          </li>
+        </ul>
+      </div>
+
+      <div class="sidebar-footer">
+        <div class="sidebar-quick-card">
+          <div class="quick-card-header">
+            <span class="quick-card-label">Recommended</span>
+            <span class="badge badge-emerald">5 min</span>
+          </div>
+          <h4 class="quick-card-title">Desk Worker Reset</h4>
+          <p class="quick-card-desc">Quick 4-step sequence to relieve neck and wrist stiffness.</p>
+          <button class="quick-card-btn" id="sidebar-quick-routine-btn" type="button" onclick="window.app && window.app.startRoutine('desk-worker-reset')">
+            <svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+            Start Routine
+          </button>
+        </div>
+      </div>
+    </aside>
+
+    <!-- Main Content Area -->
+    <main id="main-content" class="app-main">
+      <!-- Top Application Bar -->
+      <header class="app-topbar">
+        <button id="mobile-menu-toggle" class="mobile-menu-toggle" type="button" aria-label="Toggle Navigation Menu">
+          <svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <line x1="3" y1="12" x2="21" y2="12"/>
+            <line x1="3" y1="6" x2="21" y2="6"/>
+            <line x1="3" y1="18" x2="21" y2="18"/>
+          </svg>
+        </button>
+
+        <div class="topbar-status">
+          <div class="status-pill">
+            <span class="status-indicator-dot" aria-hidden="true"></span>
+            <span id="topbar-today-pill">Today</span>
+          </div>
+        </div>
+
+        <div class="topbar-actions">
+          <button id="theme-toggle-btn" class="action-btn-icon" type="button" aria-label="Toggle Dark/Light Mode" title="Toggle Theme">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <circle cx="12" cy="12" r="5"/>
+              <line x1="12" y1="1" x2="12" y2="3"/>
+              <line x1="12" y1="21" x2="12" y2="23"/>
+              <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/>
+              <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/>
+              <line x1="1" y1="12" x2="3" y2="12"/>
+              <line x1="21" y1="12" x2="23" y2="12"/>
+              <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/>
+              <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/>
+            </svg>
+          </button>
+          <button id="sound-toggle-btn" class="action-btn-icon active" type="button" aria-label="Toggle Sound Effects" title="Completion Sound">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M11 5L6 9H2v6h4l5 4V5z"/>
+              <path d="M15.54 8.46a5 5 0 0 1 0 7.07"/>
+              <path d="M19.07 4.93a10 10 0 0 1 0 14.14"/>
+            </svg>
+          </button>
+          <button id="shortcuts-modal-btn" class="action-btn-icon" type="button" aria-label="Keyboard Shortcuts" title="Keyboard Shortcuts (?)">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <circle cx="12" cy="12" r="10"/>
+              <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/>
+              <line x1="12" y1="17" x2="12.01" y2="17"/>
+            </svg>
+          </button>
+          <button id="settings-modal-btn" class="action-btn-icon" type="button" aria-label="Preferences and Accessibility Settings" title="Settings">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <circle cx="12" cy="12" r="3"/>
+              <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/>
+            </svg>
+          </button>
+        </div>
+      </header>
+
+      <!-- Viewport Shell -->
+      <div class="page-viewport">
+        <!-- ==================================================================
+             VIEW 1: WORKOUT FEED PLAYER
+             ================================================================== -->
+        <section id="view-workout" class="tab-view active" aria-labelledby="view-workout-title">
+          <!-- Active Routine Progress Banner (Dynamic) -->
+          <div id="active-routine-banner" class="active-routine-banner hidden">
+            <div class="active-routine-info">
+              <div class="routine-icon-circle">
+                <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+              </div>
+              <div>
+                <h4 id="routine-banner-title" class="routine-banner-title">Active Routine</h4>
+                <span id="routine-banner-step" class="routine-banner-step">Step 1 of 4</span>
+              </div>
+            </div>
+            <button id="routine-end-btn" class="routine-end-btn" type="button">Exit Routine</button>
+          </div>
+
+          <div class="workout-grid">
+            <!-- Left Main Movement Card -->
+            <div class="workout-primary-column">
+              <article class="exercise-main-card">
+                <!-- Visual Header Banner -->
+                <div id="exercise-banner" class="exercise-visual-banner">
+                  <div class="exercise-icon-stage">
+                    <div id="exercise-icon-slot" class="movement-icon-container" aria-hidden="true">
+                      <!-- SVG icon injected dynamically -->
+                    </div>
+                    <div class="movement-meta-tags">
+                      <div class="meta-badges-row">
+                        <span id="exercise-category-badge" class="badge badge-emerald">Desk & Seated</span>
+                        <span id="exercise-level-badge" class="badge badge-outline">Gentle</span>
+                        <span id="exercise-equip-badge" class="badge badge-outline">Chair</span>
+                      </div>
+                      <span class="muscle-target-text">Focus: <strong id="exercise-muscle-target">Shoulders & Upper Back</strong></span>
+                    </div>
+                  </div>
+
+                  <div class="banner-right-actions">
+                    <button id="exercise-favorite-btn" class="favorite-btn" type="button" aria-label="Save to favorites">
+                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z"/>
+                      </svg>
+                    </button>
+                  </div>
+                </div>
+
+                <!-- Exercise Content & Instructions -->
+                <div class="exercise-body">
+                  <div class="exercise-title-area">
+                    <h2 id="exercise-title" class="exercise-title">Seated Arm Swings</h2>
+                    <p id="exercise-desc" class="exercise-description">A soft rhythmic motion to release shoulder tension and stimulate upper body circulation.</p>
+                  </div>
+
+                  <!-- Step-by-Step Instructions Panel -->
+                  <div class="instruction-panel">
+                    <div class="panel-header-mini">
+                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>
+                      <span>Movement Checkpoints</span>
+                    </div>
+                    <ol id="exercise-instructions-list" class="instructions-steps-list">
+                      <!-- List items injected -->
+                    </ol>
+
+                    <div class="coaching-note">
+                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>
+                      <span id="exercise-coaching-text">Keep your movement pain-free and breathe naturally.</span>
+                    </div>
+                  </div>
+
+                  <!-- Interactive Controller -->
+                  <div class="session-controller-box">
+                    <!-- Timer Mode Wrap -->
+                    <div id="timer-interactive-wrapper" class="timer-interactive-wrapper">
+                      <svg class="timer-svg-ring" viewBox="0 0 120 120">
+                        <circle class="timer-ring-bg" cx="60" cy="60" r="52"></circle>
+                        <circle id="timer-ring-active" class="timer-ring-active" cx="60" cy="60" r="52"></circle>
+                      </svg>
+                      <div class="timer-inner-content">
+                        <span id="timer-time-display" class="timer-time-display">30</span>
+                        <span class="timer-unit-label">Seconds</span>
+                      </div>
+                    </div>
+
+                    <!-- Rep Stepper Mode Wrap -->
+                    <div id="reps-interactive-wrapper" class="reps-interactive-wrapper hidden">
+                      <div id="reps-count-display" class="rep-display-huge">0</div>
+                      <div id="reps-target-text" class="rep-target-label">Target: 10 reps</div>
+                      <div class="rep-controls-row">
+                        <button id="rep-decrement-btn" class="rep-stepper-btn" type="button" aria-label="Decrement rep">−</button>
+                        <button id="rep-increment-btn" class="rep-stepper-btn increment-btn" type="button">
+                          <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+                          Count Rep
+                        </button>
+                      </div>
+                    </div>
+
+                    <!-- Timer Quick Nudges -->
+                    <div id="timer-nudge-row" class="timer-nudge-row">
+                      <button id="nudge-minus-btn" class="nudge-btn" type="button">−15s</button>
+                      <button id="nudge-plus-btn" class="nudge-btn" type="button">+15s</button>
+                    </div>
+
+                    <!-- Player Primary Actions -->
+                    <div class="player-actions-row">
+                      <button id="player-primary-btn" class="btn-primary" type="button">
+                        <svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+                        Start Timer
+                      </button>
+                      <button id="player-reset-btn" class="btn-secondary" type="button">
+                        <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"><polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 1 0 2.13-9.36L1 10"/></svg>
+                        Reset
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              </article>
+
+              <!-- Feed Navigation Bar -->
+              <div class="feed-nav-bar">
+                <button id="feed-prev-btn" class="feed-nav-btn" type="button">
+                  <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"><polyline points="15 18 9 12 15 6"/></svg>
+                  <span>Previous</span>
+                </button>
+                <div id="feed-dots-track" class="feed-dots-track" aria-label="Exercise selector">
+                  <!-- Dots injected dynamically -->
+                </div>
+                <button id="feed-next-btn" class="feed-nav-btn" type="button">
+                  <span>Next Movement</span>
+                  <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"/></svg>
+                </button>
+              </div>
+            </div>
+
+            <!-- Right Side Widgets Column -->
+            <div class="workout-side-panel">
+              <!-- Daily Goal Tracker Widget -->
+              <div class="widget-card">
+                <div class="widget-title-row">
+                  <h3 class="widget-title">Daily Activity Goal</h3>
+                  <span id="goal-percent-text" class="widget-badge">0%</span>
+                </div>
+                <div class="progress-container-box">
+                  <div class="progress-labels-row">
+                    <span id="goal-caption-text">0 of 3 completed today</span>
+                  </div>
+                  <div class="progress-track-bg">
+                    <div id="goal-bar-fill" class="progress-track-fill" style="width: 0%;"></div>
+                  </div>
+                </div>
+                <p class="widget-helper-note">Every short movement break counts toward sustained energy and joint health.</p>
+              </div>
+
+              <!-- Ergonomics / Safety Card -->
+              <div class="widget-card">
+                <div class="widget-title-row">
+                  <h3 class="widget-title">Ergonomic Tip</h3>
+                  <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="var(--accent-primary)" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4"/><path d="M12 8h.01"/></svg>
+                </div>
+                <p class="widget-helper-note" style="margin-bottom: 8px;"><strong>Micro-breaks matter:</strong> Standing or gently stretching for just 60 seconds every 45 minutes reduces spinal compression and resets mental focus.</p>
+                <span class="badge badge-emerald">Evidence-backed</span>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- ==================================================================
+             VIEW 2: EXERCISE LIBRARY
+             ================================================================== -->
+        <section id="view-library" class="tab-view" aria-labelledby="view-library-title">
+          <div class="view-header">
+            <div class="view-header-content">
+              <h1 id="view-library-title">Movement Library</h1>
+              <p>Explore all 16 gentle exercises, filtered by focus area or equipment.</p>
+            </div>
+          </div>
+
+          <div class="library-controls-bar">
+            <div class="search-box-wrapper">
+              <svg class="search-icon-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+              <input id="library-search-input" class="search-input" type="search" placeholder="Search exercises, target muscles, or focus..." aria-label="Search exercises">
+            </div>
+
+            <div class="category-filter-chips">
+              <button class="filter-chip active" data-filter="all" type="button">All Movements</button>
+              <button class="filter-chip" data-filter="seated" type="button">Seated Only</button>
+              <button class="filter-chip" data-filter="mobility" type="button">Mobility & Spine</button>
+              <button class="filter-chip" data-filter="strength" type="button">Supported Strength</button>
+              <button class="filter-chip" data-filter="breathwork" type="button">Breathwork</button>
+            </div>
+          </div>
+
+          <div id="library-cards-grid" class="library-grid">
+            <!-- Injected via JavaScript -->
+          </div>
+        </section>
+
+        <!-- ==================================================================
+             VIEW 3: GUIDED ROUTINES
+             ================================================================== -->
+        <section id="view-routines" class="tab-view" aria-labelledby="view-routines-title">
+          <div class="view-header">
+            <div class="view-header-content">
+              <h1 id="view-routines-title">Guided Movement Routines</h1>
+              <p>Curated sequences structured to address specific workday and daily needs.</p>
+            </div>
+          </div>
+
+          <div id="routines-cards-grid" class="routines-grid">
+            <!-- Injected via JavaScript -->
+          </div>
+        </section>
+
+        <!-- ==================================================================
+             VIEW 4: ACTIVITY & ANALYTICS
+             ================================================================== -->
+        <section id="view-analytics" class="tab-view" aria-labelledby="view-analytics-title">
+          <div class="view-header">
+            <div class="view-header-content">
+              <h1 id="view-analytics-title">Activity & Progress</h1>
+              <p>Personalized movement metrics stored privately on your local browser.</p>
+            </div>
+          </div>
+
+          <!-- Top Stats Row -->
+          <div class="analytics-metrics-grid">
+            <div class="stat-tile">
+              <div class="stat-tile-header">
+                <span class="stat-tile-label">Current Streak</span>
+                <div class="stat-tile-icon">
+                  <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg>
+                </div>
+              </div>
+              <div id="metric-streak-count" class="stat-tile-number">0</div>
+              <span class="stat-tile-subtext">Consecutive active days</span>
+            </div>
+
+            <div class="stat-tile">
+              <div class="stat-tile-header">
+                <span class="stat-tile-label">Total Activities</span>
+                <div class="stat-tile-icon">
+                  <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>
+                </div>
+              </div>
+              <div id="metric-total-sessions" class="stat-tile-number">0</div>
+              <span class="stat-tile-subtext">Completed movement blocks</span>
+            </div>
+
+            <div class="stat-tile">
+              <div class="stat-tile-header">
+                <span class="stat-tile-label">Movement Time</span>
+                <div class="stat-tile-icon">
+                  <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+                </div>
+              </div>
+              <div id="metric-total-minutes" class="stat-tile-number">0</div>
+              <span class="stat-tile-subtext">Estimated total minutes</span>
+            </div>
+
+            <div class="stat-tile">
+              <div class="stat-tile-header">
+                <span class="stat-tile-label">This Week</span>
+                <div class="stat-tile-icon">
+                  <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+                </div>
+              </div>
+              <div id="metric-this-week" class="stat-tile-number">0</div>
+              <span class="stat-tile-subtext">Activities completed</span>
+            </div>
+          </div>
+
+          <!-- 7-Day Chart & Activity Feed Split -->
+          <div class="analytics-split-grid">
+            <!-- 7-Day Chart -->
+            <div class="chart-card">
+              <div class="chart-header-row">
+                <h3 class="chart-title">7-Day Activity Trend</h3>
+                <span class="badge badge-emerald">Current Week</span>
+              </div>
+              <div id="chart-bars-wrap" class="chart-bars-wrap">
+                <!-- Bars dynamically rendered -->
+              </div>
+              <p class="chart-foot-note">Daily completions reset each week. Consistent short breaks yield the greatest physical benefits.</p>
+            </div>
+
+            <!-- History Feed -->
+            <div class="history-card">
+              <div class="history-header-row">
+                <h3 class="chart-title">Recent Activity</h3>
+                <span class="badge badge-outline">History Log</span>
+              </div>
+              <ul id="history-list-items" class="history-list">
+                <!-- History list items rendered dynamically -->
+              </ul>
+
+              <!-- Data Portability Actions -->
+              <div class="data-actions-row">
+                <button id="export-data-btn" class="btn-ghost-sm" type="button">Export JSON</button>
+                <button id="import-data-trigger" class="btn-ghost-sm" type="button">Import Backup</button>
+                <input id="import-data-file" type="file" accept=".json" class="hidden">
+                <button id="reset-data-btn" class="btn-ghost-sm danger-hover" type="button" style="margin-left: auto;">Reset History</button>
+              </div>
+            </div>
+          </div>
+        </section>
+      </div>
+    </main>
+  </div>
+
+  <!-- ========================================================================
+       ACCESSIBILITY & PREFERENCES MODAL
+       ======================================================================== -->
+  <dialog id="settings-modal" class="modal-overlay" aria-labelledby="settings-dialog-title">
+    <div class="modal-content-wrap">
+      <div class="modal-header-row">
+        <h2 id="settings-dialog-title" class="modal-title">Preferences & Accessibility</h2>
+        <button class="modal-close-btn" type="button" onclick="document.getElementById('settings-modal').close()" aria-label="Close dialog">✕</button>
+      </div>
+
+      <form id="settings-form">
+        <div class="settings-list-group">
+          <!-- Theme -->
+          <div class="setting-item-row">
+            <div class="setting-label-col">
+              <strong>Interface Theme</strong>
+              <small>Choose visual theme preference.</small>
+            </div>
+            <select id="setting-theme-select" class="select-control">
+              <option value="system">Auto (System)</option>
+              <option value="light">Light Mode</option>
+              <option value="dark">Dark Mode</option>
+            </select>
+          </div>
+
+          <!-- Text Size -->
+          <div class="setting-item-row">
+            <div class="setting-label-col">
+              <strong>Font Size Scale</strong>
+              <small>Increase text size for improved legibility.</small>
+            </div>
+            <select id="setting-text-size-select" class="select-control">
+              <option value="normal">Standard (16px)</option>
+              <option value="large">Large (18px)</option>
+              <option value="xlarge">Extra Large (20px)</option>
+            </select>
+          </div>
+
+          <!-- Sound Profile -->
+          <div class="setting-item-row">
+            <div class="setting-label-col">
+              <strong>Chime Sound Effect</strong>
+              <small>Pleasant audio cue on activity completion.</small>
+            </div>
+            <select id="setting-sound-select" class="select-control">
+              <option value="zen">Zen Singing Bowl</option>
+              <option value="bell">Soft Bell Chord</option>
+              <option value="ding">Crisp Modern Ding</option>
+              <option value="mute">Muted (Silent)</option>
+            </select>
+          </div>
+
+          <!-- Daily Goal -->
+          <div class="setting-item-row">
+            <div class="setting-label-col">
+              <strong>Daily Movement Goal</strong>
+              <small>Target number of exercises per day.</small>
+            </div>
+            <select id="setting-daily-goal-select" class="select-control">
+              <option value="1">1 activity</option>
+              <option value="2">2 activities</option>
+              <option value="3">3 activities (Recommended)</option>
+              <option value="5">5 activities</option>
+            </select>
+          </div>
+
+          <!-- Reduced Motion -->
+          <div class="setting-item-row">
+            <div class="setting-label-col">
+              <strong>Reduce Motion</strong>
+              <small>Disables interface animations and transitions.</small>
+            </div>
+            <label class="toggle-switch">
+              <input id="setting-reduced-motion-toggle" type="checkbox">
+              <span class="toggle-slider"></span>
+            </label>
+          </div>
+
+          <!-- Seated Only Mode -->
+          <div class="setting-item-row">
+            <div class="setting-label-col">
+              <strong>Seated Exercises Only</strong>
+              <small>Filters out standing and wall-supported movements.</small>
+            </div>
+            <label class="toggle-switch">
+              <input id="setting-seated-only-toggle" type="checkbox">
+              <span class="toggle-slider"></span>
+            </label>
+          </div>
+
+          <!-- Longer Timer -->
+          <div class="setting-item-row">
+            <div class="setting-label-col">
+              <strong>Extended Timers (+15s)</strong>
+              <small>Adds extra duration to timed exercises.</small>
+            </div>
+            <label class="toggle-switch">
+              <input id="setting-longer-timer-toggle" type="checkbox">
+              <span class="toggle-slider"></span>
+            </label>
+          </div>
+        </div>
+
+        <div class="modal-actions-row">
+          <button class="btn-secondary" type="button" onclick="document.getElementById('settings-modal').close()">Cancel</button>
+          <button class="btn-primary" type="submit">Save Preferences</button>
+        </div>
+      </form>
+    </div>
+  </dialog>
+
+  <!-- ========================================================================
+       KEYBOARD SHORTCUTS MODAL
+       ======================================================================== -->
+  <dialog id="shortcuts-modal" class="modal-overlay" aria-labelledby="shortcuts-dialog-title">
+    <div class="modal-content-wrap">
+      <div class="modal-header-row">
+        <h2 id="shortcuts-dialog-title" class="modal-title">Keyboard Shortcuts</h2>
+        <button class="modal-close-btn" type="button" onclick="document.getElementById('shortcuts-modal').close()" aria-label="Close dialog">✕</button>
+      </div>
+      <div class="settings-list-group">
+        <div class="setting-item-row">
+          <div class="setting-label-col"><strong>Start / Pause / Count Rep</strong></div>
+          <kbd class="badge badge-outline" style="font-family: monospace;">Space</kbd>
+        </div>
+        <div class="setting-item-row">
+          <div class="setting-label-col"><strong>Next Exercise</strong></div>
+          <kbd class="badge badge-outline" style="font-family: monospace;">→</kbd>
+        </div>
+        <div class="setting-item-row">
+          <div class="setting-label-col"><strong>Previous Exercise</strong></div>
+          <kbd class="badge badge-outline" style="font-family: monospace;">←</kbd>
+        </div>
+        <div class="setting-item-row">
+          <div class="setting-label-col"><strong>Reset Session</strong></div>
+          <kbd class="badge badge-outline" style="font-family: monospace;">R</kbd>
+        </div>
+        <div class="setting-item-row">
+          <div class="setting-label-col"><strong>Toggle Favorite</strong></div>
+          <kbd class="badge badge-outline" style="font-family: monospace;">F</kbd>
+        </div>
+        <div class="setting-item-row">
+          <div class="setting-label-col"><strong>Open Shortcuts Cheat-Sheet</strong></div>
+          <kbd class="badge badge-outline" style="font-family: monospace;">?</kbd>
+        </div>
+      </div>
+      <div class="modal-actions-row">
+        <button class="btn-primary" type="button" onclick="document.getElementById('shortcuts-modal').close()">Got It</button>
+      </div>
+    </div>
+  </dialog>
+
+  <!-- Polite Live Toast Notification -->
+  <div id="toast-notice" class="toast-notice" role="status" aria-live="polite"></div>
+
+  <!-- App Script -->
+  <script src="script.js"></script>
+</body>
+</html>
