@@ -2140,7 +2140,7 @@ class AppStore {
       lastDate: new Date().toISOString().slice(0, 10),
       likedIds: [],
       publicLikes: {}, // Real community likes (starts at 0, no fake numbers!)
-      voiceEnabled: true,
+      voiceEnabled: false,
       slowMotion: false,
       dailyGoal: 3,
       history: []
@@ -2247,7 +2247,7 @@ class AppStore {
 class VoiceCoach {
   constructor() {
     this.synth = window.speechSynthesis || null;
-    this.enabled = true;
+    this.enabled = false;
     this.isUnlocked = false;
 
     // Unlock Web Speech API on first user interaction
@@ -3081,7 +3081,7 @@ class FitFeedApp {
     }
 
     if (tabId === "dashboard") {
-      this.pauseTimer();
+      this.pauseTimer(index);
       this.renderDashboard();
     } else if (tabId === "library") {
       this.pauseTimer();
@@ -3284,13 +3284,17 @@ class FitFeedApp {
   }
 
   handlePlayClick(index) {
-    if (this.activeIndex !== index) {
-      this.switchReel(index);
+    const idx = (typeof index === "number") ? index : this.activeIndex;
+    if (this.activeIndex !== idx) {
+      this.switchReel(idx);
     }
+
     if (this.timerRunning) {
-      this.pauseTimer();
+      // User clicked the two lines -> Pause the reel and switch back to play icon
+      this.pauseTimer(idx);
     } else {
-      this.startExercise(index);
+      // User clicked play -> Start reel and show the two lines (pause icon)
+      this.startExercise(idx);
     }
   }
 
@@ -3306,11 +3310,19 @@ class FitFeedApp {
   startTimer(index) {
     const ex = EXERCISES_DATA[index];
     this.timerRunning = true;
-    this.timerTotal = ex.duration;
-    this.timerSeconds = ex.duration;
+    if (this.avatar) this.avatar.isPaused = false;
 
+    // Reset timer seconds if it reached 0
+    if (!this.timerSeconds || this.timerSeconds <= 0) {
+      this.timerTotal = ex.duration;
+      this.timerSeconds = ex.duration;
+    }
+
+    // Show the TWO LINES (pause icon)
     const playIcon = document.getElementById("play-icon-" + index);
-    if (playIcon) playIcon.innerHTML = '<rect x="6" y="4" width="4" height="16"/><rect x="14" y="4" width="4" height="16"/>';
+    if (playIcon) {
+      playIcon.innerHTML = '<rect x="6" y="4" width="4" height="16" rx="1"/><rect x="14" y="4" width="4" height="16" rx="1"/>';
+    }
 
     const hudText = document.getElementById("hud-text-" + index);
     if (hudText) hudText.textContent = "Moving: " + this.timerSeconds + "s remaining";
@@ -3346,9 +3358,13 @@ class FitFeedApp {
   startRepPacer(index) {
     const ex = EXERCISES_DATA[index];
     this.timerRunning = true;
+    if (this.avatar) this.avatar.isPaused = false;
 
+    // Show the TWO LINES (pause icon)
     const playIcon = document.getElementById("play-icon-" + index);
-    if (playIcon) playIcon.innerHTML = '<rect x="6" y="4" width="4" height="16"/><rect x="14" y="4" width="4" height="16"/>';
+    if (playIcon) {
+      playIcon.innerHTML = '<rect x="6" y="4" width="4" height="16" rx="1"/><rect x="14" y="4" width="4" height="16" rx="1"/>';
+    }
 
     const hudText = document.getElementById("hud-text-" + index);
     if (hudText) hudText.textContent = "Pacing reps: " + this.currentReps + " of " + ex.targetReps;
@@ -3356,7 +3372,6 @@ class FitFeedApp {
     this.voice.announceStart(ex.title);
 
     clearInterval(this.timerInterval);
-    // Auto-paces a repetition every 2.2 seconds!
     this.timerInterval = setInterval(() => {
       this.countRep(ex, index);
       if (this.currentReps >= ex.targetReps) {
@@ -3364,16 +3379,25 @@ class FitFeedApp {
       }
     }, 2200);
   }
-  pauseTimer() {
-    if (!this.timerRunning) return;
+
+  pauseTimer(index) {
+    const idx = (typeof index === "number") ? index : this.activeIndex;
     this.timerRunning = false;
     clearInterval(this.timerInterval);
 
-    const playIcon = document.getElementById("play-icon-" + this.activeIndex);
-    if (playIcon) playIcon.innerHTML = '<polygon points="5 3 19 12 5 21 5 3"/>';
+    // Change back to PLAY triangle icon
+    const playIcon = document.getElementById("play-icon-" + idx);
+    if (playIcon) {
+      playIcon.innerHTML = '<polygon points="5 3 19 12 5 21 5 3"/>';
+    }
 
-    const hudText = document.getElementById("hud-text-" + this.activeIndex);
+    const hudText = document.getElementById("hud-text-" + idx);
     if (hudText) hudText.textContent = "Paused • Tap to resume";
+
+    // Pause the 3D human avatar when reel is paused
+    if (this.avatar) {
+      this.avatar.isPaused = true;
+    }
   }
 
   countRep(ex, index) {
@@ -3428,10 +3452,13 @@ class FitFeedApp {
     const res = this.store.toggleLike(ex.id);
     const btn = document.getElementById("btn-like-" + idx);
     const count = document.getElementById("like-count-" + idx);
-    if (btn) btn.classList.toggle("liked", res.isLiked);
+    if (btn) {
+      btn.classList.toggle("liked", res.isLiked);
+      const svg = btn.querySelector("svg");
+      if (svg) svg.setAttribute("fill", res.isLiked ? "currentColor" : "none");
+    }
     if (count) count.textContent = res.count;
-
-    this.showToast(res.isLiked ? "Saved to your bookmarks ♥ (" + res.count + " likes)" : "Removed from bookmarks (" + res.count + " likes)");
+    this.showToast(res.isLiked ? "Liked ♥" : "Unliked");
   }
 
   toggleVoiceCoach() {
