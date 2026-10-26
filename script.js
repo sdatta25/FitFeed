@@ -2932,66 +2932,306 @@ class FitFeedApp {
       this.el.reelsDeck.addEventListener("click", (e) => {
         const playBtn = e.target.closest("[id^='btn-play-']");
         if (playBtn) {
-          e.preventDefault();
           e.stopPropagation();
           const idx = parseInt(playBtn.id.replace("btn-play-", ""), 10);
           this.handlePlayClick(idx);
           return;
         }
-
         const likeBtn = e.target.closest("[id^='btn-like-']");
         if (likeBtn) {
-          e.preventDefault();
           e.stopPropagation();
           const idx = parseInt(likeBtn.id.replace("btn-like-", ""), 10);
           this.handleLikeClick(EXERCISES_DATA[idx], idx);
           return;
         }
-
         const repBtn = e.target.closest("[id^='btn-rep-']");
         if (repBtn) {
-          e.preventDefault();
           e.stopPropagation();
           const idx = parseInt(repBtn.id.replace("btn-rep-", ""), 10);
           this.countRep(EXERCISES_DATA[idx], idx);
           return;
         }
-
         const voiceBtn = e.target.closest("[id^='btn-voice-reel-']");
         if (voiceBtn) {
-          e.preventDefault();
           e.stopPropagation();
           this.toggleVoiceCoach();
           return;
         }
-
-        const speedBtn = e.target.closest("[id^='btn-speed-']");
-        if (speedBtn) {
-          e.preventDefault();
-          e.stopPropagation();
-          this.store.data.slowMotion = !this.store.data.slowMotion;
-          if (this.avatar) {
-            this.avatar.speedMultiplier = this.store.data.slowMotion ? 0.5 : 1.0;
-          }
-          speedBtn.textContent = this.store.data.slowMotion ? "0.5x Slow" : "1.0x";
-          this.showToast(this.store.data.slowMotion ? "Slow-motion form view (0.5x)" : "Normal speed (1.0x)");
-          return;
-        }
-
         const infoBtn = e.target.closest("[id^='btn-info-']");
         if (infoBtn) {
-          e.preventDefault();
           e.stopPropagation();
           const idx = parseInt(infoBtn.id.replace("btn-info-", ""), 10);
           this.openDrawer(EXERCISES_DATA[idx]);
           return;
         }
-
-        // Tap on reel background toggles caption visibility (Instagram style)
+        // Instagram-style: tap on reel background toggles caption visibility
         const slide = e.target.closest(".reel-item");
         if (slide && !e.target.closest("button") && !e.target.closest("a")) {
           slide.classList.toggle("caption-hidden");
         }
+      });
+    }
+
+    this.updateTopBarStats();
+  }
+
+  cacheElements() {
+    this.el = {
+      tabReels: document.getElementById("tab-reels"),
+      tabDashboard: document.getElementById("tab-dashboard"),
+      tabLibrary: document.getElementById("tab-library"),
+      navBtns: document.querySelectorAll(".nav-pill, .mobile-nav-btn"),
+
+      navStreak: document.getElementById("nav-streak-text"),
+      navPoints: document.getElementById("nav-points-text"),
+      voiceBtn: document.getElementById("btn-global-voice"),
+
+      reelsDeck: document.getElementById("reels-scroll-deck"),
+      storyBar: document.getElementById("reels-story-bar"),
+      btnSideUp: document.getElementById("btn-side-up"),
+      btnSideDown: document.getElementById("btn-side-down"),
+
+      dashStreak: document.getElementById("dash-streak-val"),
+      dashCalories: document.getElementById("dash-calories-val"),
+      dashPoints: document.getElementById("dash-points-val"),
+      dashCompleted: document.getElementById("dash-completed-val"),
+      dashBars: document.getElementById("dash-weekly-bars"),
+      dashWeekTotal: document.getElementById("dash-week-total-text"),
+      dashGoalBar: document.getElementById("dash-goal-bar"),
+      dashGoalLabel: document.getElementById("dash-goal-label"),
+      dashHistory: document.getElementById("dash-history-container"),
+      btnClearHistory: document.getElementById("btn-clear-history"),
+      btnJumpReels: document.getElementById("btn-quick-play-reels"),
+
+      libSearch: document.getElementById("lib-search-input"),
+      libFilterPills: document.querySelectorAll(".filter-pill"),
+      libGrid: document.getElementById("lib-cards-grid"),
+
+      drawerBackdrop: document.getElementById("drawer-backdrop"),
+      infoDrawer: document.getElementById("info-drawer"),
+      btnCloseDrawer: document.getElementById("btn-close-drawer"),
+      drawerTitle: document.getElementById("drawer-title"),
+      drawerMuscles: document.getElementById("drawer-muscles"),
+      drawerModifications: document.getElementById("drawer-modifications"),
+      drawerSafety: document.getElementById("drawer-safety"),
+
+      toast: document.getElementById("toast-bubble")
+    };
+  }
+
+  bindNavigation() {
+    this.el.navBtns.forEach(btn => {
+      btn.addEventListener("click", () => {
+        const target = btn.dataset.tab;
+        this.switchTab(target);
+      });
+    });
+
+    if (this.el.btnJumpReels) {
+      this.el.btnJumpReels.addEventListener("click", () => this.switchTab("reels"));
+    }
+
+    if (this.el.voiceBtn) {
+      this.el.voiceBtn.addEventListener("click", () => this.toggleVoiceCoach());
+    }
+
+    if (this.el.btnClearHistory) {
+      this.el.btnClearHistory.addEventListener("click", () => {
+        if (confirm("Reset your workout history? This cannot be undone.")) {
+          this.store.data.completedCount = 0;
+          this.store.data.totalCalories = 0;
+          this.store.data.totalPoints = 0;
+          this.store.data.history = [];
+          this.store.save();
+          this.renderDashboard();
+          this.updateTopBarStats();
+          this.showToast("Activity history cleared.");
+        }
+      });
+    }
+
+    if (this.el.drawerBackdrop) {
+      this.el.drawerBackdrop.addEventListener("click", () => this.closeDrawer());
+    }
+    if (this.el.btnCloseDrawer) {
+      this.el.btnCloseDrawer.addEventListener("click", () => this.closeDrawer());
+    }
+
+    if (this.el.btnSideUp) {
+      this.el.btnSideUp.addEventListener("click", () => this.scrollToPrevReel());
+    }
+    if (this.el.btnSideDown) {
+      this.el.btnSideDown.addEventListener("click", () => this.scrollToNextReel());
+    }
+  }
+
+  switchTab(tabId) {
+    this.el.navBtns.forEach(b => {
+      const match = b.dataset.tab === tabId;
+      b.classList.toggle("active", match);
+      b.setAttribute("aria-selected", match ? "true" : "false");
+    });
+
+    if (this.el.tabReels) this.el.tabReels.classList.toggle("hidden", tabId !== "reels");
+    if (this.el.tabDashboard) this.el.tabDashboard.classList.toggle("hidden", tabId !== "dashboard");
+    if (this.el.tabLibrary) this.el.tabLibrary.classList.toggle("hidden", tabId !== "library");
+
+    if (this.avatar) {
+      this.avatar.isPaused = (tabId !== "reels");
+    }
+
+    if (tabId === "dashboard") {
+      this.pauseTimer(index);
+      this.renderDashboard();
+    } else if (tabId === "library") {
+      this.pauseTimer(index);
+      this.renderLibrary();
+    } else if (tabId === "reels") {
+      if (this.avatar) {
+        this.avatar.resize();
+        this.avatar.setAnimation(EXERCISES_DATA[this.activeIndex].animType);
+      }
+    }
+  }
+
+  updateTopBarStats() {
+    if (this.el.navStreak) this.el.navStreak.textContent = this.store.data.streak + " Day" + (this.store.data.streak === 1 ? "" : "s");
+    if (this.el.navPoints) this.el.navPoints.textContent = this.store.data.totalPoints + " pts";
+  }
+
+  /* ==========================================================================
+     REELS ENGINE (ULTRA LIGHTWEIGHT DOM SLIDES)
+     ========================================================================== */
+  renderReels() {
+    if (this.el.storyBar) {
+      this.el.storyBar.innerHTML = "";
+      const segCount = Math.min(20, EXERCISES_DATA.length);
+      for (let i = 0; i < segCount; i++) {
+        const seg = document.createElement("div");
+        seg.className = "story-seg" + (i < this.activeIndex ? " done" : "");
+        seg.innerHTML = '<div class="story-seg-fill" id="story-bar-' + i + '"></div>';
+        this.el.storyBar.appendChild(seg);
+      }
+    }
+
+    if (!this.el.reelsDeck) return;
+    this.el.reelsDeck.innerHTML = "";
+
+    EXERCISES_DATA.forEach((ex, idx) => {
+      const isLiked = this.store.data.likedIds.includes(ex.id);
+      const likesCount = this.store.getLikes(ex.id); // Real like counter (no fake numbers!)
+      const slide = document.createElement("div");
+      slide.className = "reel-item";
+      slide.id = "reel-" + idx;
+      slide.dataset.index = idx;
+
+      slide.innerHTML = `
+        <div class="motion-badge">
+          <span class="motion-dot"></span>
+          <span>Motion Guide</span>
+        </div>
+
+        <button class="speed-toggle" id="btn-speed-${idx}" type="button" title="Toggle demonstration speed">
+          <span>1.0x</span>
+        </button>
+
+        <div class="reel-vignette-top"></div>
+        <div class="reel-vignette-bottom"></div>
+
+        <aside class="reel-actions" aria-label="Exercise Tools">
+          <div>
+            <button class="action-btn play-active" id="btn-play-${idx}" type="button" aria-label="Start or pause exercise">
+              <svg class="timer-ring-svg" viewBox="0 0 54 54">
+                <circle id="timer-ring-${idx}" cx="27" cy="27" r="24"></circle>
+              </svg>
+              <svg id="play-icon-${idx}" class="w-5 h-5 fill-current" viewBox="0 0 24 24"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+            </button>
+          </div>
+
+          <div>
+            <button class="action-btn ${isLiked ? 'liked' : ''}" id="btn-like-${idx}" type="button" aria-label="Bookmark move">
+              <svg class="w-5 h-5" viewBox="0 0 24 24" fill="${isLiked ? 'currentColor' : 'none'}" stroke="currentColor" stroke-width="2">
+                <path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z"/>
+              </svg>
+            </button>
+            <div class="action-label" id="like-count-${idx}">${likesCount}</div>
+          </div>
+
+          ${ex.mode === 'reps' ? `
+          <div>
+            <button class="action-btn" id="btn-rep-${idx}" type="button" aria-label="Count a repetition">
+              <span class="text-xs font-black text-emerald-400">＋1</span>
+            </button>
+            <div class="action-label" id="rep-rail-label-${idx}">0/${ex.targetReps}</div>
+          </div>` : ''}
+
+          <!-- Quick Voice Coach Toggle directly on Reel -->
+          <div>
+            <button class="action-btn ${this.store.data.voiceEnabled ? 'active-voice' : ''}" id="btn-voice-reel-${idx}" type="button" aria-label="Toggle voice coach">
+              <svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/>
+                <path d="M19.07 4.93a10 10 0 0 1 0 14.14M15.54 8.46a5 5 0 0 1 0 7.07"/>
+              </svg>
+            </button>
+            <div class="action-label">Voice</div>
+          </div>
+
+          <div>
+            <button class="action-btn" id="btn-info-${idx}" type="button" aria-label="Open anatomy and adjustments">
+              <svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/>
+              </svg>
+            </button>
+            <div class="action-label">Info</div>
+          </div>
+        </aside>
+
+        <div class="reel-caption">
+          <div>
+            <span class="category-chip">${ex.category} · ${ex.impactTag}</span>
+          </div>
+          <h2 class="reel-title">${ex.title}</h2>
+          <p class="reel-desc">${ex.caption}</p>
+          <div class="audio-row">
+            <div class="audio-disc"></div>
+            <span class="truncate">${ex.audioTrack}</span>
+          </div>
+          <div class="hud-pill" id="hud-pill-${idx}">
+            <span id="hud-text-${idx}">${ex.mode === 'timer' ? 'Ready • ' + ex.duration + 's timer' : 'Ready • Tap ＋1 to count'}</span>
+          </div>
+        </div>
+      `;
+
+      this.bindReelSlideEvents(slide, ex, idx);
+      this.el.reelsDeck.appendChild(slide);
+    });
+  }
+
+  bindReelSlideEvents(slide, ex, idx) {
+    const playBtn = slide.querySelector("#btn-play-" + idx);
+    if (playBtn) playBtn.addEventListener("click", () => this.handlePlayClick(idx));
+
+    const likeBtn = slide.querySelector("#btn-like-" + idx);
+    if (likeBtn) likeBtn.addEventListener("click", () => this.handleLikeClick(ex, idx));
+
+    const infoBtn = slide.querySelector("#btn-info-" + idx);
+    if (infoBtn) infoBtn.addEventListener("click", () => this.openDrawer(ex));
+
+    const repBtn = slide.querySelector("#btn-rep-" + idx);
+    if (repBtn) repBtn.addEventListener("click", () => this.countRep(ex, idx));
+
+    const voiceBtn = slide.querySelector("#btn-voice-reel-" + idx);
+    if (voiceBtn) voiceBtn.addEventListener("click", () => this.toggleVoiceCoach());
+
+    const speedBtn = slide.querySelector("#btn-speed-" + idx);
+    if (speedBtn) {
+      speedBtn.addEventListener("click", () => {
+        this.store.data.slowMotion = !this.store.data.slowMotion;
+        if (this.avatar) {
+          this.avatar.speedMultiplier = this.store.data.slowMotion ? 0.5 : 1.0;
+        }
+        speedBtn.textContent = this.store.data.slowMotion ? "0.5x Slow" : "1.0x";
+        this.showToast(this.store.data.slowMotion ? "Slow-motion form view (0.5x)" : "Normal speed (1.0x)");
       });
     }
   }
