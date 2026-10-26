@@ -2719,11 +2719,87 @@ class SharedMovementAvatar3D {
       this.leftArm.rotation.z = Math.PI / 3;
       this.rightArm.rotation.z = -Math.PI / 3;
       this.human.position.y = Math.sin(t * 2) * 0.015;
+    } else if (this.animType === "arm_circle") {
+      const c = t * 3;
+      this.leftArm.rotation.z = Math.PI / 2.8 + Math.sin(c) * 0.15;
+      this.rightArm.rotation.z = -Math.PI / 2.8 - Math.sin(c) * 0.15;
+      this.leftArm.rotation.x = Math.cos(c) * 0.28;
+      this.rightArm.rotation.x = Math.cos(c) * 0.28;
+    } else if (this.animType === "cross_reach") {
+      const cr = Math.sin(t * 2.8);
+      this.leftArm.rotation.x = -Math.PI / 3 + cr * 0.35;
+      this.rightArm.rotation.x = -Math.PI / 3 - cr * 0.35;
+      this.torso.rotation.y = cr * 0.3;
+    } else if (this.animType === "goalpost") {
+      const gp = (Math.sin(t * 2.6) + 1) * 0.5 * 0.4;
+      this.leftArm.rotation.z = Math.PI / 2.2;
+      this.rightArm.rotation.z = -Math.PI / 2.2;
+      this.leftForearm.rotation.x = -Math.PI / 2.2 + gp;
+      this.rightForearm.rotation.x = -Math.PI / 2.2 + gp;
+    } else if (this.animType === "side_tap") {
+      const st = Math.sin(t * 3.2);
+      this.leftLeg.rotation.z = Math.max(0, -st) * 0.35;
+      this.rightLeg.rotation.z = Math.max(0, st) * 0.35;
+    } else if (this.animType === "bicep_curl") {
+      const bc = (Math.sin(t * 3.2) + 1) * 0.5;
+      this.leftForearm.rotation.x = -bc * 1.6;
+      this.rightForearm.rotation.x = -bc * 1.6;
+    } else if (this.animType === "tricep_press") {
+      const tp = (Math.sin(t * 3.2) + 1) * 0.5 * 0.45;
+      this.leftArm.rotation.x = tp;
+      this.rightArm.rotation.x = tp;
+    } else if (this.animType === "wrist_circle") {
+      const wc = t * 4;
+      this.leftForearm.rotation.x = -Math.PI / 2.5;
+      this.rightForearm.rotation.x = -Math.PI / 2.5;
+      this.leftForearm.rotation.z = Math.sin(wc) * 0.3;
+      this.rightForearm.rotation.z = Math.cos(wc) * 0.3;
+    } else if (this.animType === "pelvic_tilt") {
+      const pt = Math.sin(t * 2.5) * 0.15;
+      this.pelvis.rotation.x = pt;
+      this.torso.rotation.x = -pt * 0.8;
+    } else if (this.animType === "front_punch") {
+      const fp = Math.sin(t * 4);
+      this.leftArm.rotation.x = -Math.PI / 2.5 + Math.max(0, fp) * 0.6;
+      this.rightArm.rotation.x = -Math.PI / 2.5 + Math.max(0, -fp) * 0.6;
+      this.torso.rotation.y = fp * 0.12;
+    } else if (this.animType === "steering_wheel") {
+      const sw = Math.sin(t * 2.8) * 0.45;
+      this.leftArm.rotation.x = -Math.PI / 3;
+      this.rightArm.rotation.x = -Math.PI / 3;
+      this.leftForearm.rotation.z = sw;
+      this.rightForearm.rotation.z = sw;
+      this.torso.rotation.y = sw * 0.25;
+    } else if (this.animType === "knee_hug") {
+      const kh = (Math.sin(t * 2.4) + 1) * 0.5;
+      this.rightLeg.rotation.x = -Math.PI / 2.3 - kh * 0.4;
+      this.torso.rotation.x = kh * 0.15;
+    } else if (this.animType === "torso_circle") {
+      const tc = t * 2.5;
+      this.torso.rotation.x = Math.sin(tc) * 0.18;
+      this.torso.rotation.z = Math.cos(tc) * 0.18;
+    } else if (this.animType === "windshield_arm") {
+      const wa = Math.sin(t * 3) * 0.45;
+      this.leftForearm.rotation.y = wa;
+      this.rightForearm.rotation.y = -wa;
+    } else if (this.animType === "inner_thigh") {
+      const it = (Math.sin(t * 3) + 1) * 0.5;
+      this.leftLeg.rotation.z = it * 0.15;
+      this.rightLeg.rotation.z = -it * 0.15;
+    } else if (this.animType === "thoracic_ext") {
+      const te = (Math.sin(t * 2.2) + 1) * 0.5 * 0.3;
+      this.torso.rotation.x = -te;
+      this.headGroup.rotation.x = -te * 1.2;
+    } else {
+      // Natural Fallback Animation so NO movement ever stands still!
+      const fallbackSwing = Math.sin(t * 3.0) * 0.55;
+      this.leftArm.rotation.x = fallbackSwing;
+      this.rightArm.rotation.x = -fallbackSwing;
+      this.torso.rotation.y = fallbackSwing * 0.08;
     }
 
     this.renderer.render(this.scene, this.camera);
   }
-
   resize() {
     if (!this.renderer || !this.camera) return;
     const rect = this.canvas.parentElement.getBoundingClientRect();
@@ -3167,14 +3243,21 @@ class FitFeedApp {
     if (this.timerRunning) {
       this.pauseTimer();
     } else {
+      this.startExercise(index);
+    }
+  }
+
+  startExercise(index) {
+    const ex = EXERCISES_DATA[index];
+    if (ex.mode === "timer") {
       this.startTimer(index);
+    } else {
+      this.startRepPacer(index);
     }
   }
 
   startTimer(index) {
     const ex = EXERCISES_DATA[index];
-    if (ex.mode !== "timer") return;
-
     this.timerRunning = true;
     this.timerTotal = ex.duration;
     this.timerSeconds = ex.duration;
@@ -3213,6 +3296,27 @@ class FitFeedApp {
     }, 1000);
   }
 
+  startRepPacer(index) {
+    const ex = EXERCISES_DATA[index];
+    this.timerRunning = true;
+
+    const playIcon = document.getElementById("play-icon-" + index);
+    if (playIcon) playIcon.innerHTML = '<rect x="6" y="4" width="4" height="16"/><rect x="14" y="4" width="4" height="16"/>';
+
+    const hudText = document.getElementById("hud-text-" + index);
+    if (hudText) hudText.textContent = "Pacing reps: " + this.currentReps + " of " + ex.targetReps;
+
+    this.voice.announceStart(ex.title);
+
+    clearInterval(this.timerInterval);
+    // Auto-paces a repetition every 2.2 seconds!
+    this.timerInterval = setInterval(() => {
+      this.countRep(ex, index);
+      if (this.currentReps >= ex.targetReps) {
+        clearInterval(this.timerInterval);
+      }
+    }, 2200);
+  }
   pauseTimer() {
     if (!this.timerRunning) return;
     this.timerRunning = false;

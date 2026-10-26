@@ -388,7 +388,7 @@ button {
   overscroll-behavior: contain;
 }
 
-/* Individual reel slide */
+/* Individual reel slide with GPU virtualization */
 .reel-item {
   width: 100%;
   height: 100%;
@@ -399,6 +399,9 @@ button {
   flex-direction: column;
   overflow: hidden;
   background: transparent !important;
+  content-visibility: auto;
+  contain-intrinsic-size: 100vh;
+  will-change: transform;
 }
 
 /* High-Performance Single Shared 3D Canvas Layer */
@@ -532,16 +535,14 @@ button {
   width: 48px;
   height: 48px;
   border-radius: 50%;
-  background: rgba(255,255,255,0.14);
-  backdrop-filter: blur(14px);
-  -webkit-backdrop-filter: blur(14px);
-  border: 1px solid rgba(255,255,255,0.2);
+  background: rgba(18, 24, 38, 0.88);
+  border: 1px solid rgba(255,255,255,0.18);
   color: white;
   display: flex;
   align-items: center;
   justify-content: center;
   transition: transform 150ms ease, background 150ms ease;
-  box-shadow: 0 4px 20px rgba(0,0,0,0.5);
+  box-shadow: 0 4px 16px rgba(0,0,0,0.6);
   position: relative;
 }
 
