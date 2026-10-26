@@ -2927,47 +2927,12 @@ class FitFeedApp {
       this.avatar.setAnimation(EXERCISES_DATA[0].animType);
     }
 
-    // Direct and Delegated event handler: 100% reliable clicks on play, like, rep, voice, info
+    // Caption tap-to-toggle (Instagram style) — delegated, only fires for non-button taps
     if (this.el.reelsDeck) {
       this.el.reelsDeck.addEventListener("click", (e) => {
-        const playBtn = e.target.closest("[id^='btn-play-']");
-        if (playBtn) {
-          e.stopPropagation();
-          const idx = parseInt(playBtn.id.replace("btn-play-", ""), 10);
-          this.handlePlayClick(idx);
-          return;
-        }
-        const likeBtn = e.target.closest("[id^='btn-like-']");
-        if (likeBtn) {
-          e.stopPropagation();
-          const idx = parseInt(likeBtn.id.replace("btn-like-", ""), 10);
-          this.handleLikeClick(EXERCISES_DATA[idx], idx);
-          return;
-        }
-        const repBtn = e.target.closest("[id^='btn-rep-']");
-        if (repBtn) {
-          e.stopPropagation();
-          const idx = parseInt(repBtn.id.replace("btn-rep-", ""), 10);
-          this.countRep(EXERCISES_DATA[idx], idx);
-          return;
-        }
-        const voiceBtn = e.target.closest("[id^='btn-voice-reel-']");
-        if (voiceBtn) {
-          e.stopPropagation();
-          this.toggleVoiceCoach();
-          return;
-        }
-        const infoBtn = e.target.closest("[id^='btn-info-']");
-        if (infoBtn) {
-          e.stopPropagation();
-          const idx = parseInt(infoBtn.id.replace("btn-info-", ""), 10);
-          this.openDrawer(EXERCISES_DATA[idx]);
-          return;
-        }
-        // Instagram-style: tap on reel background toggles caption visibility
-        const slide = e.target.closest(".reel-item");
-        if (slide && !e.target.closest("button") && !e.target.closest("a")) {
-          slide.classList.toggle("caption-hidden");
+        if (!e.target.closest("button") && !e.target.closest("a")) {
+          const slide = e.target.closest(".reel-item");
+          if (slide) slide.classList.toggle("caption-hidden");
         }
       });
     }
@@ -3209,23 +3174,24 @@ class FitFeedApp {
 
   bindReelSlideEvents(slide, ex, idx) {
     const playBtn = slide.querySelector("#btn-play-" + idx);
-    if (playBtn) playBtn.addEventListener("click", () => this.handlePlayClick(idx));
+    if (playBtn) playBtn.addEventListener("click", (e) => { e.stopPropagation(); this.handlePlayClick(idx); });
 
     const likeBtn = slide.querySelector("#btn-like-" + idx);
-    if (likeBtn) likeBtn.addEventListener("click", () => this.handleLikeClick(ex, idx));
+    if (likeBtn) likeBtn.addEventListener("click", (e) => { e.stopPropagation(); this.handleLikeClick(ex, idx); });
 
     const infoBtn = slide.querySelector("#btn-info-" + idx);
-    if (infoBtn) infoBtn.addEventListener("click", () => this.openDrawer(ex));
+    if (infoBtn) infoBtn.addEventListener("click", (e) => { e.stopPropagation(); this.openDrawer(ex); });
 
     const repBtn = slide.querySelector("#btn-rep-" + idx);
-    if (repBtn) repBtn.addEventListener("click", () => this.countRep(ex, idx));
+    if (repBtn) repBtn.addEventListener("click", (e) => { e.stopPropagation(); this.countRep(ex, idx); });
 
     const voiceBtn = slide.querySelector("#btn-voice-reel-" + idx);
-    if (voiceBtn) voiceBtn.addEventListener("click", () => this.toggleVoiceCoach());
+    if (voiceBtn) voiceBtn.addEventListener("click", (e) => { e.stopPropagation(); this.toggleVoiceCoach(); });
 
     const speedBtn = slide.querySelector("#btn-speed-" + idx);
     if (speedBtn) {
-      speedBtn.addEventListener("click", () => {
+      speedBtn.addEventListener("click", (e) => {
+        e.stopPropagation();
         this.store.data.slowMotion = !this.store.data.slowMotion;
         if (this.avatar) {
           this.avatar.speedMultiplier = this.store.data.slowMotion ? 0.5 : 1.0;
