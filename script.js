@@ -2927,6 +2927,51 @@ class FitFeedApp {
       this.avatar.setAnimation(EXERCISES_DATA[0].animType);
     }
 
+    // Direct and Delegated event handler: 100% reliable clicks on play, like, rep, voice, info
+    if (this.el.reelsDeck) {
+      this.el.reelsDeck.addEventListener("click", (e) => {
+        const playBtn = e.target.closest("[id^='btn-play-']");
+        if (playBtn) {
+          e.stopPropagation();
+          const idx = parseInt(playBtn.id.replace("btn-play-", ""), 10);
+          this.handlePlayClick(idx);
+          return;
+        }
+        const likeBtn = e.target.closest("[id^='btn-like-']");
+        if (likeBtn) {
+          e.stopPropagation();
+          const idx = parseInt(likeBtn.id.replace("btn-like-", ""), 10);
+          this.handleLikeClick(EXERCISES_DATA[idx], idx);
+          return;
+        }
+        const repBtn = e.target.closest("[id^='btn-rep-']");
+        if (repBtn) {
+          e.stopPropagation();
+          const idx = parseInt(repBtn.id.replace("btn-rep-", ""), 10);
+          this.countRep(EXERCISES_DATA[idx], idx);
+          return;
+        }
+        const voiceBtn = e.target.closest("[id^='btn-voice-reel-']");
+        if (voiceBtn) {
+          e.stopPropagation();
+          this.toggleVoiceCoach();
+          return;
+        }
+        const infoBtn = e.target.closest("[id^='btn-info-']");
+        if (infoBtn) {
+          e.stopPropagation();
+          const idx = parseInt(infoBtn.id.replace("btn-info-", ""), 10);
+          this.openDrawer(EXERCISES_DATA[idx]);
+          return;
+        }
+        // Instagram-style: tap on reel background toggles caption visibility
+        const slide = e.target.closest(".reel-item");
+        if (slide && !e.target.closest("button") && !e.target.closest("a")) {
+          slide.classList.toggle("caption-hidden");
+        }
+      });
+    }
+
     this.updateTopBarStats();
   }
 
@@ -3101,7 +3146,6 @@ class FitFeedApp {
               </svg>
               <svg id="play-icon-${idx}" class="w-5 h-5 fill-current" viewBox="0 0 24 24"><polygon points="5 3 19 12 5 21 5 3"/></svg>
             </button>
-            <div class="action-label" id="timer-text-${idx}">${ex.mode === 'timer' ? ex.duration + 's' : 'Reps'}</div>
           </div>
 
           <div>
@@ -3240,6 +3284,9 @@ class FitFeedApp {
   }
 
   handlePlayClick(index) {
+    if (this.activeIndex !== index) {
+      this.switchReel(index);
+    }
     if (this.timerRunning) {
       this.pauseTimer();
     } else {
