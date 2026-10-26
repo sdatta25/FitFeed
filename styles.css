@@ -80,7 +80,7 @@ html, body {
   position: sticky;
   top: 0;
   z-index: 50;
-  background: rgba(9, 9, 11, 0.85);
+  background: rgba(9, 9, 11, 0.88);
   backdrop-filter: blur(16px);
   -webkit-backdrop-filter: blur(16px);
   border-bottom: 1px solid var(--border-subtle);
@@ -136,8 +136,8 @@ html, body {
 
 .reels-phone-frame {
   width: 100%;
-  max-width: 420px;
-  height: min(840px, calc(100vh - 120px));
+  max-width: 430px;
+  height: min(840px, calc(100vh - 110px));
   position: relative;
   background: #000000;
   border-radius: 32px;
@@ -175,10 +175,10 @@ html, body {
   flex-direction: column;
   justify-content: space-between;
   overflow: hidden;
-  background: #08080c;
+  background: #06080e;
 }
 
-/* 3D Canvas Background inside Reel */
+/* Visual Motion Video / Canvas Demonstration Layer */
 .reel-canvas-layer {
   position: absolute;
   inset: 0;
@@ -191,6 +191,62 @@ html, body {
   width: 100% !important;
   height: 100% !important;
   display: block;
+}
+
+/* Motion Demo HUD Badges */
+.motion-demo-badge {
+  position: absolute;
+  top: 36px;
+  left: 14px;
+  z-index: 10;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  background: rgba(0, 0, 0, 0.6);
+  backdrop-filter: blur(8px);
+  padding: 4px 10px;
+  border-radius: 9999px;
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: 0.8px;
+  text-transform: uppercase;
+}
+
+.motion-rec-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: #ef4444;
+  animation: pulseRec 1.5s infinite;
+}
+
+@keyframes pulseRec {
+  0% { transform: scale(1); opacity: 1; }
+  50% { transform: scale(1.4); opacity: 0.4; }
+  100% { transform: scale(1); opacity: 1; }
+}
+
+.speed-toggle-pill {
+  position: absolute;
+  top: 36px;
+  right: 14px;
+  z-index: 10;
+  background: rgba(0, 0, 0, 0.6);
+  backdrop-filter: blur(8px);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  color: #ffffff;
+  padding: 3px 8px;
+  border-radius: 8px;
+  font-size: 10px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 150ms ease;
+}
+
+.speed-toggle-pill:hover {
+  background: var(--accent-emerald);
+  color: #000000;
 }
 
 /* Gradient Vignettes */
@@ -210,8 +266,8 @@ html, body {
   bottom: 0;
   left: 0;
   right: 0;
-  height: 280px;
-  background: linear-gradient(0deg, rgba(0, 0, 0, 0.95) 0%, rgba(0, 0, 0, 0.7) 45%, rgba(0, 0, 0, 0) 100%);
+  height: 290px;
+  background: linear-gradient(0deg, rgba(0, 0, 0, 0.96) 0%, rgba(0, 0, 0, 0.72) 48%, rgba(0, 0, 0, 0) 100%);
   z-index: 5;
   pointer-events: none;
 }
@@ -223,14 +279,14 @@ html, body {
   left: 12px;
   right: 12px;
   display: flex;
-  gap: 4px;
+  gap: 3px;
   z-index: 25;
 }
 
 .story-segment {
   flex: 1;
   height: 3px;
-  background: rgba(255, 255, 255, 0.25);
+  background: rgba(255, 255, 255, 0.22);
   border-radius: 9999px;
   overflow: hidden;
   position: relative;
@@ -260,7 +316,7 @@ html, body {
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 16px;
+  gap: 15px;
   z-index: 20;
 }
 

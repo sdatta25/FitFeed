@@ -4,29 +4,28 @@
  * Congressional App Challenge 2026
  * Developed by: Naihrit & Co-Developer
  *
- * Core Modules:
- * 1. Exercises Catalog (Low-Impact, Senior & High BMI Friendly)
- * 2. Navigation Controller (Reels Feed, Dashboard, Library Views)
+ * Core Architecture:
+ * 1. 24 Comprehensive Low-Impact Exercises (Senior, High BMI & Rehabilitation)
+ * 2. Biomechanical Motion Demonstration Engine (3D Three.js + Form Cues + 0.5x Slow-Mo)
  * 3. Reels Engine (Snap-Scroll, Live Timer Ring, Tap Rep Stepper, Likes)
- * 4. Three.js 3D Kinematics Avatar Engine
- * 5. Dashboard Engine (7-Day Interactive Graph, Daily Goal Ring, MET Calories)
- * 6. Library Search & Category Filtering
- * 7. Web Speech API Voice Coach
- * 8. 3D Confetti Particle Explosion
+ * 4. Full Activity Dashboard (7-Day Interactive Graph, MET Calories, Streaks)
+ * 5. Searchable Movement Library with Category Filters
+ * 6. Accessible Voice Coach (Web Speech API)
+ * 7. 3D Confetti Particle Explosion
  * ============================================================================
  */
 
 "use strict";
 
 /* ==========================================================================
-   1. EXERCISES DATASET (Senior, High BMI & Limited Mobility Focused)
+   1. 24 COMPREHENSIVE LOW-IMPACT EXERCISES
    ========================================================================== */
 
 const EXERCISES_DATA = [
   {
     id: "seated-arm-swings",
     title: "Seated Arm Swings",
-    category: "Seated",
+    category: "Seated Mobility",
     filterTag: "seated",
     impactTag: "Zero Joint Impact",
     suitableFor: "Wheelchair, Seniors, High BMI",
@@ -49,7 +48,7 @@ const EXERCISES_DATA = [
   {
     id: "chair-marches",
     title: "Seated Chair Marches",
-    category: "Seated",
+    category: "Seated Mobility",
     filterTag: "seated",
     impactTag: "Zero Knee Pounding",
     suitableFor: "Knee Osteoarthritis, Seniors, High BMI",
@@ -59,7 +58,7 @@ const EXERCISES_DATA = [
     points: 60,
     audioTrack: "FitFeed Coach • Steady Cadence",
     caption: "Activates lower leg circulation and hip flexors without putting any bodyweight load on your knees.",
-    muscles: "Iliopsoas, Quadriceps & Lower Abdominals",
+    muscles: "Iliopsoas, Quadriceps & Lower Core",
     modifications: [
       "Low Energy: Lift only your heels while keeping toes grounded on the floor.",
       "Heavy Legs: Lift knees just 1 to 2 inches off the chair to protect hip joints."
@@ -115,7 +114,7 @@ const EXERCISES_DATA = [
   {
     id: "ankle-circles",
     title: "Ankle Alphabet Swivels",
-    category: "Seated",
+    category: "Seated Mobility",
     filterTag: "seated",
     impactTag: "Zero Joint Impact",
     suitableFor: "Edema Relief, Neuropathy, Seniors",
@@ -181,7 +180,7 @@ const EXERCISES_DATA = [
   {
     id: "box-breathing",
     title: "4-4-4-4 Box Breathing",
-    category: "Breathwork",
+    category: "Mindful Breath",
     filterTag: "breath",
     impactTag: "Restorative",
     suitableFor: "Anxiety Relief, Blood Pressure Care",
@@ -199,16 +198,368 @@ const EXERCISES_DATA = [
     safety: "Breathe naturally. If dizziness occurs, return to normal breathing.",
     animType: "breath",
     likes: 412
+  },
+  {
+    id: "seated-knee-extensions",
+    title: "Seated Knee Extensions",
+    category: "Seated Mobility",
+    filterTag: "seated",
+    impactTag: "Zero Joint Impact",
+    suitableFor: "Knee Cartilage Support, Seniors",
+    mode: "reps",
+    targetReps: 12,
+    met: 2.4,
+    points: 55,
+    audioTrack: "FitFeed Coach • Quad Strengthening",
+    caption: "Slowly straighten one leg forward from your chair. Builds quadriceps strength without compressive load.",
+    muscles: "Quadriceps & Patellar Tendon",
+    modifications: [
+      "Knee Discomfort: Extend only halfway without locking the knee joint.",
+      "Comfort: Place a rolled towel under thighs for joint relief."
+    ],
+    safety: "Do not hyperextend or kick abruptly. Extend with smooth control.",
+    animType: "knee_ext",
+    likes: 178
+  },
+  {
+    id: "wall-angel-slides",
+    title: "Wall Angel Arm Slides",
+    category: "Supported Strength",
+    filterTag: "strength",
+    impactTag: "Postural Restoration",
+    suitableFor: "Forward Head Posture, Rounded Shoulders",
+    mode: "reps",
+    targetReps: 10,
+    met: 2.6,
+    points: 55,
+    audioTrack: "FitFeed Coach • Scapular Glide",
+    caption: "Stand with back against a wall. Slide elbows and wrists upward like making a snow angel.",
+    muscles: "Rhomboids, Middle Trapezius & Rotator Cuff",
+    modifications: [
+      "Tight Shoulders: Keep elbows slightly off the wall if touching causes strain.",
+      "Seated Option: Can be performed seated against a high-back chair."
+    ],
+    safety: "Do not arch your lower back away from the wall.",
+    animType: "wall_angel",
+    likes: 195
+  },
+  {
+    id: "seated-shoulder-rolls",
+    title: "Seated Shoulder Rolls",
+    category: "Seated Mobility",
+    filterTag: "seated",
+    impactTag: "Zero Joint Impact",
+    suitableFor: "Neck Strain, Computer Fatigue, Arthritis",
+    mode: "timer",
+    duration: 30,
+    met: 2.0,
+    points: 45,
+    audioTrack: "FitFeed Coach • Cervical Ease",
+    caption: "Draw smooth, wide circular motions with your shoulders backward to release trapezius stiffness.",
+    muscles: "Trapezius, Levator Scapulae & Deltoids",
+    modifications: [
+      "Neck Tenderness: Keep circles small and gentle.",
+      "Wheelchair: Keep hands relaxed in lap throughout."
+    ],
+    safety: "Keep chin level; avoid tilting head backward.",
+    animType: "arm_swing",
+    likes: 210
+  },
+  {
+    id: "wrist-finger-glides",
+    title: "Wrist & Finger Glides",
+    category: "Seated Mobility",
+    filterTag: "seated",
+    impactTag: "Zero Joint Impact",
+    suitableFor: "Arthritis Relief, Carpal Tunnel, Typing Fatigue",
+    mode: "reps",
+    targetReps: 12,
+    met: 1.8,
+    points: 40,
+    audioTrack: "FitFeed Coach • Tendon Lubrication",
+    caption: "Gently open hands wide like open stars, then curl softly into relaxed fists.",
+    muscles: "Finger Flexors, Extensors & Carpal Synovium",
+    modifications: [
+      "Arthritis Flare: Move within gentle pain-free perimeter without tight squeezing.",
+      "Support: Rest forearms on a table or chair armrests."
+    ],
+    safety: "Never snap fingers open forcefully.",
+    animType: "wrist_glide",
+    likes: 133
+  },
+  {
+    id: "seated-heel-toe-taps",
+    title: "Seated Heel-Toe Rockers",
+    category: "Seated Mobility",
+    filterTag: "seated",
+    impactTag: "Zero Joint Impact",
+    suitableFor: "Lower Leg Swelling, Seniors, Walking Balance",
+    mode: "reps",
+    targetReps: 20,
+    met: 2.2,
+    points: 50,
+    audioTrack: "FitFeed Coach • Ankle Pump Rhythm",
+    caption: "Alternate tapping heels and toes on the floor to stimulate lower leg circulation.",
+    muscles: "Tibialis Anterior & Soleus",
+    modifications: [
+      "Limited Ankle Motion: Small taps without forcing full range.",
+      "Footwear: Can be done in comfortable socks or shoes."
+    ],
+    safety: "Keep movements rhythmic and pain-free.",
+    animType: "ankle_circle",
+    likes: 164
+  },
+  {
+    id: "seated-row-pulls",
+    title: "Seated Scapular Row Pulls",
+    category: "Spine & Posture",
+    filterTag: "spine",
+    impactTag: "Zero Joint Impact",
+    suitableFor: "Slumped Posture, Desk Fatigue",
+    mode: "reps",
+    targetReps: 12,
+    met: 2.5,
+    points: 55,
+    audioTrack: "FitFeed Coach • Upper Back Activation",
+    caption: "Reach forward gently, then pull elbows backward while squeezing shoulder blades softly together.",
+    muscles: "Rhomboids, Latissimus Dorsi & Posterior Deltoids",
+    modifications: [
+      "Shoulder Pain: Keep elbows lower by your ribs.",
+      "Chair Support: Sit against backrest for spinal support."
+    ],
+    safety: "Avoid shrugging shoulders up toward your ears.",
+    animType: "row_pull",
+    likes: 189
+  },
+  {
+    id: "chair-supported-squats",
+    title: "Chair Sit-to-Stand Tap",
+    category: "Supported Strength",
+    filterTag: "strength",
+    impactTag: "Functional Strength",
+    suitableFor: "Independence, Sit-to-Stand Mobility, Seniors",
+    mode: "reps",
+    targetReps: 8,
+    met: 3.5,
+    points: 70,
+    audioTrack: "FitFeed Coach • Functional Power",
+    caption: "Rise partially or fully from your chair with feet planted, then lower down softly under control.",
+    muscles: "Gluteus Maximus, Quadriceps & Core",
+    modifications: [
+      "Beginners: Push off chair armrests with both hands.",
+      "High BMI: Position feet wider than hip-width for balance and joint comfort."
+    ],
+    safety: "Ensure chair is sturdy against a wall or non-slip mat so it cannot slide.",
+    animType: "squat_tap",
+    likes: 340
+  },
+  {
+    id: "neck-side-tilts",
+    title: "Gentle Neck Side Tilts",
+    category: "Spine & Posture",
+    filterTag: "spine",
+    impactTag: "Zero Joint Impact",
+    suitableFor: "Tension Headaches, Upper Back Stiffness",
+    mode: "timer",
+    duration: 30,
+    met: 1.8,
+    points: 40,
+    audioTrack: "FitFeed Coach • Cervical Release",
+    caption: "Slowly tilt right ear toward right shoulder. Pause for 2 breaths, then softly switch to left.",
+    muscles: "Upper Trapezius, Scalenes & Sternocleidomastoid",
+    modifications: [
+      "Gentle: Move only a few inches; never force ear all the way to shoulder.",
+      "Supported: Rest hands comfortably in lap."
+    ],
+    safety: "Never pull or press your head with your hand. Gravity alone is sufficient.",
+    animType: "neck_tilt",
+    likes: 152
+  },
+  {
+    id: "seated-hamstring-hinge",
+    title: "Seated Hamstring Hinge",
+    category: "Seated Mobility",
+    filterTag: "seated",
+    impactTag: "Zero Joint Impact",
+    suitableFor: "Tight Leg Backs, Lower Back Decompression",
+    mode: "timer",
+    duration: 30,
+    met: 2.1,
+    points: 45,
+    audioTrack: "FitFeed Coach • Posterior Lengthener",
+    caption: "Extend one leg forward with heel on floor. Hinge gently at hips with flat back until mild stretch is felt.",
+    muscles: "Biceps Femoris, Semitendinosus & Calves",
+    modifications: [
+      "Knee Relief: Keep knee slightly soft rather than rigidly locked.",
+      "Chair Position: Perch on front third of chair."
+    ],
+    safety: "Do not round your lower spine; hinge cleanly from the hip crease.",
+    animType: "hamstring_hinge",
+    likes: 175
+  },
+  {
+    id: "countertop-calf-raises",
+    title: "Supported Calf Raises",
+    category: "Supported Strength",
+    filterTag: "strength",
+    impactTag: "Balance & Stability",
+    suitableFor: "Fall Prevention, Ankle Strength, Seniors",
+    mode: "reps",
+    targetReps: 12,
+    met: 2.8,
+    points: 55,
+    audioTrack: "FitFeed Coach • Ankle Power",
+    caption: "Lightly hold a countertop or chair back. Rise onto balls of both feet, hold 1s, lower slowly.",
+    muscles: "Gastrocnemius, Soleus & Plantar Fascia",
+    modifications: [
+      "Balance Support: Keep both hands resting on surface.",
+      "Seated: Can be performed seated by lifting heels high."
+    ],
+    safety: "Keep weight distributed evenly across the balls of both feet.",
+    animType: "calf_raise",
+    likes: 228
+  },
+  {
+    id: "seated-hip-openers",
+    title: "Seated Butterfly Hip Openers",
+    category: "Seated Mobility",
+    filterTag: "seated",
+    impactTag: "Zero Joint Impact",
+    suitableFor: "Pelvic Mobility, Hip Stiffness, Wheelchair",
+    mode: "reps",
+    targetReps: 10,
+    met: 2.2,
+    points: 50,
+    audioTrack: "FitFeed Coach • Pelvic Freedom",
+    caption: "With feet grounded, softly open knees outward, then bring knees back to hip-width.",
+    muscles: "Gluteus Medius, Tensor Fasciae Latae & Adductors",
+    modifications: [
+      "Hip Replacements: Keep range small; do not exceed 45 degrees.",
+      "Support: Place hands on outer thighs to assist movement."
+    ],
+    safety: "Stop if you feel sharp groin discomfort.",
+    animType: "hip_opener",
+    likes: 161
+  },
+  {
+    id: "chin-tuck-retractions",
+    title: "Postural Chin Tucks",
+    category: "Spine & Posture",
+    filterTag: "spine",
+    impactTag: "Zero Joint Impact",
+    suitableFor: "Tech Neck, Forward Head Posture",
+    mode: "reps",
+    targetReps: 10,
+    met: 1.8,
+    points: 45,
+    audioTrack: "FitFeed Coach • Alignment Reset",
+    caption: "Draw your chin straight backward as if making a gentle double chin. Hold 2s, release.",
+    muscles: "Longus Colli, Deep Cervical Flexors",
+    modifications: [
+      "Feedback: Touch two fingers lightly to chin to guide head straight back.",
+      "Seated: Keep back firmly against backrest."
+    ],
+    safety: "Do not tilt head downward; glide horizontally backward.",
+    animType: "chin_tuck",
+    likes: 198
+  },
+  {
+    id: "wall-chest-stretch",
+    title: "Wall Supported Chest Opener",
+    category: "Supported Strength",
+    filterTag: "strength",
+    impactTag: "Zero Joint Impact",
+    suitableFor: "Hunched Shoulders, Breathing Capacity",
+    mode: "timer",
+    duration: 30,
+    met: 2.0,
+    points: 45,
+    audioTrack: "FitFeed Coach • Heart Opening",
+    caption: "Place forearm flat against a doorway or wall. Step forward gently until a soft stretch opens your chest.",
+    muscles: "Pectoralis Major & Biceps Brachii",
+    modifications: [
+      "Low Impact: Keep elbow lower than shoulder height.",
+      "Seated: Can be done by clasping hands behind chair backrest."
+    ],
+    safety: "Never twist aggressively away from the wall.",
+    animType: "chest_stretch",
+    likes: 187
+  },
+  {
+    id: "seated-flutter-kicks",
+    title: "Seated Gentle Flutter Kicks",
+    category: "Seated Mobility",
+    filterTag: "seated",
+    impactTag: "Zero Joint Impact",
+    suitableFor: "Gentle Core Activation, Seniors",
+    mode: "timer",
+    duration: 25,
+    met: 2.6,
+    points: 50,
+    audioTrack: "FitFeed Coach • Core Circulation",
+    caption: "Hold chair sides. Lift feet slightly and make small, gentle alternating flutter kicks in the air.",
+    muscles: "Transverse Abdominis & Rectus Femoris",
+    modifications: [
+      "Resting Foot: Keep one foot grounded while fluttering the other.",
+      "Low Energy: Point and flex feet on the floor instead."
+    ],
+    safety: "Keep lower back supported against chair; avoid slouching.",
+    animType: "flutter_kick",
+    likes: 145
+  },
+  {
+    id: "diaphragmatic-belly-breath",
+    title: "Diaphragmatic Belly Expansion",
+    category: "Mindful Breath",
+    filterTag: "breath",
+    impactTag: "Restorative",
+    suitableFor: "Oxygenation, Digestion, Relaxation",
+    mode: "timer",
+    duration: 40,
+    met: 1.5,
+    points: 40,
+    audioTrack: "FitFeed Coach • Diaphragm Awakening",
+    caption: "Place one hand on your belly. Inhale softly through nose, feeling belly balloon outward. Exhale gently.",
+    muscles: "Diaphragm & Intercostals",
+    modifications: [
+      "Position: Can be done seated, reclined, or supported in wheelchair.",
+      "Pacing: Breathe at your natural unhurried cadence."
+    ],
+    safety: "Keep shoulders and chest still; let only the belly move.",
+    animType: "breath",
+    likes: 276
+  },
+  {
+    id: "4-7-8-relax-breath",
+    title: "4-7-8 Deep Sleep Reset",
+    category: "Mindful Breath",
+    filterTag: "breath",
+    impactTag: "Restorative",
+    suitableFor: "Insomnia, High Stress, Evening Wind-Down",
+    mode: "timer",
+    duration: 45,
+    met: 1.4,
+    points: 40,
+    audioTrack: "FitFeed Coach • Parasympathetic Ease",
+    caption: "Inhale quietly through nose for 4s, hold breath for 7s, exhale completely through mouth with a whoosh for 8s.",
+    muscles: "Vagus Nerve & Autonomic Recovery",
+    modifications: [
+      "Breath Hold Discomfort: Shorten to 2-3-4 cadence.",
+      "High Blood Pressure: Skip the 7-second hold; simply inhale 4, exhale 8."
+    ],
+    safety: "Never strain to hold breath. Stop if any lightheadedness occurs.",
+    animType: "breath",
+    likes: 389
   }
 ];
 
 /* ==========================================================================
-   2. APP STATE & PERSISTENCE
+   2. APP STATE STORE (LOCAL-FIRST)
    ========================================================================== */
 
 class AppStore {
   constructor() {
-    this.KEY = "fitfeed_app_v4_state";
+    this.KEY = "fitfeed_app_v5_complete";
     this.data = this.load();
   }
 
@@ -227,6 +578,7 @@ class AppStore {
       lastDate: new Date().toISOString().slice(0, 10),
       likedIds: [],
       voiceEnabled: true,
+      slowMotion: false,
       dailyGoal: 3,
       history: []
     };
@@ -243,7 +595,6 @@ class AppStore {
   recordExercise(ex, durationSecs) {
     const today = new Date().toISOString().slice(0, 10);
     const durationMins = durationSecs / 60;
-    // Calorie calculation: MET * 3.5 * 85kg / 200 * durationMins
     const calories = Math.round((ex.met * 3.5 * 85 / 200) * durationMins * 10) / 10;
 
     this.data.completedCount++;
@@ -297,7 +648,7 @@ class AppStore {
 }
 
 /* ==========================================================================
-   3. VOICE COACH AUDIO SYNTHESIZER
+   3. VOICE COACH (WEB SPEECH API)
    ========================================================================== */
 
 class VoiceCoach {
@@ -336,7 +687,7 @@ class VoiceCoach {
 }
 
 /* ==========================================================================
-   4. THREE.JS 3D MOVEMENT AVATAR ENGINE
+   4. THREE.JS 3D MOVEMENT DEMONSTRATION ENGINE
    ========================================================================== */
 
 class MovementAvatar3D {
@@ -348,6 +699,7 @@ class MovementAvatar3D {
     this.avatar = null;
     this.chair = null;
     this.animType = "arm_swing";
+    this.speedMultiplier = 1.0;
     this.clock = null;
     this.isReady = false;
 
@@ -473,7 +825,7 @@ class MovementAvatar3D {
   setAnimation(animType) {
     this.animType = animType;
     if (this.chair) {
-      this.chair.visible = animType !== "wall_push";
+      this.chair.visible = !["wall_push", "wall_angel", "chest_stretch", "calf_raise"].includes(animType);
     }
   }
 
@@ -481,7 +833,7 @@ class MovementAvatar3D {
     if (!this.isReady) return;
     requestAnimationFrame(() => this.animate());
 
-    const t = this.clock.getElapsedTime();
+    const t = this.clock.getElapsedTime() * this.speedMultiplier;
 
     if (this.animType === "arm_swing") {
       const swing = Math.sin(t * 3.5) * 0.75;
@@ -514,6 +866,26 @@ class MovementAvatar3D {
       const lean = Math.sin(t * 2) * 0.3;
       this.torso.rotation.z = lean;
       this.rightArm.rotation.z = Math.PI / 1.3 + lean;
+    } else if (this.animType === "knee_ext") {
+      const ext = Math.sin(t * 3) * 0.55;
+      this.rightLeg.rotation.x = Math.max(0, ext);
+    } else if (this.animType === "wall_angel") {
+      const slide = Math.sin(t * 2.5) * 0.45;
+      this.leftArm.rotation.z = Math.PI / 2 + slide;
+      this.rightArm.rotation.z = -Math.PI / 2 - slide;
+    } else if (this.animType === "row_pull") {
+      const row = Math.sin(t * 3) * 0.4;
+      this.leftArm.rotation.x = -Math.PI / 4 + row;
+      this.rightArm.rotation.x = -Math.PI / 4 + row;
+    } else if (this.animType === "squat_tap") {
+      const squat = (Math.sin(t * 2) + 1) * 0.5;
+      this.avatar.position.y = squat * 0.35;
+      this.leftLeg.rotation.x = -squat * 0.4;
+      this.rightLeg.rotation.x = -squat * 0.4;
+    } else if (this.animType === "hip_opener") {
+      const open = Math.sin(t * 2.5) * 0.35;
+      this.leftLeg.rotation.z = open;
+      this.rightLeg.rotation.z = -open;
     }
 
     this.renderer.render(this.scene, this.camera);
@@ -794,6 +1166,16 @@ class FitFeedApp {
           <canvas id="canvas-reel-${idx}"></canvas>
         </div>
 
+        <!-- Live Visual Demonstration Badge & Speed Toggle -->
+        <div class="motion-demo-badge">
+          <span class="motion-rec-dot"></span>
+          <span>Motion Guide</span>
+        </div>
+
+        <button class="speed-toggle-pill" id="btn-speed-${idx}" type="button" title="Toggle Demonstration Speed">
+          <span>1.0x</span>
+        </button>
+
         <div class="reel-vignette-top"></div>
         <div class="reel-vignette-bottom"></div>
 
@@ -888,6 +1270,17 @@ class FitFeedApp {
     if (repBtn) {
       repBtn.addEventListener("click", () => this.countRep(ex, idx));
     }
+
+    const speedBtn = slide.querySelector(`#btn-speed-${idx}`);
+    if (speedBtn) {
+      speedBtn.addEventListener("click", () => {
+        if (!this.avatar) return;
+        this.store.data.slowMotion = !this.store.data.slowMotion;
+        this.avatar.speedMultiplier = this.store.data.slowMotion ? 0.5 : 1.0;
+        speedBtn.textContent = this.store.data.slowMotion ? "0.5x Slow" : "1.0x";
+        this.showToast(this.store.data.slowMotion ? "Slow-motion form guide (0.5x)" : "Normal speed (1.0x)");
+      });
+    }
   }
 
   initObserver() {
@@ -923,6 +1316,7 @@ class FitFeedApp {
         this.avatar = new MovementAvatar3D(activeCanvas);
       }
       this.avatar.setAnimation(ex.animType);
+      this.avatar.speedMultiplier = this.store.data.slowMotion ? 0.5 : 1.0;
     }
 
     this.currentReps = 0;
@@ -1190,7 +1584,7 @@ class FitFeedApp {
         <div class="mt-auto pt-3 border-t border-white/10 flex items-center justify-between">
           <span class="text-[11px] font-semibold text-slate-500 truncate max-w-[130px]">${ex.muscles}</span>
           <button class="px-3 py-1.5 rounded-xl bg-white/10 hover:bg-emerald-500 hover:text-slate-950 text-white font-bold text-xs transition-colors btn-play-in-reels" type="button" data-id="${ex.id}">
-            Play in Reels →
+            Play Reel →
           </button>
         </div>
       `;
