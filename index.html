@@ -112,7 +112,7 @@
           <span aria-hidden="true">⭐</span>
           <span id="nav-points-text">0 pts</span>
         </div>
-        <button id="btn-global-voice" class="icon-btn" type="button" title="Toggle voice coach" aria-label="Toggle voice coach audio" aria-pressed="true">
+        <button id="btn-global-voice" class="icon-btn active-voice" type="button" title="Toggle voice coach" aria-label="Toggle voice coach audio" aria-pressed="true">
           <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
             <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/>
             <path d="M19.07 4.93a10 10 0 0 1 0 14.14M15.54 8.46a5 5 0 0 1 0 7.07"/>
@@ -149,6 +149,10 @@
 
       <!-- Reels phone/viewport frame -->
       <div class="reels-frame">
+        <!-- Single Shared High-Performance WebGL 3D Canvas -->
+        <div class="shared-canvas-container" id="shared-canvas-container">
+          <canvas id="shared-avatar-canvas"></canvas>
+        </div>
 
         <!-- Story progress segments (only first 20 shown) -->
         <div class="story-bar" id="reels-story-bar" aria-hidden="true"></div>

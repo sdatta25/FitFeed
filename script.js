@@ -4,13 +4,11 @@
  * Authors: Naihrit & Co-Developer
  *
  * Architecture:
- * 1. 100 Low-Impact Medically Valid Exercises across 5 Categories
- * 2. Realistic 3D Human Biomechanical Engine (Three.js with realistic head, hair,
- *    anatomical skin tones, athletic tank & shorts, joints, chair, and 360-degree orbit camera)
- * 3. Mobile (360-430px) & Tablet (768-1024px) Responsive Reels Feed
- * 4. Local-First Activity Dashboard (7-day activity graph, MET energy burn, streaks, history)
- * 5. Instant Filterable Movement Library
- * 6. Accessible Voice Coach (Web Speech API) & Confetti Explosion
+ * 1. 100 Low-Impact Medically Valid Exercises across 5 Categories (Real Likes Counter)
+ * 2. High-Performance Single-Context 3D Human Engine (Three.js 60FPS Zero-Lag)
+ * 3. Seamless Mobile (100dvh) & Tablet Responsive Reels Layout
+ * 4. Accurate Local-First Activity Dashboard (Real MET Burn, Streaks, 7-Day History)
+ * 5. Instant Voice Coach (Web Speech API with User Gesture Unlock)
  */
 
 "use strict";
@@ -35,8 +33,7 @@ const EXERCISES_DATA = [
       "Maintain a wider leg stance for comfortable shoulder clearance."
     ],
     "safety": "Never force past shoulder impingement. Stop if sharp pinching occurs.",
-    "animType": "arm_swing",
-    "likes": 184
+    "animType": "arm_swing"
   },
   {
     "id": "chair-marches",
@@ -57,8 +54,7 @@ const EXERCISES_DATA = [
       "Lift knees just 1 to 2 inches off chair to protect hips."
     ],
     "safety": "Lower each foot gently without stomping.",
-    "animType": "march",
-    "likes": 245
+    "animType": "march"
   },
   {
     "id": "seated-knee-extensions",
@@ -79,8 +75,7 @@ const EXERCISES_DATA = [
       "Place rolled towel under thighs for joint relief."
     ],
     "safety": "Do not hyperextend or kick abruptly. Extend smoothly.",
-    "animType": "knee_ext",
-    "likes": 198
+    "animType": "knee_ext"
   },
   {
     "id": "seated-ankle-circles",
@@ -101,8 +96,7 @@ const EXERCISES_DATA = [
       "Can be done with legs resting on a footrest."
     ],
     "safety": "If calf cramping occurs, gently draw toes toward shin.",
-    "animType": "ankle_circle",
-    "likes": 162
+    "animType": "ankle_circle"
   },
   {
     "id": "seated-shoulder-rolls",
@@ -123,8 +117,7 @@ const EXERCISES_DATA = [
       "Rest hands on thighs throughout."
     ],
     "safety": "Keep chin level; avoid tilting neck backward.",
-    "animType": "shoulder_roll",
-    "likes": 215
+    "animType": "shoulder_roll"
   },
   {
     "id": "wrist-finger-glides",
@@ -145,8 +138,7 @@ const EXERCISES_DATA = [
       "Rest forearms on chair armrests."
     ],
     "safety": "Never snap fingers open forcefully.",
-    "animType": "wrist_glide",
-    "likes": 140
+    "animType": "wrist_glide"
   },
   {
     "id": "seated-heel-toe-taps",
@@ -167,8 +159,7 @@ const EXERCISES_DATA = [
       "Can be done with shoes or barefoot."
     ],
     "safety": "Keep movements rhythmic and smooth.",
-    "animType": "heel_tap",
-    "likes": 188
+    "animType": "heel_tap"
   },
   {
     "id": "seated-hip-openers",
@@ -189,8 +180,7 @@ const EXERCISES_DATA = [
       "Place hands on outer thighs to assist."
     ],
     "safety": "Stop if sharp groin pinching occurs.",
-    "animType": "hip_opener",
-    "likes": 176
+    "animType": "hip_opener"
   },
   {
     "id": "seated-flutter-kicks",
@@ -211,8 +201,7 @@ const EXERCISES_DATA = [
       "Point and flex feet on floor instead."
     ],
     "safety": "Keep lower back supported against chair.",
-    "animType": "flutter_kick",
-    "likes": 153
+    "animType": "flutter_kick"
   },
   {
     "id": "seated-hamstring-hinge",
@@ -233,8 +222,7 @@ const EXERCISES_DATA = [
       "Perch on front third of chair."
     ],
     "safety": "Do not round lower back; hinge cleanly at hip crease.",
-    "animType": "hamstring_hinge",
-    "likes": 169
+    "animType": "hamstring_hinge"
   },
   {
     "id": "seated-arm-circles",
@@ -255,8 +243,7 @@ const EXERCISES_DATA = [
       "Make circles with elbows bent."
     ],
     "safety": "Never push through neck or shoulder pinch.",
-    "animType": "arm_circle",
-    "likes": 147
+    "animType": "arm_circle"
   },
   {
     "id": "seated-overhead-reach",
@@ -277,8 +264,7 @@ const EXERCISES_DATA = [
       "Support non-reaching hand on chair."
     ],
     "safety": "Avoid arching neck backward.",
-    "animType": "overhead_reach",
-    "likes": 180
+    "animType": "overhead_reach"
   },
   {
     "id": "seated-cross-reach",
@@ -299,8 +285,7 @@ const EXERCISES_DATA = [
       "Keep reaching arm low."
     ],
     "safety": "Rotate only through upper torso, keep hips stable.",
-    "animType": "cross_reach",
-    "likes": 164
+    "animType": "cross_reach"
   },
   {
     "id": "seated-chest-opener",
@@ -321,8 +306,7 @@ const EXERCISES_DATA = [
       "Perform one arm at a time."
     ],
     "safety": "Breathe smoothly without straining ribs.",
-    "animType": "goalpost",
-    "likes": 210
+    "animType": "goalpost"
   },
   {
     "id": "seated-side-taps",
@@ -343,8 +327,7 @@ const EXERCISES_DATA = [
       "Hold chair frame for stability."
     ],
     "safety": "Keep sitting tall without leaning heavily.",
-    "animType": "side_tap",
-    "likes": 172
+    "animType": "side_tap"
   },
   {
     "id": "seated-bicep-curls",
@@ -365,8 +348,7 @@ const EXERCISES_DATA = [
       "Rest elbows lightly against ribs."
     ],
     "safety": "Keep wrists straight and neutral.",
-    "animType": "bicep_curl",
-    "likes": 158
+    "animType": "bicep_curl"
   },
   {
     "id": "seated-tricep-pressbacks",
@@ -387,8 +369,7 @@ const EXERCISES_DATA = [
       "Move within comfortable shoulder range."
     ],
     "safety": "Avoid swinging torso back and forth.",
-    "animType": "tricep_press",
-    "likes": 149
+    "animType": "tricep_press"
   },
   {
     "id": "seated-wrist-circles",
@@ -409,8 +390,7 @@ const EXERCISES_DATA = [
       "Keep fingers soft and loose."
     ],
     "safety": "Never force through sharp wrist pain.",
-    "animType": "wrist_circle",
-    "likes": 135
+    "animType": "wrist_circle"
   },
   {
     "id": "seated-finger-spreads",
@@ -431,8 +411,7 @@ const EXERCISES_DATA = [
       "Gentle spread without maximum force."
     ],
     "safety": "Keep joints relaxed, do not hyperextend knuckles.",
-    "animType": "finger_spread",
-    "likes": 128
+    "animType": "finger_spread"
   },
   {
     "id": "seated-pelvic-tilts",
@@ -453,8 +432,7 @@ const EXERCISES_DATA = [
       "Place pillow behind lumbar spine if sensitive."
     ],
     "safety": "Avoid jarring spinal jolts.",
-    "animType": "pelvic_tilt",
-    "likes": 167
+    "animType": "pelvic_tilt"
   },
   {
     "id": "seated-punch-track",
@@ -475,8 +453,7 @@ const EXERCISES_DATA = [
       "Keep pace comfortable and unhurried."
     ],
     "safety": "Never snap elbows into full hyperextension.",
-    "animType": "front_punch",
-    "likes": 219
+    "animType": "front_punch"
   },
   {
     "id": "seated-steering-wheel",
@@ -497,8 +474,7 @@ const EXERCISES_DATA = [
       "Keep steering radius small."
     ],
     "safety": "Keep core engaged to avoid arching back.",
-    "animType": "steering_wheel",
-    "likes": 154
+    "animType": "steering_wheel"
   },
   {
     "id": "seated-knee-hugs",
@@ -519,8 +495,7 @@ const EXERCISES_DATA = [
       "Lift only a few inches off seat."
     ],
     "safety": "Stop if hip replacement restriction applies.",
-    "animType": "knee_hug",
-    "likes": 182
+    "animType": "knee_hug"
   },
   {
     "id": "seated-torso-circles",
@@ -541,8 +516,7 @@ const EXERCISES_DATA = [
       "Hold onto chair sides for balance."
     ],
     "safety": "Keep both buttocks firmly planted on the chair.",
-    "animType": "torso_circle",
-    "likes": 173
+    "animType": "torso_circle"
   },
   {
     "id": "seated-windshield-wipers",
@@ -563,8 +537,7 @@ const EXERCISES_DATA = [
       "Hold a rolled towel between elbow and rib."
     ],
     "safety": "Keep shoulders relaxed down away from ears.",
-    "animType": "windshield_arm",
-    "likes": 161
+    "animType": "windshield_arm"
   },
   {
     "id": "seated-calf-raises",
@@ -585,8 +558,7 @@ const EXERCISES_DATA = [
       "Lift one heel at a time if tired."
     ],
     "safety": "Keep feet pointed straight forward.",
-    "animType": "calf_raise",
-    "likes": 194
+    "animType": "calf_raise"
   },
   {
     "id": "seated-toe-lifts",
@@ -607,8 +579,7 @@ const EXERCISES_DATA = [
       "Slide feet forward slightly if shins fatigue quickly."
     ],
     "safety": "Keep movement controlled without slamming feet.",
-    "animType": "heel_tap",
-    "likes": 165
+    "animType": "heel_tap"
   },
   {
     "id": "seated-inner-thigh-squeeze",
@@ -629,8 +600,7 @@ const EXERCISES_DATA = [
       "Use 50% effort to avoid inner thigh cramps."
     ],
     "safety": "Breathe continuously; avoid holding breath during isometric hold.",
-    "animType": "inner_thigh",
-    "likes": 181
+    "animType": "inner_thigh"
   },
   {
     "id": "seated-hip-circles",
@@ -651,8 +621,7 @@ const EXERCISES_DATA = [
       "Keep circular range small."
     ],
     "safety": "Stop if sharp clicking or pinching occurs.",
-    "animType": "hip_opener",
-    "likes": 152
+    "animType": "hip_opener"
   },
   {
     "id": "seated-quad-holds",
@@ -673,8 +642,7 @@ const EXERCISES_DATA = [
       "Rest foot on low stool if lifting is heavy."
     ],
     "safety": "Keep knee slightly soft, do not forcefully hyperextend.",
-    "animType": "knee_ext",
-    "likes": 177
+    "animType": "knee_ext"
   },
   {
     "id": "seated-seated-kicks",
@@ -695,8 +663,7 @@ const EXERCISES_DATA = [
       "Hold onto chair arms for core stability."
     ],
     "safety": "Never snap knees rigidly at top of motion.",
-    "animType": "knee_ext",
-    "likes": 189
+    "animType": "knee_ext"
   },
   {
     "id": "seated-glute-squeezes",
@@ -717,8 +684,7 @@ const EXERCISES_DATA = [
       "Keep spine tall and relaxed."
     ],
     "safety": "Avoid holding your breath while clenching.",
-    "animType": "pelvic_tilt",
-    "likes": 203
+    "animType": "pelvic_tilt"
   },
   {
     "id": "seated-ankle-inversion",
@@ -739,8 +705,7 @@ const EXERCISES_DATA = [
       "Perform with socks on smooth flooring."
     ],
     "safety": "Never force past comfortable lateral ankle tension.",
-    "animType": "ankle_circle",
-    "likes": 143
+    "animType": "ankle_circle"
   },
   {
     "id": "seated-figure-4-stretch",
@@ -761,8 +726,7 @@ const EXERCISES_DATA = [
       "Stay upright without forward lean."
     ],
     "safety": "Prohibited for individuals with posterior hip replacement precautions without doctor clearance.",
-    "animType": "hamstring_hinge",
-    "likes": 221
+    "animType": "hamstring_hinge"
   },
   {
     "id": "seated-seated-leg-lift",
@@ -783,8 +747,7 @@ const EXERCISES_DATA = [
       "Keep back braced firmly against backrest."
     ],
     "safety": "Do not let lower back arch away from chair.",
-    "animType": "knee_ext",
-    "likes": 168
+    "animType": "knee_ext"
   },
   {
     "id": "seated-side-leg-lift",
@@ -805,8 +768,7 @@ const EXERCISES_DATA = [
       "Hold seat base for stability."
     ],
     "safety": "Keep torso facing squarely forward.",
-    "animType": "side_tap",
-    "likes": 159
+    "animType": "side_tap"
   },
   {
     "id": "seated-calf-stretch",
@@ -827,8 +789,7 @@ const EXERCISES_DATA = [
       "Keep knee softly bent if hamstring feels tight."
     ],
     "safety": "Do not yank or bounce; maintain gentle static hold.",
-    "animType": "hamstring_hinge",
-    "likes": 175
+    "animType": "hamstring_hinge"
   },
   {
     "id": "seated-toe-curls",
@@ -849,8 +810,7 @@ const EXERCISES_DATA = [
       "Can be done with actual washcloth for tactile feedback."
     ],
     "safety": "If arch cramps, instantly splay toes upward.",
-    "animType": "heel_tap",
-    "likes": 148
+    "animType": "heel_tap"
   },
   {
     "id": "seated-quad-pulse",
@@ -871,8 +831,7 @@ const EXERCISES_DATA = [
       "Keep heel lightly touching ground during rest."
     ],
     "safety": "Keep movements small and controlled.",
-    "animType": "knee_ext",
-    "likes": 163
+    "animType": "knee_ext"
   },
   {
     "id": "seated-cross-ankle-swivel",
@@ -893,8 +852,7 @@ const EXERCISES_DATA = [
       "Switch crossed ankles halfway."
     ],
     "safety": "Keep movements gentle and unforced.",
-    "animType": "ankle_circle",
-    "likes": 139
+    "animType": "ankle_circle"
   },
   {
     "id": "seated-shin-taps",
@@ -915,8 +873,7 @@ const EXERCISES_DATA = [
       "Count aloud to engage cognitive coordination."
     ],
     "safety": "Relax shoulders and maintain steady breathing.",
-    "animType": "heel_tap",
-    "likes": 185
+    "animType": "heel_tap"
   },
   {
     "id": "seated-marching-twist",
@@ -937,8 +894,7 @@ const EXERCISES_DATA = [
       "Keep movements slow and deliberate."
     ],
     "safety": "Keep chest proud, do not stoop forward excessively.",
-    "animType": "march",
-    "likes": 212
+    "animType": "march"
   },
   {
     "id": "seated-butterfly-flutters",
@@ -959,8 +915,7 @@ const EXERCISES_DATA = [
       "Keep flutter range very small."
     ],
     "safety": "Never press down on knees with hands.",
-    "animType": "hip_opener",
-    "likes": 156
+    "animType": "hip_opener"
   },
   {
     "id": "seated-leg-cradle",
@@ -981,8 +936,7 @@ const EXERCISES_DATA = [
       "Perform rocking while foot rests on a yoga block."
     ],
     "safety": "Keep knee at a comfortable angle without twisting.",
-    "animType": "hip_opener",
-    "likes": 171
+    "animType": "hip_opener"
   },
   {
     "id": "seated-heel-slides",
@@ -1003,8 +957,7 @@ const EXERCISES_DATA = [
       "Slide only as far as comfortable."
     ],
     "safety": "Maintain even pressure; avoid sudden jerks.",
-    "animType": "knee_ext",
-    "likes": 178
+    "animType": "knee_ext"
   },
   {
     "id": "wall-push-ups",
@@ -1025,8 +978,7 @@ const EXERCISES_DATA = [
       "Place palms flat or use light fists if wrists ache."
     ],
     "safety": "Ensure non-slip shoes and dry floor before starting.",
-    "animType": "wall_push",
-    "likes": 310
+    "animType": "wall_push"
   },
   {
     "id": "wall-angel-slides",
@@ -1047,8 +999,7 @@ const EXERCISES_DATA = [
       "Can be done seated against a high-backed chair."
     ],
     "safety": "Do not arch lower back away from the wall.",
-    "animType": "wall_angel",
-    "likes": 224
+    "animType": "wall_angel"
   },
   {
     "id": "chair-supported-squats",
@@ -1069,8 +1020,7 @@ const EXERCISES_DATA = [
       "Place feet slightly wider than hip-width for balance."
     ],
     "safety": "Ensure chair is sturdy against a wall so it cannot slide.",
-    "animType": "squat_tap",
-    "likes": 345
+    "animType": "squat_tap"
   },
   {
     "id": "countertop-calf-raises",
@@ -1091,8 +1041,7 @@ const EXERCISES_DATA = [
       "Can be performed seated by lifting heels high."
     ],
     "safety": "Distribute weight evenly across the balls of both feet.",
-    "animType": "calf_raise",
-    "likes": 240
+    "animType": "calf_raise"
   },
   {
     "id": "wall-chest-stretch",
@@ -1113,8 +1062,7 @@ const EXERCISES_DATA = [
       "Can be done by clasping hands behind chair."
     ],
     "safety": "Never twist aggressively away from the wall.",
-    "animType": "chest_stretch",
-    "likes": 195
+    "animType": "chest_stretch"
   },
   {
     "id": "countertop-side-leg-raise",
@@ -1135,8 +1083,7 @@ const EXERCISES_DATA = [
       "Keep standing knee slightly soft."
     ],
     "safety": "Do not tilt upper body deeply to side to cheat height.",
-    "animType": "side_step",
-    "likes": 218
+    "animType": "side_step"
   },
   {
     "id": "countertop-standing-march",
@@ -1157,8 +1104,7 @@ const EXERCISES_DATA = [
       "Hold with both hands for maximum balance."
     ],
     "safety": "Land gently on mid-foot without slamming.",
-    "animType": "standing_march",
-    "likes": 232
+    "animType": "standing_march"
   },
   {
     "id": "wall-plank-hold",
@@ -1179,8 +1125,7 @@ const EXERCISES_DATA = [
       "Take small rests every 8 seconds."
     ],
     "safety": "Keep hips in line with shoulders; do not sag lower back.",
-    "animType": "wall_push",
-    "likes": 205
+    "animType": "wall_push"
   },
   {
     "id": "supported-tandem-balance",
@@ -1201,8 +1146,7 @@ const EXERCISES_DATA = [
       "Keep both hands hovering right above counter."
     ],
     "safety": "Always maintain counter within immediate hand grasp.",
-    "animType": "balance_hold",
-    "likes": 190
+    "animType": "balance_hold"
   },
   {
     "id": "wall-supported-squat",
@@ -1223,8 +1167,7 @@ const EXERCISES_DATA = [
       "Place an exercise ball behind back for smoother roll."
     ],
     "safety": "Do not allow knees to travel past toes.",
-    "animType": "squat_tap",
-    "likes": 226
+    "animType": "squat_tap"
   },
   {
     "id": "countertop-hamstring-curls",
@@ -1245,8 +1188,7 @@ const EXERCISES_DATA = [
       "Hold counter with both hands."
     ],
     "safety": "Keep thighs parallel; do not swing thigh forward.",
-    "animType": "standing_march",
-    "likes": 198
+    "animType": "standing_march"
   },
   {
     "id": "supported-single-leg-stance",
@@ -1267,8 +1209,7 @@ const EXERCISES_DATA = [
       "Hold counter firmly with both hands."
     ],
     "safety": "Maintain counter contact if feeling unsteady.",
-    "animType": "balance_hold",
-    "likes": 238
+    "animType": "balance_hold"
   },
   {
     "id": "countertop-glute-kickbacks",
@@ -1289,8 +1230,7 @@ const EXERCISES_DATA = [
       "Do not arch lower back."
     ],
     "safety": "Keep core firm to protect lumbar spine.",
-    "animType": "side_step",
-    "likes": 201
+    "animType": "side_step"
   },
   {
     "id": "wall-tricep-press",
@@ -1311,8 +1251,7 @@ const EXERCISES_DATA = [
       "Move within small 3-inch range."
     ],
     "safety": "Keep elbows pointed straight down.",
-    "animType": "wall_push",
-    "likes": 184
+    "animType": "wall_push"
   },
   {
     "id": "countertop-side-step",
@@ -1333,8 +1272,7 @@ const EXERCISES_DATA = [
       "Take small comfortable steps."
     ],
     "safety": "Keep knees slightly springy; never lock knees.",
-    "animType": "side_step",
-    "likes": 215
+    "animType": "side_step"
   },
   {
     "id": "wall-downward-dog",
@@ -1355,8 +1293,7 @@ const EXERCISES_DATA = [
       "Keep hands higher on wall for gentler stretch."
     ],
     "safety": "Do not let head drop lower than arms.",
-    "animType": "hamstring_hinge",
-    "likes": 246
+    "animType": "hamstring_hinge"
   },
   {
     "id": "countertop-hip-hinge",
@@ -1377,8 +1314,7 @@ const EXERCISES_DATA = [
       "Keep knees comfortably bent."
     ],
     "safety": "Never round lower back during the hinge.",
-    "animType": "hamstring_hinge",
-    "likes": 191
+    "animType": "hamstring_hinge"
   },
   {
     "id": "doorframe-lat-stretch",
@@ -1399,8 +1335,7 @@ const EXERCISES_DATA = [
       "Can be done holding countertop edge."
     ],
     "safety": "Hold with full grip, ensure dry non-slip hands.",
-    "animType": "hamstring_hinge",
-    "likes": 177
+    "animType": "hamstring_hinge"
   },
   {
     "id": "supported-heel-rockers",
@@ -1421,8 +1356,7 @@ const EXERCISES_DATA = [
       "Keep both hands firmly on counter."
     ],
     "safety": "Avoid leaning torso backward during heel lift.",
-    "animType": "calf_raise",
-    "likes": 204
+    "animType": "calf_raise"
   },
   {
     "id": "countertop-torso-twist",
@@ -1443,8 +1377,7 @@ const EXERCISES_DATA = [
       "Switch hands halfway through."
     ],
     "safety": "Keep hips facing forward; rotate only through mid-back.",
-    "animType": "torso_twist",
-    "likes": 182
+    "animType": "torso_twist"
   },
   {
     "id": "seated-cat-cow",
@@ -1465,8 +1398,7 @@ const EXERCISES_DATA = [
       "Keep movement small and fluid; avoid aggressive flexion."
     ],
     "safety": "Do not hyperextend cervical neck. Keep eye gaze natural.",
-    "animType": "cat_cow",
-    "likes": 284
+    "animType": "cat_cow"
   },
   {
     "id": "seated-torso-twist",
@@ -1487,8 +1419,7 @@ const EXERCISES_DATA = [
       "Hold chair armrest to support the stretch softly."
     ],
     "safety": "Never torque or twist using ballistic momentum.",
-    "animType": "torso_twist",
-    "likes": 216
+    "animType": "torso_twist"
   },
   {
     "id": "seated-side-reach",
@@ -1509,8 +1440,7 @@ const EXERCISES_DATA = [
       "Hold onto chair frame with non-reaching hand."
     ],
     "safety": "Keep both hips firmly grounded on seat to prevent tipping.",
-    "animType": "side_reach",
-    "likes": 195
+    "animType": "side_reach"
   },
   {
     "id": "seated-row-pulls",
@@ -1531,8 +1461,7 @@ const EXERCISES_DATA = [
       "Sit against backrest for spinal support."
     ],
     "safety": "Avoid shrugging shoulders up toward ears.",
-    "animType": "row_pull",
-    "likes": 247
+    "animType": "row_pull"
   },
   {
     "id": "neck-side-tilts",
@@ -1553,8 +1482,7 @@ const EXERCISES_DATA = [
       "Rest hands comfortably in lap."
     ],
     "safety": "Never pull or press your head with your hand. Gravity alone is sufficient.",
-    "animType": "neck_tilt",
-    "likes": 210
+    "animType": "neck_tilt"
   },
   {
     "id": "chin-tuck-retractions",
@@ -1575,8 +1503,7 @@ const EXERCISES_DATA = [
       "Keep back firmly against backrest."
     ],
     "safety": "Do not tilt head downward; glide horizontally backward.",
-    "animType": "chin_tuck",
-    "likes": 235
+    "animType": "chin_tuck"
   },
   {
     "id": "seated-thoracic-extension",
@@ -1597,8 +1524,7 @@ const EXERCISES_DATA = [
       "Place a folded towel behind upper back for cushion."
     ],
     "safety": "Do not hyperextend lower back; move only from mid-back.",
-    "animType": "thoracic_ext",
-    "likes": 202
+    "animType": "thoracic_ext"
   },
   {
     "id": "seated-shoulder-blade-pinch",
@@ -1619,8 +1545,7 @@ const EXERCISES_DATA = [
       "Perform with hands resting on thighs."
     ],
     "safety": "Keep neck elongated and shoulders down away from ears.",
-    "animType": "row_pull",
-    "likes": 189
+    "animType": "row_pull"
   },
   {
     "id": "neck-rotations",
@@ -1641,8 +1566,7 @@ const EXERCISES_DATA = [
       "Keep eyes level on horizon."
     ],
     "safety": "Never roll head backward in full circular neck rolls.",
-    "animType": "neck_tilt",
-    "likes": 198
+    "animType": "neck_tilt"
   },
   {
     "id": "seated-spinal-waves",
@@ -1663,8 +1587,7 @@ const EXERCISES_DATA = [
       "Support hands on thighs throughout."
     ],
     "safety": "Keep breathing rhythmic and unhurried.",
-    "animType": "cat_cow",
-    "likes": 174
+    "animType": "cat_cow"
   },
   {
     "id": "seated-shoulder-shrugs",
@@ -1685,8 +1608,7 @@ const EXERCISES_DATA = [
       "Shrug one shoulder at a time."
     ],
     "safety": "Do not hold tension at the top; release fully on exhale.",
-    "animType": "shoulder_roll",
-    "likes": 183
+    "animType": "shoulder_roll"
   },
   {
     "id": "seated-chest-expansion",
@@ -1707,8 +1629,7 @@ const EXERCISES_DATA = [
       "Rest hands flat on back of hips."
     ],
     "safety": "Avoid pushing head forward as shoulders open.",
-    "animType": "goalpost",
-    "likes": 219
+    "animType": "goalpost"
   },
   {
     "id": "seated-side-bend-glide",
@@ -1729,8 +1650,7 @@ const EXERCISES_DATA = [
       "Keep other hand on hip for stability."
     ],
     "safety": "Keep both buttocks pressed evenly into chair seat.",
-    "animType": "side_reach",
-    "likes": 167
+    "animType": "side_reach"
   },
   {
     "id": "seated-overhead-y-hold",
@@ -1751,8 +1671,7 @@ const EXERCISES_DATA = [
       "Perform one arm at a time."
     ],
     "safety": "Keep ribs knitted down; avoid arching lower spine.",
-    "animType": "overhead_reach",
-    "likes": 231
+    "animType": "overhead_reach"
   },
   {
     "id": "seated-head-press",
@@ -1773,8 +1692,7 @@ const EXERCISES_DATA = [
       "Repeat with hand behind head."
     ],
     "safety": "Keep motion strictly isometric; no head movement occurs.",
-    "animType": "chin_tuck",
-    "likes": 157
+    "animType": "chin_tuck"
   },
   {
     "id": "seated-bow-and-arrow",
@@ -1795,8 +1713,7 @@ const EXERCISES_DATA = [
       "Keep pulling elbow at chest height."
     ],
     "safety": "Rotate from ribcage, not lower spine.",
-    "animType": "row_pull",
-    "likes": 212
+    "animType": "row_pull"
   },
   {
     "id": "seated-cross-shoulder-stretch",
@@ -1817,8 +1734,7 @@ const EXERCISES_DATA = [
       "Keep arm below shoulder level."
     ],
     "safety": "Do not twist your spine to force the stretch.",
-    "animType": "cross_reach",
-    "likes": 193
+    "animType": "cross_reach"
   },
   {
     "id": "seated-lumbar-decompression",
@@ -1839,8 +1755,7 @@ const EXERCISES_DATA = [
       "Use tabletop if chair lacks armrests."
     ],
     "safety": "Stop if shoulder discomfort occurs.",
-    "animType": "wall_push",
-    "likes": 242
+    "animType": "wall_push"
   },
   {
     "id": "seated-rib-expansions",
@@ -1861,8 +1776,7 @@ const EXERCISES_DATA = [
       "Focus breath into lower ribs."
     ],
     "safety": "Breathe naturally without straining.",
-    "animType": "breath",
-    "likes": 181
+    "animType": "breath"
   },
   {
     "id": "seated-prayer-extension",
@@ -1883,8 +1797,7 @@ const EXERCISES_DATA = [
       "Press softly with 30% effort."
     ],
     "safety": "Keep forearms level and shoulders relaxed down.",
-    "animType": "overhead_reach",
-    "likes": 204
+    "animType": "overhead_reach"
   },
   {
     "id": "box-breathing",
@@ -1905,8 +1818,7 @@ const EXERCISES_DATA = [
       "Skip holds and breathe continuously if blood pressure is high."
     ],
     "safety": "Breathe naturally. If dizziness occurs, return to normal breathing.",
-    "animType": "breath",
-    "likes": 412
+    "animType": "breath"
   },
   {
     "id": "diaphragmatic-belly-breath",
@@ -1927,8 +1839,7 @@ const EXERCISES_DATA = [
       "Breathe at your natural unhurried cadence."
     ],
     "safety": "Keep shoulders still; let only the belly expand.",
-    "animType": "breath",
-    "likes": 276
+    "animType": "breath"
   },
   {
     "id": "4-7-8-relax-breath",
@@ -1949,8 +1860,7 @@ const EXERCISES_DATA = [
       "Skip hold entirely if hypertensive."
     ],
     "safety": "Never strain to hold breath. Stop if lightheaded.",
-    "animType": "breath",
-    "likes": 389
+    "animType": "breath"
   },
   {
     "id": "pursed-lip-breathing",
@@ -1971,8 +1881,7 @@ const EXERCISES_DATA = [
       "Rest hands flat on thighs."
     ],
     "safety": "Do not force air out; let exhale flow smoothly.",
-    "animType": "breath",
-    "likes": 308
+    "animType": "breath"
   },
   {
     "id": "resonant-coherent-breath",
@@ -1993,8 +1902,7 @@ const EXERCISES_DATA = [
       "Breathe through nose only."
     ],
     "safety": "Maintain relaxed face and jaw throughout.",
-    "animType": "breath",
-    "likes": 335
+    "animType": "breath"
   },
   {
     "id": "ocean-breath-ujjayi",
@@ -2015,8 +1923,7 @@ const EXERCISES_DATA = [
       "Breathe naturally if throat feels dry."
     ],
     "safety": "Do not choke or over-constrict airway.",
-    "animType": "breath",
-    "likes": 264
+    "animType": "breath"
   },
   {
     "id": "physiological-sigh",
@@ -2037,8 +1944,7 @@ const EXERCISES_DATA = [
       "Sigh softly without vocal shouting."
     ],
     "safety": "Excellent for quick resets between workouts.",
-    "animType": "breath",
-    "likes": 395
+    "animType": "breath"
   },
   {
     "id": "breath-with-arm-sweeps",
@@ -2059,8 +1965,7 @@ const EXERCISES_DATA = [
       "Rest hands on knees between sweeps."
     ],
     "safety": "Move arms at the exact speed of your breath.",
-    "animType": "overhead_reach",
-    "likes": 279
+    "animType": "overhead_reach"
   },
   {
     "id": "alternate-nostril-breath",
@@ -2081,8 +1986,7 @@ const EXERCISES_DATA = [
       "Keep elbow supported on armrest."
     ],
     "safety": "Never force if nostrils are blocked from colds.",
-    "animType": "breath",
-    "likes": 290
+    "animType": "breath"
   },
   {
     "id": "humming-bee-breath",
@@ -2103,8 +2007,7 @@ const EXERCISES_DATA = [
       "Rest fingertips gently over ears to heighten resonance."
     ],
     "safety": "Soothing for headaches and blood pressure.",
-    "animType": "breath",
-    "likes": 318
+    "animType": "breath"
   },
   {
     "id": "guided-body-scan-release",
@@ -2125,8 +2028,7 @@ const EXERCISES_DATA = [
       "Can be done with head resting back."
     ],
     "safety": "Notice sensations without judgment.",
-    "animType": "breath",
-    "likes": 362
+    "animType": "breath"
   },
   {
     "id": "3-part-dirga-breath",
@@ -2147,8 +2049,7 @@ const EXERCISES_DATA = [
       "Keep volume comfortable; do not overfill lungs."
     ],
     "safety": "Keep throat relaxed without gasping.",
-    "animType": "breath",
-    "likes": 288
+    "animType": "breath"
   },
   {
     "id": "jaw-temple-release",
@@ -2169,8 +2070,7 @@ const EXERCISES_DATA = [
       "Make gentle side-to-side jaw sways."
     ],
     "safety": "Never click or pop jaw aggressively.",
-    "animType": "breath",
-    "likes": 271
+    "animType": "breath"
   },
   {
     "id": "heart-hands-gratitude",
@@ -2191,8 +2091,7 @@ const EXERCISES_DATA = [
       "Allow shoulders to drop completely."
     ],
     "safety": "Body-positive and restorative.",
-    "animType": "breath",
-    "likes": 384
+    "animType": "breath"
   },
   {
     "id": "grounding-foot-breath",
@@ -2213,17 +2112,16 @@ const EXERCISES_DATA = [
       "Press toes gently into floor on exhale."
     ],
     "safety": "Brings mind immediately back to the present moment.",
-    "animType": "breath",
-    "likes": 329
+    "animType": "breath"
   }
 ];
 
 /* ==========================================================================
-   2. APP STATE STORE (LOCAL-FIRST)
+   2. APP STATE STORE (LOCAL-FIRST & ACCURATE)
    ========================================================================== */
 class AppStore {
   constructor() {
-    this.KEY = "fitfeed_v6_100ex";
+    this.KEY = "fitfeed_v7_real_data";
     this.data = this.load();
   }
 
@@ -2241,6 +2139,7 @@ class AppStore {
       streak: 1,
       lastDate: new Date().toISOString().slice(0, 10),
       likedIds: [],
+      publicLikes: {}, // Real community likes (starts at 0, no fake numbers!)
       voiceEnabled: true,
       slowMotion: false,
       dailyGoal: 3,
@@ -2256,17 +2155,48 @@ class AppStore {
     }
   }
 
+  getLikes(id) {
+    return this.data.publicLikes[id] || 0;
+  }
+
+  toggleLike(id) {
+    if (!this.data.publicLikes) this.data.publicLikes = {};
+    const isLiked = this.data.likedIds.includes(id);
+
+    if (isLiked) {
+      const idx = this.data.likedIds.indexOf(id);
+      if (idx > -1) this.data.likedIds.splice(idx, 1);
+      this.data.publicLikes[id] = Math.max(0, (this.data.publicLikes[id] || 1) - 1);
+    } else {
+      this.data.likedIds.push(id);
+      this.data.publicLikes[id] = (this.data.publicLikes[id] || 0) + 1;
+    }
+
+    this.save();
+    return { isLiked: !isLiked, count: this.data.publicLikes[id] };
+  }
+
   recordExercise(ex, durationSecs) {
     const today = new Date().toISOString().slice(0, 10);
     const durationMins = durationSecs / 60;
-    const calories = Math.round((ex.met * 3.5 * 85 / 200) * durationMins * 10) / 10;
+    // Accurate MET formula: kcal = (MET * 3.5 * 75kg / 200) * minutes
+    const calories = Math.round((ex.met * 3.5 * 75 / 200) * durationMins * 10) / 10;
 
     this.data.completedCount++;
     this.data.totalCalories = Math.round((this.data.totalCalories + calories) * 10) / 10;
     this.data.totalPoints += ex.points;
 
+    // Accurate streak calculation
     if (this.data.lastDate !== today) {
-      this.data.streak++;
+      const yesterday = new Date();
+      yesterday.setDate(yesterday.getDate() - 1);
+      const yesterdayStr = yesterday.toISOString().slice(0, 10);
+
+      if (this.data.lastDate === yesterdayStr) {
+        this.data.streak++;
+      } else {
+        this.data.streak = 1;
+      }
       this.data.lastDate = today;
     }
 
@@ -2279,14 +2209,14 @@ class AppStore {
       timestamp: new Date().toISOString()
     });
 
-    if (this.data.history.length > 80) this.data.history = this.data.history.slice(0, 80);
+    if (this.data.history.length > 100) this.data.history = this.data.history.slice(0, 100);
     this.save();
     return { calories, points: ex.points };
   }
 
   getTodayCompletedCount() {
     const today = new Date().toISOString().slice(0, 10);
-    return this.data.history.filter(h => h.timestamp.startsWith(today)).length;
+    return this.data.history.filter(h => h.timestamp && h.timestamp.startsWith(today)).length;
   }
 
   getWeeklyData() {
@@ -2299,7 +2229,7 @@ class AppStore {
       const d = new Date(now);
       d.setDate(now.getDate() - currentDayIdx + i);
       const dateStr = d.toISOString().slice(0, 10);
-      const count = this.data.history.filter(h => h.timestamp.startsWith(dateStr)).length;
+      const count = this.data.history.filter(h => h.timestamp && h.timestamp.startsWith(dateStr)).length;
       week.push({
         name: days[i],
         dateStr,
@@ -2312,12 +2242,29 @@ class AppStore {
 }
 
 /* ==========================================================================
-   3. VOICE COACH (WEB SPEECH API)
+   3. VOICE COACH (ACCESSIBLE WEB SPEECH API)
    ========================================================================== */
 class VoiceCoach {
   constructor() {
     this.synth = window.speechSynthesis || null;
     this.enabled = true;
+    this.isUnlocked = false;
+
+    // Unlock Web Speech API on first user interaction
+    const unlock = () => {
+      if (this.isUnlocked || !this.synth) return;
+      try {
+        const dummy = new SpeechSynthesisUtterance("");
+        dummy.volume = 0;
+        this.synth.speak(dummy);
+        this.isUnlocked = true;
+      } catch (e) {}
+      window.removeEventListener("click", unlock);
+      window.removeEventListener("touchstart", unlock);
+    };
+
+    window.addEventListener("click", unlock, { once: true });
+    window.addEventListener("touchstart", unlock, { once: true });
   }
 
   speak(text) {
@@ -2332,7 +2279,7 @@ class VoiceCoach {
       if (natural) utt.voice = natural;
       this.synth.speak(utt);
     } catch (e) {
-      console.warn("Speech synthesis warning:", e);
+      console.warn("Speech warning:", e);
     }
   }
 
@@ -2350,9 +2297,9 @@ class VoiceCoach {
 }
 
 /* ==========================================================================
-   4. REALISTIC 3D HUMAN MOVEMENT ENGINE (Three.js)
+   4. ULTRA-FAST 60FPS SHARED 3D HUMAN ENGINE (Three.js)
    ========================================================================== */
-class MovementAvatar3D {
+class SharedMovementAvatar3D {
   constructor(canvas) {
     this.canvas = canvas;
     this.scene = null;
@@ -2360,12 +2307,11 @@ class MovementAvatar3D {
     this.renderer = null;
     this.human = null;
     this.chair = null;
-    this.groundMat = null;
     this.animType = "arm_swing";
     this.speedMultiplier = 1.0;
     this.clock = null;
     this.isReady = false;
-    this.targetRotationY = 0;
+    this.isPaused = false;
     this.isDragging = false;
     this.previousMouseX = 0;
 
@@ -2376,8 +2322,9 @@ class MovementAvatar3D {
 
   init() {
     try {
-      const width = this.canvas.clientWidth || 380;
-      const height = this.canvas.clientHeight || 720;
+      const rect = this.canvas.parentElement.getBoundingClientRect();
+      const width = rect.width || 380;
+      const height = rect.height || 720;
 
       this.scene = new THREE.Scene();
       this.camera = new THREE.PerspectiveCamera(46, width / height, 0.1, 100);
@@ -2391,26 +2338,25 @@ class MovementAvatar3D {
       });
       this.renderer.setSize(width, height);
       this.renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
-      this.renderer.outputEncoding = THREE.sRGBEncoding;
 
-      // Studio 3-Point Lighting for realistic human rendering
-      const ambientLight = new THREE.AmbientLight(0xfff7ed, 0.85); // Warm ambient
+      // 3-Point Lighting
+      const ambientLight = new THREE.AmbientLight(0xfff7ed, 0.88);
       this.scene.add(ambientLight);
 
-      const keyLight = new THREE.DirectionalLight(0xffffff, 1.2); // Key light
+      const keyLight = new THREE.DirectionalLight(0xffffff, 1.2);
       keyLight.position.set(2.5, 4.5, 3.5);
       this.scene.add(keyLight);
 
-      const rimLight = new THREE.DirectionalLight(0x38bdf8, 0.9); // Cool cyan rim light
+      const rimLight = new THREE.DirectionalLight(0x38bdf8, 0.9);
       rimLight.position.set(-3.0, 2.5, -2.5);
       this.scene.add(rimLight);
 
-      const bounceLight = new THREE.DirectionalLight(0x10b981, 0.35); // Gentle emerald floor bounce
+      const bounceLight = new THREE.DirectionalLight(0x10b981, 0.35);
       bounceLight.position.set(0, -1, 2);
       this.scene.add(bounceLight);
 
-      this.buildRealisticHuman();
-      this.bindOrbitControls();
+      this.buildHuman();
+      this.bindOrbit();
 
       this.clock = new THREE.Clock();
       this.isReady = true;
@@ -2418,289 +2364,197 @@ class MovementAvatar3D {
 
       window.addEventListener("resize", () => this.resize());
     } catch (err) {
-      console.warn("Three.js WebGL initialization warning:", err);
+      console.warn("Three.js setup warning:", err);
     }
   }
 
-  buildRealisticHuman() {
+  buildHuman() {
     this.human = new THREE.Group();
 
-    // Natural Human Materials
-    const skinMat = new THREE.MeshStandardMaterial({
-      color: 0xd29d78, // Natural warm tan skin tone
-      roughness: 0.65,
-      metalness: 0.05
-    });
+    // Natural Skin Tone & Materials
+    const skinMat = new THREE.MeshStandardMaterial({ color: 0xd29d78, roughness: 0.65, metalness: 0.05 });
+    const hairMat = new THREE.MeshStandardMaterial({ color: 0x271e1b, roughness: 0.85 });
+    const shirtMat = new THREE.MeshStandardMaterial({ color: 0x0f766e, roughness: 0.45, metalness: 0.1 }); // Teal tank
+    const shortsMat = new THREE.MeshStandardMaterial({ color: 0x1e293b, roughness: 0.6 }); // Slate shorts
+    const shoeMat = new THREE.MeshStandardMaterial({ color: 0x09090b, roughness: 0.5 });
+    const soleMat = new THREE.MeshStandardMaterial({ color: 0xf8fafc, roughness: 0.3 });
+    const chairWood = new THREE.MeshStandardMaterial({ color: 0x3f2d21, roughness: 0.65 });
+    const chairMetal = new THREE.MeshStandardMaterial({ color: 0x475569, roughness: 0.3, metalness: 0.6 });
 
-    const hairMat = new THREE.MeshStandardMaterial({
-      color: 0x271e1b, // Dark natural hair
-      roughness: 0.85,
-      metalness: 0.0
-    });
-
-    const shirtMat = new THREE.MeshStandardMaterial({
-      color: 0x0f766e, // Athletic deep teal tank top
-      roughness: 0.45,
-      metalness: 0.1
-    });
-
-    const shortsMat = new THREE.MeshStandardMaterial({
-      color: 0x1e293b, // Slate navy training shorts
-      roughness: 0.6,
-      metalness: 0.05
-    });
-
-    const shoeMat = new THREE.MeshStandardMaterial({
-      color: 0x09090b, // Dark sneaker upper
-      roughness: 0.5
-    });
-
-    const soleMat = new THREE.MeshStandardMaterial({
-      color: 0xf8fafc, // Crisp white sneaker sole
-      roughness: 0.3
-    });
-
-    const chairWood = new THREE.MeshStandardMaterial({
-      color: 0x3f2d21, // Warm hardwood ergonomic chair
-      roughness: 0.65
-    });
-
-    const chairMetal = new THREE.MeshStandardMaterial({
-      color: 0x475569, // Modern slate frame
-      roughness: 0.3,
-      metalness: 0.6
-    });
-
-    // 1. HEAD & FACIAL FEATURES
+    // 1. Head & Facial Landmarks
     this.headGroup = new THREE.Group();
     this.headGroup.position.set(0, 1.48, 0);
 
-    // Oval head
-    const headGeo = new THREE.SphereGeometry(0.125, 24, 24);
+    const headGeo = new THREE.SphereGeometry(0.125, 20, 20);
     headGeo.scale(1.0, 1.18, 1.08);
     const headMesh = new THREE.Mesh(headGeo, skinMat);
     this.headGroup.add(headMesh);
 
-    // Realistic hair cap
-    const hairGeo = new THREE.SphereGeometry(0.13, 20, 20);
+    const hairGeo = new THREE.SphereGeometry(0.13, 16, 16);
     hairGeo.scale(1.02, 1.15, 1.06);
     const hairMesh = new THREE.Mesh(hairGeo, hairMat);
     hairMesh.position.set(0, 0.04, -0.015);
     this.headGroup.add(hairMesh);
 
-    // Subtle nose contour
     const noseGeo = new THREE.CylinderGeometry(0.012, 0.022, 0.045, 8);
     const noseMesh = new THREE.Mesh(noseGeo, skinMat);
     noseMesh.rotation.x = Math.PI / 2;
     noseMesh.position.set(0, -0.01, 0.135);
     this.headGroup.add(noseMesh);
 
-    // Left & Right ears
-    const earGeo = new THREE.SphereGeometry(0.025, 10, 10);
+    const earGeo = new THREE.SphereGeometry(0.025, 8, 8);
     earGeo.scale(0.5, 1.2, 0.8);
     const leftEar = new THREE.Mesh(earGeo, skinMat);
     leftEar.position.set(-0.125, 0, 0);
     this.headGroup.add(leftEar);
-
     const rightEar = leftEar.clone();
     rightEar.position.set(0.125, 0, 0);
     this.headGroup.add(rightEar);
 
     this.human.add(this.headGroup);
 
-    // 2. NECK
-    const neckGeo = new THREE.CylinderGeometry(0.06, 0.07, 0.11, 16);
-    const neckMesh = new THREE.Mesh(neckGeo, skinMat);
+    // 2. Neck
+    const neckMesh = new THREE.Mesh(new THREE.CylinderGeometry(0.06, 0.07, 0.11, 14), skinMat);
     neckMesh.position.set(0, 1.34, 0);
     this.human.add(neckMesh);
 
-    // 3. TORSO (CHEST + ABDOMEN)
+    // 3. Torso (Upper Chest + Abdomen)
     this.torso = new THREE.Group();
     this.torso.position.set(0, 1.02, 0);
 
-    // Upper Chest (with athletic tank)
-    const chestGeo = new THREE.CylinderGeometry(0.21, 0.18, 0.32, 20);
-    const chestMesh = new THREE.Mesh(chestGeo, shirtMat);
+    const chestMesh = new THREE.Mesh(new THREE.CylinderGeometry(0.21, 0.18, 0.32, 18), shirtMat);
     chestMesh.position.set(0, 0.16, 0);
     this.torso.add(chestMesh);
 
-    // Abdomen / Lower Torso
-    const abGeo = new THREE.CylinderGeometry(0.178, 0.175, 0.22, 18);
-    const abMesh = new THREE.Mesh(abGeo, shirtMat);
+    const abMesh = new THREE.Mesh(new THREE.CylinderGeometry(0.178, 0.175, 0.22, 16), shirtMat);
     abMesh.position.set(0, -0.08, 0);
     this.torso.add(abMesh);
 
     this.human.add(this.torso);
 
-    // 4. PELVIS (with shorts)
-    this.pelvis = new THREE.Mesh(new THREE.CylinderGeometry(0.18, 0.17, 0.18, 18), shortsMat);
+    // 4. Pelvis (Shorts)
+    this.pelvis = new THREE.Mesh(new THREE.CylinderGeometry(0.18, 0.17, 0.18, 16), shortsMat);
     this.pelvis.position.set(0, 0.82, 0);
     this.human.add(this.pelvis);
 
-    // 5. LEFT ARM (Parent-Child Hierarchy)
+    // 5. Left Arm Hierarchy
     this.leftArm = new THREE.Group();
     this.leftArm.position.set(-0.25, 1.25, 0);
+    const leftUpperArm = new THREE.Mesh(new THREE.CylinderGeometry(0.052, 0.046, 0.26, 12), skinMat);
+    leftUpperArm.position.set(0, -0.13, 0);
+    this.leftArm.add(leftUpperArm);
 
-    // Shoulder cap
-    const shoulderGeo = new THREE.SphereGeometry(0.06, 12, 12);
-    const leftShoulderMesh = new THREE.Mesh(shoulderGeo, skinMat);
-    this.leftArm.add(leftShoulderMesh);
-
-    // Upper Arm
-    const upperArmGeo = new THREE.CylinderGeometry(0.052, 0.046, 0.26, 14);
-    const leftUpperArmMesh = new THREE.Mesh(upperArmGeo, skinMat);
-    leftUpperArmMesh.position.set(0, -0.13, 0);
-    this.leftArm.add(leftUpperArmMesh);
-
-    // Left Forearm Group (rotates at elbow)
     this.leftForearm = new THREE.Group();
     this.leftForearm.position.set(0, -0.26, 0);
-
-    const forearmGeo = new THREE.CylinderGeometry(0.044, 0.036, 0.24, 14);
-    const leftForearmMesh = new THREE.Mesh(forearmGeo, skinMat);
+    const leftForearmMesh = new THREE.Mesh(new THREE.CylinderGeometry(0.044, 0.036, 0.24, 12), skinMat);
     leftForearmMesh.position.set(0, -0.12, 0);
     this.leftForearm.add(leftForearmMesh);
-
-    // Hand
-    const handGeo = new THREE.BoxGeometry(0.05, 0.08, 0.025);
-    const leftHandMesh = new THREE.Mesh(handGeo, skinMat);
-    leftHandMesh.position.set(0, -0.26, 0);
-    this.leftForearm.add(leftHandMesh);
+    const leftHand = new THREE.Mesh(new THREE.BoxGeometry(0.05, 0.08, 0.025), skinMat);
+    leftHand.position.set(0, -0.26, 0);
+    this.leftForearm.add(leftHand);
 
     this.leftArm.add(this.leftForearm);
     this.human.add(this.leftArm);
 
-    // 6. RIGHT ARM (Parent-Child Hierarchy)
+    // 6. Right Arm Hierarchy
     this.rightArm = new THREE.Group();
     this.rightArm.position.set(0.25, 1.25, 0);
-
-    const rightShoulderMesh = new THREE.Mesh(shoulderGeo, skinMat);
-    this.rightArm.add(rightShoulderMesh);
-
-    const rightUpperArmMesh = new THREE.Mesh(upperArmGeo, skinMat);
-    rightUpperArmMesh.position.set(0, -0.13, 0);
-    this.rightArm.add(rightUpperArmMesh);
+    const rightUpperArm = new THREE.Mesh(new THREE.CylinderGeometry(0.052, 0.046, 0.26, 12), skinMat);
+    rightUpperArm.position.set(0, -0.13, 0);
+    this.rightArm.add(rightUpperArm);
 
     this.rightForearm = new THREE.Group();
     this.rightForearm.position.set(0, -0.26, 0);
-
-    const rightForearmMesh = new THREE.Mesh(forearmGeo, skinMat);
+    const rightForearmMesh = new THREE.Mesh(new THREE.CylinderGeometry(0.044, 0.036, 0.24, 12), skinMat);
     rightForearmMesh.position.set(0, -0.12, 0);
     this.rightForearm.add(rightForearmMesh);
-
-    const rightHandMesh = new THREE.Mesh(handGeo, skinMat);
-    rightHandMesh.position.set(0, -0.26, 0);
-    this.rightForearm.add(rightHandMesh);
+    const rightHand = new THREE.Mesh(new THREE.BoxGeometry(0.05, 0.08, 0.025), skinMat);
+    rightHand.position.set(0, -0.26, 0);
+    this.rightForearm.add(rightHand);
 
     this.rightArm.add(this.rightForearm);
     this.human.add(this.rightArm);
 
-    // 7. LEFT LEG (Thigh + Knee + Calf + Sneaker)
+    // 7. Left Leg Hierarchy
     this.leftLeg = new THREE.Group();
     this.leftLeg.position.set(-0.11, 0.76, 0.05);
+    const leftThigh = new THREE.Mesh(new THREE.CylinderGeometry(0.085, 0.068, 0.36, 12), shortsMat);
+    leftThigh.position.set(0, -0.18, 0);
+    this.leftLeg.add(leftThigh);
 
-    // Thigh with short hem
-    const thighGeo = new THREE.CylinderGeometry(0.085, 0.068, 0.36, 14);
-    const leftThighMesh = new THREE.Mesh(thighGeo, shortsMat);
-    leftThighMesh.position.set(0, -0.18, 0);
-    this.leftLeg.add(leftThighMesh);
-
-    // Left Shin & Foot Group (rotates at knee)
     this.leftShin = new THREE.Group();
     this.leftShin.position.set(0, -0.36, 0);
-
-    const shinGeo = new THREE.CylinderGeometry(0.065, 0.052, 0.36, 14);
-    const leftShinMesh = new THREE.Mesh(shinGeo, skinMat);
+    const leftShinMesh = new THREE.Mesh(new THREE.CylinderGeometry(0.065, 0.052, 0.36, 12), skinMat);
     leftShinMesh.position.set(0, -0.18, 0);
     this.leftShin.add(leftShinMesh);
-
-    // Sneaker
-    const shoeGeo = new THREE.BoxGeometry(0.09, 0.065, 0.18);
-    const leftShoe = new THREE.Mesh(shoeGeo, shoeMat);
+    const leftShoe = new THREE.Mesh(new THREE.BoxGeometry(0.09, 0.065, 0.18), shoeMat);
     leftShoe.position.set(0, -0.38, 0.04);
     this.leftShin.add(leftShoe);
-
-    const soleGeo = new THREE.BoxGeometry(0.094, 0.018, 0.186);
-    const leftSole = new THREE.Mesh(soleGeo, soleMat);
+    const leftSole = new THREE.Mesh(new THREE.BoxGeometry(0.094, 0.018, 0.186), soleMat);
     leftSole.position.set(0, -0.415, 0.04);
     this.leftShin.add(leftSole);
 
     this.leftLeg.add(this.leftShin);
     this.human.add(this.leftLeg);
 
-    // 8. RIGHT LEG (Thigh + Knee + Calf + Sneaker)
+    // 8. Right Leg Hierarchy
     this.rightLeg = new THREE.Group();
     this.rightLeg.position.set(0.11, 0.76, 0.05);
-
-    const rightThighMesh = new THREE.Mesh(thighGeo, shortsMat);
-    rightThighMesh.position.set(0, -0.18, 0);
-    this.rightLeg.add(rightThighMesh);
+    const rightThigh = new THREE.Mesh(new THREE.CylinderGeometry(0.085, 0.068, 0.36, 12), shortsMat);
+    rightThigh.position.set(0, -0.18, 0);
+    this.rightLeg.add(rightThigh);
 
     this.rightShin = new THREE.Group();
     this.rightShin.position.set(0, -0.36, 0);
-
-    const rightShinMesh = new THREE.Mesh(shinGeo, skinMat);
+    const rightShinMesh = new THREE.Mesh(new THREE.CylinderGeometry(0.065, 0.052, 0.36, 12), skinMat);
     rightShinMesh.position.set(0, -0.18, 0);
     this.rightShin.add(rightShinMesh);
-
-    const rightShoe = new THREE.Mesh(shoeGeo, shoeMat);
+    const rightShoe = new THREE.Mesh(new THREE.BoxGeometry(0.09, 0.065, 0.18), shoeMat);
     rightShoe.position.set(0, -0.38, 0.04);
     this.rightShin.add(rightShoe);
-
-    const rightSole = new THREE.Mesh(soleGeo, soleMat);
+    const rightSole = new THREE.Mesh(new THREE.BoxGeometry(0.094, 0.018, 0.186), soleMat);
     rightSole.position.set(0, -0.415, 0.04);
     this.rightShin.add(rightSole);
 
     this.rightLeg.add(this.rightShin);
     this.human.add(this.rightLeg);
 
-    // 9. ERGONOMIC WORKOUT CHAIR
+    // 9. Ergonomic Chair
     this.chair = new THREE.Group();
-
-    // Contoured seat cushion
     const seat = new THREE.Mesh(new THREE.BoxGeometry(0.58, 0.05, 0.52), chairWood);
     seat.position.set(0, 0.68, -0.02);
     this.chair.add(seat);
 
-    // Curved backrest
     const back = new THREE.Mesh(new THREE.BoxGeometry(0.54, 0.52, 0.04), chairWood);
     back.position.set(0, 1.02, -0.27);
     this.chair.add(back);
 
-    // 4 Sturdy Steel Legs
-    const legOffsets = [[-0.24, 0.20], [0.24, 0.20], [-0.24, -0.22], [0.24, -0.22]];
-    legOffsets.forEach(([x, z]) => {
-      const leg = new THREE.Mesh(new THREE.CylinderGeometry(0.022, 0.022, 0.68, 10), chairMetal);
+    [[-0.24, 0.20], [0.24, 0.20], [-0.24, -0.22], [0.24, -0.22]].forEach(([x, z]) => {
+      const leg = new THREE.Mesh(new THREE.CylinderGeometry(0.022, 0.022, 0.68, 8), chairMetal);
       leg.position.set(x, 0.34, z);
       this.chair.add(leg);
     });
-
     this.human.add(this.chair);
 
-    // 10. STUDIO FLOOR TRAINING MAT
-    const matGeo = new THREE.CylinderGeometry(1.2, 1.2, 0.015, 32);
-    const matMat = new THREE.MeshStandardMaterial({ color: 0x0f172a, roughness: 0.8 });
-    const groundMatMesh = new THREE.Mesh(matGeo, matMat);
-    groundMatMesh.position.set(0, 0, 0);
-    this.human.add(groundMatMesh);
+    // 10. Studio Ground Mat
+    const matMesh = new THREE.Mesh(new THREE.CylinderGeometry(1.2, 1.2, 0.015, 24), new THREE.MeshStandardMaterial({ color: 0x0f172a, roughness: 0.8 }));
+    matMesh.position.set(0, 0, 0);
+    this.human.add(matMesh);
 
     this.scene.add(this.human);
   }
 
-  bindOrbitControls() {
-    // Allows 360-degree rotation of human avatar by drag/touch
-    const onStart = (clientX) => {
+  bindOrbit() {
+    const onStart = (x) => {
       this.isDragging = true;
-      this.previousMouseX = clientX;
+      this.previousMouseX = x;
     };
-
-    const onMove = (clientX) => {
+    const onMove = (x) => {
       if (!this.isDragging || !this.human) return;
-      const delta = clientX - this.previousMouseX;
-      this.human.rotation.y += delta * 0.01;
-      this.previousMouseX = clientX;
+      const delta = x - this.previousMouseX;
+      this.human.rotation.y += delta * 0.012;
+      this.previousMouseX = x;
     };
-
     const onEnd = () => {
       this.isDragging = false;
     };
@@ -2712,11 +2566,9 @@ class MovementAvatar3D {
     this.canvas.addEventListener("touchstart", (e) => {
       if (e.touches.length === 1) onStart(e.touches[0].clientX);
     }, { passive: true });
-
     window.addEventListener("touchmove", (e) => {
       if (e.touches.length === 1) onMove(e.touches[0].clientX);
     }, { passive: true });
-
     window.addEventListener("touchend", onEnd);
   }
 
@@ -2731,10 +2583,11 @@ class MovementAvatar3D {
   animate() {
     if (!this.isReady) return;
     requestAnimationFrame(() => this.animate());
+    if (this.isPaused) return;
 
     const t = this.clock.getElapsedTime() * this.speedMultiplier;
 
-    // Reset base limb transforms
+    // Reset base limb positions
     this.leftArm.rotation.set(0, 0, 0);
     this.rightArm.rotation.set(0, 0, 0);
     this.leftForearm.rotation.set(0, 0, 0);
@@ -2749,7 +2602,6 @@ class MovementAvatar3D {
     this.headGroup.position.set(0, 1.48, 0);
     this.human.position.set(0, 0, 0);
 
-    // Natural Default Seated Posture
     const standingTypes = ["wall_push", "wall_angel", "chest_stretch", "calf_raise", "standing_march", "side_step", "balance_hold"];
     if (!standingTypes.includes(this.animType)) {
       this.leftLeg.rotation.x = -Math.PI / 2.3;
@@ -2758,7 +2610,6 @@ class MovementAvatar3D {
       this.rightShin.rotation.x = Math.PI / 2.3;
     }
 
-    // Biomechanical Movement Kinematics
     if (this.animType === "arm_swing") {
       const swing = Math.sin(t * 3.2) * 0.75;
       this.leftArm.rotation.x = swing;
@@ -2875,8 +2726,9 @@ class MovementAvatar3D {
 
   resize() {
     if (!this.renderer || !this.camera) return;
-    const width = this.canvas.clientWidth;
-    const height = this.canvas.clientHeight;
+    const rect = this.canvas.parentElement.getBoundingClientRect();
+    const width = rect.width || 380;
+    const height = rect.height || 720;
     this.camera.aspect = width / height;
     this.camera.updateProjectionMatrix();
     this.renderer.setSize(width, height);
@@ -2884,7 +2736,7 @@ class MovementAvatar3D {
 }
 
 /* ==========================================================================
-   5. 3D CONFETTI CELEBRATION
+   5. CONFETTI BURST
    ========================================================================== */
 class ConfettiExplosion {
   constructor(canvas) {
@@ -2961,14 +2813,13 @@ class ConfettiExplosion {
 }
 
 /* ==========================================================================
-   6. MAIN FITFEED APP CONTROLLER (Reels, Dashboard, Library)
+   6. MAIN FITFEED CONTROLLER (FAST & RESPONSIVE)
    ========================================================================== */
 class FitFeedApp {
   constructor() {
     this.store = new AppStore();
     this.voice = new VoiceCoach();
     this.avatar = null;
-    this.avatarMap = new Map();
     this.confetti = null;
 
     this.activeIndex = 0;
@@ -2993,10 +2844,12 @@ class FitFeedApp {
     const confCanvas = document.getElementById("celebration-canvas");
     if (confCanvas) this.confetti = new ConfettiExplosion(confCanvas);
 
-    // Initial 3D avatar setup on first slide
-    setTimeout(() => {
-      this.setupAvatarForIndex(0);
-    }, 100);
+    // Initialize the single shared high-performance 3D canvas
+    const sharedCanvas = document.getElementById("shared-avatar-canvas");
+    if (sharedCanvas) {
+      this.avatar = new SharedMovementAvatar3D(sharedCanvas);
+      this.avatar.setAnimation(EXERCISES_DATA[0].animType);
+    }
 
     this.updateTopBarStats();
   }
@@ -3102,6 +2955,10 @@ class FitFeedApp {
     if (this.el.tabDashboard) this.el.tabDashboard.classList.toggle("hidden", tabId !== "dashboard");
     if (this.el.tabLibrary) this.el.tabLibrary.classList.toggle("hidden", tabId !== "library");
 
+    if (this.avatar) {
+      this.avatar.isPaused = (tabId !== "reels");
+    }
+
     if (tabId === "dashboard") {
       this.pauseTimer();
       this.renderDashboard();
@@ -3109,7 +2966,10 @@ class FitFeedApp {
       this.pauseTimer();
       this.renderLibrary();
     } else if (tabId === "reels") {
-      this.setupAvatarForIndex(this.activeIndex);
+      if (this.avatar) {
+        this.avatar.resize();
+        this.avatar.setAnimation(EXERCISES_DATA[this.activeIndex].animType);
+      }
     }
   }
 
@@ -3119,10 +2979,9 @@ class FitFeedApp {
   }
 
   /* ==========================================================================
-     REELS ENGINE
+     REELS ENGINE (ULTRA LIGHTWEIGHT DOM SLIDES)
      ========================================================================== */
   renderReels() {
-    // 1. Story segments (capped at 20 segments for clean UI)
     if (this.el.storyBar) {
       this.el.storyBar.innerHTML = "";
       const segCount = Math.min(20, EXERCISES_DATA.length);
@@ -3134,22 +2993,18 @@ class FitFeedApp {
       }
     }
 
-    // 2. Render Reels Deck
     if (!this.el.reelsDeck) return;
     this.el.reelsDeck.innerHTML = "";
 
     EXERCISES_DATA.forEach((ex, idx) => {
       const isLiked = this.store.data.likedIds.includes(ex.id);
+      const likesCount = this.store.getLikes(ex.id); // Real like counter (no fake numbers!)
       const slide = document.createElement("div");
       slide.className = "reel-item";
       slide.id = "reel-" + idx;
       slide.dataset.index = idx;
 
       slide.innerHTML = `
-        <div class="reel-canvas-layer">
-          <canvas id="canvas-reel-${idx}"></canvas>
-        </div>
-
         <div class="motion-badge">
           <span class="motion-dot"></span>
           <span>Motion Guide</span>
@@ -3179,7 +3034,7 @@ class FitFeedApp {
                 <path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z"/>
               </svg>
             </button>
-            <div class="action-label" id="like-count-${idx}">${ex.likes + (isLiked ? 1 : 0)}</div>
+            <div class="action-label" id="like-count-${idx}">${likesCount}</div>
           </div>
 
           ${ex.mode === 'reps' ? `
@@ -3189,6 +3044,17 @@ class FitFeedApp {
             </button>
             <div class="action-label" id="rep-rail-label-${idx}">0/${ex.targetReps}</div>
           </div>` : ''}
+
+          <!-- Quick Voice Coach Toggle directly on Reel -->
+          <div>
+            <button class="action-btn ${this.store.data.voiceEnabled ? 'active-voice' : ''}" id="btn-voice-reel-${idx}" type="button" aria-label="Toggle voice coach">
+              <svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/>
+                <path d="M19.07 4.93a10 10 0 0 1 0 14.14M15.54 8.46a5 5 0 0 1 0 7.07"/>
+              </svg>
+            </button>
+            <div class="action-label">Voice</div>
+          </div>
 
           <div>
             <button class="action-btn" id="btn-info-${idx}" type="button" aria-label="Open anatomy and adjustments">
@@ -3226,7 +3092,7 @@ class FitFeedApp {
     if (playBtn) playBtn.addEventListener("click", () => this.handlePlayClick(idx));
 
     const likeBtn = slide.querySelector("#btn-like-" + idx);
-    if (likeBtn) likeBtn.addEventListener("click", () => this.toggleLike(ex, idx));
+    if (likeBtn) likeBtn.addEventListener("click", () => this.handleLikeClick(ex, idx));
 
     const infoBtn = slide.querySelector("#btn-info-" + idx);
     if (infoBtn) infoBtn.addEventListener("click", () => this.openDrawer(ex));
@@ -3234,13 +3100,15 @@ class FitFeedApp {
     const repBtn = slide.querySelector("#btn-rep-" + idx);
     if (repBtn) repBtn.addEventListener("click", () => this.countRep(ex, idx));
 
+    const voiceBtn = slide.querySelector("#btn-voice-reel-" + idx);
+    if (voiceBtn) voiceBtn.addEventListener("click", () => this.toggleVoiceCoach());
+
     const speedBtn = slide.querySelector("#btn-speed-" + idx);
     if (speedBtn) {
       speedBtn.addEventListener("click", () => {
         this.store.data.slowMotion = !this.store.data.slowMotion;
-        const currentAvatar = this.avatarMap.get(idx);
-        if (currentAvatar) {
-          currentAvatar.speedMultiplier = this.store.data.slowMotion ? 0.5 : 1.0;
+        if (this.avatar) {
+          this.avatar.speedMultiplier = this.store.data.slowMotion ? 0.5 : 1.0;
         }
         speedBtn.textContent = this.store.data.slowMotion ? "0.5x Slow" : "1.0x";
         this.showToast(this.store.data.slowMotion ? "Slow-motion form view (0.5x)" : "Normal speed (1.0x)");
@@ -3272,27 +3140,14 @@ class FitFeedApp {
     const ex = EXERCISES_DATA[index];
 
     this.updateStorySegments();
-    this.setupAvatarForIndex(index);
+
+    // Fast 60FPS animation switch on the single shared avatar
+    if (this.avatar) {
+      this.avatar.setAnimation(ex.animType);
+      this.avatar.speedMultiplier = this.store.data.slowMotion ? 0.5 : 1.0;
+    }
+
     this.currentReps = 0;
-  }
-
-  setupAvatarForIndex(index) {
-    const ex = EXERCISES_DATA[index];
-    if (!ex) return;
-
-    let avatar = this.avatarMap.get(index);
-    if (!avatar) {
-      const canvas = document.querySelector("#canvas-reel-" + index);
-      if (canvas) {
-        avatar = new MovementAvatar3D(canvas);
-        this.avatarMap.set(index, avatar);
-      }
-    }
-
-    if (avatar) {
-      avatar.setAnimation(ex.animType);
-      avatar.speedMultiplier = this.store.data.slowMotion ? 0.5 : 1.0;
-    }
   }
 
   updateStorySegments() {
@@ -3418,33 +3273,41 @@ class FitFeedApp {
     }
   }
 
-  toggleLike(ex, idx) {
-    const isNowLiked = !this.store.data.likedIds.includes(ex.id);
-    if (isNowLiked) {
-      this.store.data.likedIds.push(ex.id);
-    } else {
-      const i = this.store.data.likedIds.indexOf(ex.id);
-      if (i > -1) this.store.data.likedIds.splice(i, 1);
-    }
-    this.store.save();
-
+  handleLikeClick(ex, idx) {
+    const res = this.store.toggleLike(ex.id);
     const btn = document.getElementById("btn-like-" + idx);
     const count = document.getElementById("like-count-" + idx);
-    if (btn) btn.classList.toggle("liked", isNowLiked);
-    if (count) count.textContent = ex.likes + (isNowLiked ? 1 : 0);
+    if (btn) btn.classList.toggle("liked", res.isLiked);
+    if (count) count.textContent = res.count;
 
-    this.showToast(isNowLiked ? "Saved to your bookmarks ♥" : "Removed from bookmarks");
+    this.showToast(res.isLiked ? "Saved to your bookmarks ♥ (" + res.count + " likes)" : "Removed from bookmarks (" + res.count + " likes)");
   }
 
   toggleVoiceCoach() {
     this.voice.enabled = !this.voice.enabled;
     this.store.data.voiceEnabled = this.voice.enabled;
     this.store.save();
-    this.showToast(this.voice.enabled ? "Voice coach audio ON" : "Voice coach MUTED");
+
+    if (this.el.voiceBtn) {
+      this.el.voiceBtn.classList.toggle("active-voice", this.voice.enabled);
+    }
+
+    // Update reel voice buttons
+    document.querySelectorAll("[id^='btn-voice-reel-']").forEach(btn => {
+      btn.classList.toggle("active-voice", this.voice.enabled);
+    });
+
+    if (this.voice.enabled) {
+      this.voice.speak("Voice coach enabled.");
+      this.showToast("Voice coach audio ON");
+    } else {
+      if (this.voice.synth) this.voice.synth.cancel();
+      this.showToast("Voice coach MUTED");
+    }
   }
 
   /* ==========================================================================
-     DASHBOARD ENGINE
+     DASHBOARD ENGINE (ACCURATE REAL DATA)
      ========================================================================== */
   renderDashboard() {
     const d = this.store.data;
@@ -3460,7 +3323,7 @@ class FitFeedApp {
     if (this.el.dashGoalBar) this.el.dashGoalBar.style.width = percent + "%";
     if (this.el.dashGoalLabel) this.el.dashGoalLabel.textContent = doneToday + " of " + target + " completed today (" + percent + "%)";
 
-    // 7-Day Chart
+    // 7-Day Weekly Bar Chart
     const weekData = this.store.getWeeklyData();
     const totalWeek = weekData.reduce((acc, curr) => acc + curr.count, 0);
     if (this.el.dashWeekTotal) this.el.dashWeekTotal.textContent = totalWeek + " total moves";
@@ -3481,14 +3344,14 @@ class FitFeedApp {
       });
     }
 
-    // History Log
+    // Session History Log
     if (this.el.dashHistory) {
       this.el.dashHistory.innerHTML = "";
       if (d.history.length === 0) {
         this.el.dashHistory.innerHTML = '<div class="text-xs text-slate-500 text-center py-6">No completed moves recorded yet. Jump into reels!</div>';
         return;
       }
-      d.history.slice(0, 10).forEach(h => {
+      d.history.slice(0, 15).forEach(h => {
         const row = document.createElement("div");
         row.className = "flex items-center justify-between p-3 rounded-2xl bg-white/5 border border-white/5 text-xs";
         const dateObj = new Date(h.timestamp);
