@@ -617,8 +617,7 @@ button {
   pointer-events: auto;
 }
 
-/* Instagram-style: caption fades out on hover or tap so the 3D human is clearly visible */
-.reel-item:hover .reel-caption,
+/* Instagram-style: tap on video toggles caption visibility */
 .reel-item.caption-hidden .reel-caption {
   opacity: 0;
   transform: translateY(14px);
