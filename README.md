@@ -7,68 +7,76 @@
 
 ---
 
-## 🏛️ Project Overview & Community Purpose
+## 🏛️ Project Overview & Purpose
 
-Traditional fitness platforms routinely exclude beginners, elderly adults, and individuals with high BMI by relying on floor exercises, heavy weights, and high-impact jumping.
+Physical inactivity and sedentary habits disproportionately impact beginners, elderly adults, and individuals with high BMI. Mainstream fitness apps often intimidate these demographics with floor-based burpees, high-impact plyometrics, and aggressive pacing.
 
-**FitFeed reimagines accessible physical activity** by uniting two powerful paradigms:
-1. **The Engaging Instagram Reels Format:** Fast, visual, vertical swipeable exercise reels with live 3D motion kinematics, tap rep counters, and circular countdown timers.
-2. **A Comprehensive Health Dashboard:** Local-first, private health analytics tracking MET-calculated energy burn, daily streaks, 7-day consistency graphs, and session history.
-
----
-
-## ✨ Application Architecture & Sections
-
-### 1. ⚡ Movement Reels (Instagram Reels Style Feed)
-- **Vertical Snap-Scrolling:** Built with CSS `scroll-snap-type: y mandatory` for smooth card-by-card browsing on both mobile touchscreens and desktop arrow keys.
-- **Interactive 3D Movement Avatar (Three.js):** Real-time 3D humanoid mannequin demonstrating the exact form and cadence for each exercise (arm swings, seated marches, cat-cow waves, wall push-ups, breathing pulse).
-- **Segmented Story Progress Bar:** Real-time top progress segments that fill as you complete exercises.
-- **Instagram Action Rail:**
-  - **Start / Pause Button:** Features an animated circular SVG countdown ring.
-  - **Heart / Like Button:** Community-style bookmarking with a heart-pop animation and like count.
-  - **Tap Rep Stepper (`+1`):** Large interactive button with haptic feedback for rep-based moves.
-  - **Info Sheet (ⓘ):** Slides up biomechanical details, targeted muscles, wheelchair adaptations, and safety rules.
-  - **Voice Coach Audio Toggle:** Hands-free spoken movement cues via the Web Speech API.
-
-### 2. 📊 Activity Dashboard & Health Analytics
-- **4 Key Health Metrics:**
-  - **Consistency Streak:** Consecutive active days tracker.
-  - **MET Calorie Burn:** Scientifically calculated energy expenditure using metabolic equivalents (METs) for low-impact physical activity.
-  - **FitPoints:** Effort reward system (+50 pts per completed move).
-  - **Completed Exercises Count:** Total movement blocks finished.
-- **7-Day Visual Activity Graph:** Dynamic weekly bar chart (Mon–Sun) showing completed exercises per day with today's highlight.
-- **Daily Target Ring:** Visual daily check-in (customizable target: 3 moves per day).
-- **Session History Log:** Chronological record of completed sessions with timestamps and energy burn.
-
-### 3. 📚 Movement Library (Searchable Directory)
-- **Instant Search:** Search exercises by title, focus area, or target muscle group.
-- **Category Filter Pills:** Quickly filter by *All*, *Seated Only*, *Spine & Posture*, *Supported Strength*, or *Breathwork*.
-- **"Play in Reels" Integration:** Clicking any card jumps directly to that exercise in the vertical Reels player.
+**FitFeed reimagines accessible physical activity** through two seamless pillars:
+1. **Vertical Movement Reels:** An engaging, non-intimidating Instagram Reels-style video feed featuring an **actual 3D human being** demonstrating 100 low-impact exercises in real-time, accompanied by tap rep counters, animated circular timers, and hands-free voice coaching.
+2. **Local-First Health Analytics:** A comprehensive, zero-telemetry dashboard that tracks scientifically validated MET energy expenditure, daily streaks, a 7-day consistency chart, and chronological session logs.
 
 ---
 
-## 🛠️ Technical Stack
+## ✨ Key Features & Architecture
 
-- **Markup & Layout:** Semantic HTML5, accessible ARIA landmarks, dialog drawers.
-- **Styling:** Custom CSS design system + Tailwind CSS (via CDN) with clean dark-mode zinc/slate aesthetic.
-- **3D Graphics:** Three.js (via CDN) for real-time humanoid kinematics & Canvas 2D fallback.
-- **Audio & Accessibility:** Web Speech API for voice coaching, Web Audio API, and high-contrast color ratios.
-- **Data Persistence:** Local-first browser storage (`localStorage`) ensuring 100% user privacy with zero tracking.
+### 1. 🧍 Realistic 3D Human Biomechanical Engine (Three.js)
+- **Natural Human Form:** Rendered with warm, lifelike human skin tones, natural proportions (head contour, neck, shoulders, elbows, forearms, hands, torso, knees, and sneakers with soles), and athletic sportswear (tank top and gym shorts).
+- **Smooth Joint Kinematics:** Hierarchical parent-child skeletal groupings for fluid, medically safe movement execution (arm swings, seated marches, knee extensions, wall push-ups, cat-cow waves, and box breathing).
+- **360-Degree Interactive Orbit View:** Users can click or touch-drag left/right on the canvas to rotate the human avatar in 360 degrees to inspect exercise posture from any angle.
+- **Slow-Motion Form Guide (0.5x):** One-tap toggle to slow down 3D motion for individuals mastering gentle joint alignment.
+- **Ergonomic Studio Staging:** Features a sturdy hardwood chair for seated routines and a low-profile studio mat with 3-point studio lighting (warm key light, cool cyan rim light, and gentle emerald ground bounce).
+
+### 2. 📱 Flawless Phone & Tablet Responsiveness
+- **Mobile Phones (360px – 430px):** Full-screen 100dvh experience with native vertical snap scrolling (`scroll-snap-type: y mandatory`), iOS safe-area padding (`env(safe-area-inset-bottom)`), and a thumb-friendly bottom navigation bar.
+- **Tablets & iPads (768px – 1024px):** Centered phone frame with elevated glassmorphism, responsive typography, and segmented top navigation.
+- **Desktop (1024px+):** Floating arrow navigation buttons (`↑` / `↓`), full keyboard shortcuts (`Space` to start/count reps, `M` to mute voice coach, `Esc` to close drawers).
+
+### 3. 📚 100 Clinically Designed Low-Impact Exercises
+Cataloged across five distinct accessibility categories with zero floor work and zero knee impact:
+1. **Seated Mobility & Upper Body (25 Moves):** Arm swings, chair marches, knee extensions, ankle alphabet swivels, shoulder rolls, wrist glides, goalpost openers, and more.
+2. **Seated Lower Body & Hip Circulation (20 Moves):** High-heel calf lifts, inner thigh squeezes, figure-4 hip cradles, hamstring lengtheners, towel scrunches, and heel slides.
+3. **Supported Standing & Wall Stability (20 Moves):** Wall push-ups, wall angel slides, countertop calf raises, sit-to-stand chair taps, supported flamingo balances, and doorframe lat hangs.
+4. **Spine, Posture & Core Health (20 Moves):** Seated cat-cow waves, thoracic backrest arches, scapular row pulls, chin tucks, cervical tilts, and lumbar decompressions.
+5. **Mindful Breathing, Recovery & Vagus Nerve (15 Moves):** 4-4-4-4 box breathing, diaphragmatic expansion, 4-7-8 sleep resets, pursed-lip airway flows, physiological sighs, and body scans.
+
+### 4. 📊 Activity Dashboard & Health Analytics
+- **4 Real-Time Metrics:** Daily Active Streak, MET-Calculated Calorie Expenditure, FitPoints effort points (+50 pts per move), and Total Completed Moves.
+- **7-Day Activity Chart:** Dynamic weekly bar chart highlighting daily exercise consistency.
+- **Daily Target Progress Ring:** Daily micro-goal tracker (3 moves/day target).
+- **Session History Log:** Private chronological log with timestamps, categories, and calorie burn.
+
+### 5. 🔊 Inclusive Accessibility & Voice Coaching
+- **Voice Coach (Web Speech API):** Hands-free auditory countdowns and motivational form cues.
+- **High-Contrast Design:** Clean dark aesthetic with `#06070a` canvas, `#10b981` emerald accents, and crisp typography (`Space Grotesk` & `Inter`).
+- **3D Confetti Particles:** Instant celebratory visual reward upon completing any movement.
+
+---
+
+## 🛠️ Technology Stack
+
+- **Markup & Styling:** Vanilla HTML5, Tailwind CSS (via CDN), custom CSS design system.
+- **3D Rendering:** Three.js r128 (via CDN) with WebGL2 support.
+- **Audio & Speech:** HTML5 Web Speech Synthesis API.
+- **Storage:** Client-side `localStorage` (100% private, zero user tracking or data collection).
+- **Deployment:** Vercel edge deployment with automated GitHub synchronization.
 
 ---
 
 ## 🚀 Running Locally
 
-1. Clone or extract this repository.
-2. Open `index.html` in any web browser, or launch using VS Code's **Live Server**.
+1. Clone the repository:
+   ```bash
+   git clone https://github.com/sdatta25/FitFeed.git
+   cd FitFeed
+   ```
+2. Open `index.html` in any modern web browser, or launch using VS Code **Live Server**.
 3. **Keyboard Shortcuts:**
-   - `↓` / `↑` : Scroll to next / previous exercise reel
+   - `↓` / `↑` or `PageDown` / `PageUp` : Next / Previous exercise reel
    - `Space` : Start / pause timer or count repetition
-   - `M` : Toggle voice coach audio
-   - `Esc` : Close drawers
+   - `M` : Toggle voice coach audio on/off
+   - `Esc` : Close info drawers
 
 ---
 
-## 🌐 Deployment
-
-Deployed live on Vercel at **[https://fitfeedatlanta.vercel.app](https://fitfeedatlanta.vercel.app)**.
+## 🌐 Live URL
+Live on Vercel at **[https://fitfeedatlanta.vercel.app](https://fitfeedatlanta.vercel.app)**.
