@@ -1,30 +1,33 @@
 /**
  * ============================================================================
- * FitFeed — Instagram Reels Style Accessible Fitness App
- * Congressional App Challenge Project
- * Developed by: Naihrit & Team
+ * FitFeed — Accessible Low-Impact Fitness & Movement Reels
+ * Congressional App Challenge 2026
+ * Developed by: Naihrit & Co-Developer
  *
- * Core Architecture:
- * 1. Exercises Dataset (Low-Impact, Senior & High BMI Friendly)
- * 2. Reels Snap-Scroll & Viewport Active State Controller
- * 3. 3D Movement Avatar Engine (Three.js Kinematics)
- * 4. Interactive Action Rail (Timer Ring, Tap Reps, Hearts, Voice Coach)
- * 5. Bottom Sheet Drawers (Anatomy Modifications & Stats Dashboard)
- * 6. Floating Hearts & 3D Confetti Particle Engines
+ * Core Modules:
+ * 1. Exercises Catalog (Low-Impact, Senior & High BMI Friendly)
+ * 2. Navigation Controller (Reels Feed, Dashboard, Library Views)
+ * 3. Reels Engine (Snap-Scroll, Live Timer Ring, Tap Rep Stepper, Likes)
+ * 4. Three.js 3D Kinematics Avatar Engine
+ * 5. Dashboard Engine (7-Day Interactive Graph, Daily Goal Ring, MET Calories)
+ * 6. Library Search & Category Filtering
+ * 7. Web Speech API Voice Coach
+ * 8. 3D Confetti Particle Explosion
  * ============================================================================
  */
 
 "use strict";
 
 /* ==========================================================================
-   1. EXERCISES DATABASE (Optimized for Gentle Reels Feed)
+   1. EXERCISES DATASET (Senior, High BMI & Limited Mobility Focused)
    ========================================================================== */
 
-const REELS_EXERCISES = [
+const EXERCISES_DATA = [
   {
     id: "seated-arm-swings",
     title: "Seated Arm Swings",
-    category: "Seated Mobility",
+    category: "Seated",
+    filterTag: "seated",
     impactTag: "Zero Joint Impact",
     suitableFor: "Wheelchair, Seniors, High BMI",
     mode: "timer",
@@ -32,21 +35,22 @@ const REELS_EXERCISES = [
     met: 2.3,
     points: 50,
     audioTrack: "FitFeed Coach • Gentle 30s Rhythm",
-    caption: "Keep shoulders relaxed down. Let gravity swing your arms smoothly without forcing height.",
+    caption: "Keep shoulders relaxed. Let momentum swing your arms softly forward and back without forcing height.",
     muscles: "Deltoids, Upper Trapezius & Rotator Cuff",
     modifications: [
-      "Wheelchair: Lock wheels, keep elbows slightly bent to reduce lever strain.",
-      "High BMI: Keep swings below chest level for comfortable shoulder clearance.",
-      "Limited Mobility: Swing one arm at a time if dual motion is fatiguing."
+      "Wheelchair: Keep footrests locked, swing below chest level to reduce lever strain.",
+      "High BMI: Maintain a wide stance for comfortable shoulder clearance.",
+      "Limited Mobility: Alternate one arm at a time if dual motion is fatiguing."
     ],
-    safety: "Never force past shoulder impingement. Stop immediately if pinching occurs.",
+    safety: "Never force past shoulder impingement. Stop immediately if sharp pinching occurs.",
     animType: "arm_swing",
     likes: 142
   },
   {
     id: "chair-marches",
     title: "Seated Chair Marches",
-    category: "Gentle Cardio",
+    category: "Seated",
+    filterTag: "seated",
     impactTag: "Zero Knee Pounding",
     suitableFor: "Knee Osteoarthritis, Seniors, High BMI",
     mode: "reps",
@@ -54,13 +58,13 @@ const REELS_EXERCISES = [
     met: 2.8,
     points: 60,
     audioTrack: "FitFeed Coach • Steady Cadence",
-    caption: "Strengthens hip flexors and calf muscle pumps to promote blood circulation safely.",
-    muscles: "Hip Flexors (Psoas), Quadriceps & Lower Core",
+    caption: "Activates lower leg circulation and hip flexors without putting any bodyweight load on your knees.",
+    muscles: "Iliopsoas, Quadriceps & Lower Abdominals",
     modifications: [
-      "Low Energy: Lift only heels off the floor while keeping ball of foot grounded.",
+      "Low Energy: Lift only your heels while keeping toes grounded on the floor.",
       "Heavy Legs: Lift knees just 1 to 2 inches off the chair to protect hip joints."
     ],
-    safety: "Avoid stomping your feet downward. Control each landing softly.",
+    safety: "Avoid stomping your feet down. Lower each foot gently to protect joints.",
     animType: "march",
     likes: 218
   },
@@ -68,6 +72,7 @@ const REELS_EXERCISES = [
     id: "seated-cat-cow",
     title: "Seated Cat-Cow Waves",
     category: "Spine & Posture",
+    filterTag: "spine",
     impactTag: "Zero Joint Impact",
     suitableFor: "Desk Workers, Lower Back Stiffness",
     mode: "timer",
@@ -75,11 +80,11 @@ const REELS_EXERCISES = [
     met: 2.2,
     points: 55,
     audioTrack: "FitFeed Coach • Deep Breath Flow",
-    caption: "Decompresses the lumbar vertebrae. Inhale softly on forward arch, exhale on gentle curl.",
+    caption: "Decompresses the lumbar vertebrae. Inhale softly on forward arch, exhale on gentle rounding.",
     muscles: "Erector Spinae, Latissimus & Diaphragm",
     modifications: [
-      "High BMI: Position knees slightly wider for comfortable abdominal room.",
-      "Osteoporosis: Keep movement small and fluid; avoid aggressive forward bending."
+      "High BMI: Position knees slightly wider apart for comfortable abdominal room.",
+      "Osteoporosis: Keep movement small and fluid; avoid aggressive flexion."
     ],
     safety: "Do not hyperextend the cervical neck. Keep eye gaze natural.",
     animType: "cat_cow",
@@ -89,6 +94,7 @@ const REELS_EXERCISES = [
     id: "wall-push-ups",
     title: "Supported Wall Push-ups",
     category: "Supported Strength",
+    filterTag: "strength",
     impactTag: "Joint Friendly",
     suitableFor: "Difficulty Getting Off Floor, Beginners",
     mode: "reps",
@@ -96,11 +102,11 @@ const REELS_EXERCISES = [
     met: 3.2,
     points: 65,
     audioTrack: "FitFeed Coach • Gentle Power",
-    caption: "Builds upper-body pushing strength without putting any pressure on your knees or floor strain.",
+    caption: "Builds upper-body pushing power without knee strain or floor struggle.",
     muscles: "Pectoralis Major, Anterior Deltoids & Triceps",
     modifications: [
       "Beginners: Stand closer to the wall for lighter resistance.",
-      "Wrist Tenderness: Place palms on a soft towel or make light closed fists."
+      "Wrist Discomfort: Place palms on a soft towel or make light closed fists."
     ],
     safety: "Ensure non-slip shoes and dry floor before leaning into the wall.",
     animType: "wall_push",
@@ -109,7 +115,8 @@ const REELS_EXERCISES = [
   {
     id: "ankle-circles",
     title: "Ankle Alphabet Swivels",
-    category: "Mobility & Circulation",
+    category: "Seated",
+    filterTag: "seated",
     impactTag: "Zero Joint Impact",
     suitableFor: "Edema Relief, Neuropathy, Seniors",
     mode: "timer",
@@ -117,11 +124,11 @@ const REELS_EXERCISES = [
     met: 2.0,
     points: 45,
     audioTrack: "FitFeed Coach • Joint Lubrication",
-    caption: "Slow deliberate circles with your toes help activate calf muscle venous pumps.",
+    caption: "Slow deliberate circles with your toes help activate calf muscle venous pumps to reduce swelling.",
     muscles: "Gastrocnemius, Soleus & Peroneals",
     modifications: [
       "Supported: Rest your heel on the floor and swivel toes left and right.",
-      "Seated: Can be done reclined with legs elevated."
+      "Seated: Can be done reclined with legs elevated on an ottoman."
     ],
     safety: "If a calf cramp occurs, gently pull your toes toward your shin.",
     animType: "ankle_circle",
@@ -131,6 +138,7 @@ const REELS_EXERCISES = [
     id: "seated-torso-twist",
     title: "Gentle Torso Twist",
     category: "Spine & Posture",
+    filterTag: "spine",
     impactTag: "Zero Joint Impact",
     suitableFor: "Mid-Back Tension, Digestive Ease",
     mode: "timer",
@@ -151,7 +159,8 @@ const REELS_EXERCISES = [
   {
     id: "seated-side-reach",
     title: "Seated Side Reach",
-    category: "Mobility",
+    category: "Spine & Posture",
+    filterTag: "spine",
     impactTag: "Zero Joint Impact",
     suitableFor: "Shallow Breathing, Ribcage Stiffness",
     mode: "reps",
@@ -172,7 +181,8 @@ const REELS_EXERCISES = [
   {
     id: "box-breathing",
     title: "4-4-4-4 Box Breathing",
-    category: "Mindful Reset",
+    category: "Breathwork",
+    filterTag: "breath",
     impactTag: "Restorative",
     suitableFor: "Anxiety Relief, Blood Pressure Care",
     mode: "timer",
@@ -193,12 +203,12 @@ const REELS_EXERCISES = [
 ];
 
 /* ==========================================================================
-   2. APP STATE & LOCAL-FIRST STORAGE
+   2. APP STATE & PERSISTENCE
    ========================================================================== */
 
-class ReelsState {
+class AppStore {
   constructor() {
-    this.KEY = "fitfeed_reels_cac_v2";
+    this.KEY = "fitfeed_app_v4_state";
     this.data = this.load();
   }
 
@@ -207,7 +217,7 @@ class ReelsState {
       const raw = localStorage.getItem(this.KEY);
       if (raw) return JSON.parse(raw);
     } catch (e) {
-      console.warn("Storage warning:", e);
+      console.warn("Could not read localStorage:", e);
     }
     return {
       completedCount: 0,
@@ -216,8 +226,8 @@ class ReelsState {
       streak: 1,
       lastDate: new Date().toISOString().slice(0, 10),
       likedIds: [],
-      voiceCoach: true,
-      soundMuted: false,
+      voiceEnabled: true,
+      dailyGoal: 3,
       history: []
     };
   }
@@ -226,18 +236,19 @@ class ReelsState {
     try {
       localStorage.setItem(this.KEY, JSON.stringify(this.data));
     } catch (e) {
-      console.warn("Storage save error:", e);
+      console.warn("Could not save to localStorage:", e);
     }
   }
 
-  recordSession(exercise, durationSecs) {
+  recordExercise(ex, durationSecs) {
     const today = new Date().toISOString().slice(0, 10);
     const durationMins = durationSecs / 60;
-    const calories = Math.round((exercise.met * 3.5 * 80 / 200) * durationMins * 10) / 10;
+    // Calorie calculation: MET * 3.5 * 85kg / 200 * durationMins
+    const calories = Math.round((ex.met * 3.5 * 85 / 200) * durationMins * 10) / 10;
 
     this.data.completedCount++;
     this.data.totalCalories = Math.round((this.data.totalCalories + calories) * 10) / 10;
-    this.data.totalPoints += exercise.points;
+    this.data.totalPoints += ex.points;
 
     if (this.data.lastDate !== today) {
       this.data.streak++;
@@ -245,27 +256,43 @@ class ReelsState {
     }
 
     this.data.history.unshift({
-      title: exercise.title,
-      category: exercise.category,
+      id: Date.now().toString(),
+      title: ex.title,
+      category: ex.category,
       calories,
-      points: exercise.points,
-      time: new Date().toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })
+      points: ex.points,
+      timestamp: new Date().toISOString()
     });
 
-    if (this.data.history.length > 50) this.data.history = this.data.history.slice(0, 50);
+    if (this.data.history.length > 80) this.data.history = this.data.history.slice(0, 80);
     this.save();
-    return { calories, points: exercise.points };
+    return { calories, points: ex.points };
   }
 
-  toggleLike(id) {
-    const idx = this.data.likedIds.indexOf(id);
-    if (idx > -1) {
-      this.data.likedIds.splice(idx, 1);
-    } else {
-      this.data.likedIds.push(id);
+  getTodayCompletedCount() {
+    const today = new Date().toISOString().slice(0, 10);
+    return this.data.history.filter(h => h.timestamp.startsWith(today)).length;
+  }
+
+  getWeeklyData() {
+    const days = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
+    const now = new Date();
+    const currentDayIdx = (now.getDay() + 6) % 7; // Monday = 0
+    const week = [];
+
+    for (let i = 0; i < 7; i++) {
+      const d = new Date(now);
+      d.setDate(now.getDate() - currentDayIdx + i);
+      const dateStr = d.toISOString().slice(0, 10);
+      const count = this.data.history.filter(h => h.timestamp.startsWith(dateStr)).length;
+      week.push({
+        name: days[i],
+        dateStr,
+        count,
+        isToday: i === currentDayIdx
+      });
     }
-    this.save();
-    return idx === -1; // true if liked now
+    return week;
   }
 }
 
@@ -287,24 +314,24 @@ class VoiceCoach {
       utt.rate = 1.0;
       utt.pitch = 1.05;
       const voices = this.synth.getVoices();
-      const english = voices.find(v => v.lang.startsWith("en") && (v.name.includes("Natural") || v.name.includes("Google") || v.name.includes("Samantha")));
-      if (english) utt.voice = english;
+      const natural = voices.find(v => v.lang.startsWith("en") && (v.name.includes("Natural") || v.name.includes("Google") || v.name.includes("Samantha")));
+      if (natural) utt.voice = natural;
       this.synth.speak(utt);
     } catch (e) {
       console.warn("Speech synthesis error:", e);
     }
   }
 
-  start(title) {
-    this.speak(`Ready? Starting ${title}. Breathe easily and move at your own comfort.`);
+  announceStart(title) {
+    this.speak(`Starting ${title}. Breathe easily and move within your comfort.`);
   }
 
-  halfway() {
-    this.speak("Halfway through! You are doing wonderful.");
+  announceHalfway() {
+    this.speak("Halfway there! Keep your shoulders soft and relaxed.");
   }
 
-  done(points) {
-    this.speak(`Awesome job! You earned ${points} FitPoints.`);
+  announceDone(points) {
+    this.speak(`Movement complete! You earned ${points} FitPoints.`);
   }
 }
 
@@ -312,7 +339,7 @@ class VoiceCoach {
    4. THREE.JS 3D MOVEMENT AVATAR ENGINE
    ========================================================================== */
 
-class ThreeReelAvatar {
+class MovementAvatar3D {
   constructor(canvas) {
     this.canvas = canvas;
     this.scene = null;
@@ -346,15 +373,15 @@ class ThreeReelAvatar {
       this.renderer.setSize(width, height);
       this.renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
 
-      // Modern Studio Lights
-      const ambient = new THREE.AmbientLight(0xffffff, 0.8);
+      // Studio Lighting
+      const ambient = new THREE.AmbientLight(0xffffff, 0.85);
       this.scene.add(ambient);
 
       const keyLight = new THREE.DirectionalLight(0x10b981, 1.4);
       keyLight.position.set(2, 5, 3);
       this.scene.add(keyLight);
 
-      const rimLight = new THREE.DirectionalLight(0x38bdf8, 0.9);
+      const rimLight = new THREE.DirectionalLight(0x06b6d4, 0.8);
       rimLight.position.set(-3, 2, -2);
       this.scene.add(rimLight);
 
@@ -372,10 +399,9 @@ class ThreeReelAvatar {
   buildModel() {
     this.avatar = new THREE.Group();
 
-    // Matte Porcelain & Emerald Styling
-    const bodyMat = new THREE.MeshStandardMaterial({ color: 0x10b981, roughness: 0.3, metalness: 0.1 });
-    const jointMat = new THREE.MeshStandardMaterial({ color: 0x38bdf8, roughness: 0.4 });
-    const chairMat = new THREE.MeshStandardMaterial({ color: 0x475569, roughness: 0.6 });
+    const bodyMat = new THREE.MeshStandardMaterial({ color: 0x10b981, roughness: 0.35, metalness: 0.1 });
+    const jointMat = new THREE.MeshStandardMaterial({ color: 0x06b6d4, roughness: 0.4 });
+    const chairMat = new THREE.MeshStandardMaterial({ color: 0x334155, roughness: 0.6 });
 
     // Torso
     const torsoGeo = new THREE.CylinderGeometry(0.22, 0.18, 0.52, 16);
@@ -504,10 +530,10 @@ class ThreeReelAvatar {
 }
 
 /* ==========================================================================
-   5. 3D CONFETTI CELEBRATION ENGINE
+   5. 3D CONFETTI CELEBRATION
    ========================================================================== */
 
-class ConfettiEngine {
+class ConfettiExplosion {
   constructor(canvas) {
     this.canvas = canvas;
     this.ctx = canvas.getContext("2d");
@@ -525,7 +551,7 @@ class ConfettiEngine {
 
   burst() {
     this.resize();
-    const colors = ["#10b981", "#38bdf8", "#f59e0b", "#ec4899", "#8b5cf6", "#ffffff"];
+    const colors = ["#10b981", "#06b6d4", "#f59e0b", "#ec4899", "#8b5cf6", "#ffffff"];
     this.particles = [];
     for (let i = 0; i < 90; i++) {
       this.particles.push({
@@ -537,7 +563,6 @@ class ConfettiEngine {
         color: colors[Math.floor(Math.random() * colors.length)],
         rotation: Math.random() * 360,
         rSpeed: (Math.random() - 0.5) * 10,
-        tilt: Math.random() * 10,
         alpha: 1
       });
     }
@@ -582,17 +607,17 @@ class ConfettiEngine {
 }
 
 /* ==========================================================================
-   6. MAIN REELS FEED CONTROLLER
+   6. MAIN FITFEED CONTROLLER (REELS + DASHBOARD + LIBRARY)
    ========================================================================== */
 
-class FitFeedReelsApp {
+class FitFeedApp {
   constructor() {
-    this.state = new ReelsState();
+    this.store = new AppStore();
     this.voice = new VoiceCoach();
-    this.confetti = null;
     this.avatar = null;
+    this.confetti = null;
 
-    // Active Reel Tracking
+    // Active Reel State
     this.activeIndex = 0;
     this.timerRunning = false;
     this.timerSeconds = 30;
@@ -605,237 +630,315 @@ class FitFeedReelsApp {
 
   init() {
     this.cacheElements();
-    this.renderStoryProgressBar();
+    this.bindNavigation();
     this.renderReels();
-    this.bindGlobalEvents();
     this.initObserver();
-    this.updateStatsDisplay();
+    this.renderDashboard();
+    this.renderLibrary();
+    this.bindGlobalShortcuts();
 
     // Init Confetti
-    const confCanvas = document.getElementById("confetti-canvas");
-    if (confCanvas) this.confetti = new ConfettiEngine(confCanvas);
+    const confCanvas = document.getElementById("celebration-canvas");
+    if (confCanvas) this.confetti = new ConfettiExplosion(confCanvas);
 
-    // Init Three Avatar on First Reel
-    const firstCanvas = document.querySelector(".reel-canvas-stage canvas");
+    // Init 3D Avatar
+    const firstCanvas = document.querySelector("#canvas-reel-0");
     if (firstCanvas) {
-      this.avatar = new ThreeReelAvatar(firstCanvas);
+      this.avatar = new MovementAvatar3D(firstCanvas);
     }
+
+    this.updateTopBarStats();
   }
 
   cacheElements() {
     this.el = {
-      feed: document.getElementById("reels-feed"),
-      storyProgress: document.getElementById("story-progress-bar"),
-      infoSheet: document.getElementById("info-sheet"),
-      statsSheet: document.getElementById("stats-sheet"),
-      sheetBackdrop: document.getElementById("sheet-backdrop"),
-      toast: document.getElementById("reel-toast"),
-      btnUp: document.getElementById("btn-desktop-up"),
-      btnDown: document.getElementById("btn-desktop-down"),
-      streakPill: document.getElementById("streak-badge-count")
+      // Views
+      tabReels: document.getElementById("tab-reels"),
+      tabDashboard: document.getElementById("tab-dashboard"),
+      tabLibrary: document.getElementById("tab-library"),
+      navBtns: document.querySelectorAll(".segmented-nav-pill"),
+
+      // Top Bar Stats
+      navStreak: document.getElementById("nav-streak-text"),
+      navPoints: document.getElementById("nav-points-text"),
+      voiceBtn: document.getElementById("btn-global-voice"),
+
+      // Reels Feed
+      reelsDeck: document.getElementById("reels-scroll-deck"),
+      storyBar: document.getElementById("reels-story-bar"),
+      btnSideUp: document.getElementById("btn-side-up"),
+      btnSideDown: document.getElementById("btn-side-down"),
+
+      // Dashboard
+      dashStreak: document.getElementById("dash-streak-val"),
+      dashCalories: document.getElementById("dash-calories-val"),
+      dashPoints: document.getElementById("dash-points-val"),
+      dashCompleted: document.getElementById("dash-completed-val"),
+      dashBars: document.getElementById("dash-weekly-bars"),
+      dashWeekTotal: document.getElementById("dash-week-total-text"),
+      dashGoalBar: document.getElementById("dash-goal-bar"),
+      dashGoalLabel: document.getElementById("dash-goal-label"),
+      dashHistory: document.getElementById("dash-history-container"),
+      btnClearHistory: document.getElementById("btn-clear-history"),
+      btnJumpReels: document.getElementById("btn-quick-play-reels"),
+
+      // Library
+      libSearch: document.getElementById("lib-search-input"),
+      libFilterPills: document.querySelectorAll(".filter-pill"),
+      libGrid: document.getElementById("lib-cards-grid"),
+
+      // Drawers
+      drawerBackdrop: document.getElementById("drawer-backdrop"),
+      infoDrawer: document.getElementById("info-drawer"),
+      btnCloseDrawer: document.getElementById("btn-close-drawer"),
+      drawerTitle: document.getElementById("drawer-title"),
+      drawerMuscles: document.getElementById("drawer-muscles"),
+      drawerModifications: document.getElementById("drawer-modifications"),
+      drawerSafety: document.getElementById("drawer-safety"),
+
+      toast: document.getElementById("toast-bubble")
     };
   }
 
-  renderStoryProgressBar() {
-    this.el.storyProgress.innerHTML = "";
-    REELS_EXERCISES.forEach((_, idx) => {
-      const seg = document.createElement("div");
-      seg.className = `story-progress-segment ${idx < this.activeIndex ? 'completed' : ''}`;
-      seg.innerHTML = `<div class="story-progress-segment-fill" id="story-fill-${idx}"></div>`;
-      this.el.storyProgress.appendChild(seg);
+  /* ==========================================================================
+     NAVIGATION CONTROLLER
+     ========================================================================== */
+  bindNavigation() {
+    this.el.navBtns.forEach(btn => {
+      btn.addEventListener("click", () => {
+        const target = btn.dataset.tab;
+        this.switchTab(target);
+      });
     });
+
+    if (this.el.btnJumpReels) {
+      this.el.btnJumpReels.addEventListener("click", () => this.switchTab("reels"));
+    }
+
+    if (this.el.voiceBtn) {
+      this.el.voiceBtn.addEventListener("click", () => this.toggleVoiceCoach());
+    }
+
+    if (this.el.btnClearHistory) {
+      this.el.btnClearHistory.addEventListener("click", () => {
+        if (confirm("Reset all activity history? This cannot be undone.")) {
+          this.store.data.completedCount = 0;
+          this.store.data.totalCalories = 0;
+          this.store.data.totalPoints = 0;
+          this.store.data.history = [];
+          this.store.save();
+          this.renderDashboard();
+          this.updateTopBarStats();
+          this.showToast("Activity history cleared.");
+        }
+      });
+    }
+
+    // Drawer Close Listeners
+    this.el.drawerBackdrop.addEventListener("click", () => this.closeDrawer());
+    this.el.btnCloseDrawer.addEventListener("click", () => this.closeDrawer());
+
+    // Desktop Reel Nav
+    if (this.el.btnSideUp) this.el.btnSideUp.addEventListener("click", () => this.scrollToPrevReel());
+    if (this.el.btnSideDown) this.el.btnSideDown.addEventListener("click", () => this.scrollToNextReel());
   }
 
+  switchTab(tabId) {
+    this.el.navBtns.forEach(b => {
+      b.classList.toggle("active", b.dataset.tab === tabId);
+      b.setAttribute("aria-selected", b.dataset.tab === tabId);
+    });
+
+    this.el.tabReels.classList.toggle("hidden", tabId !== "reels");
+    this.el.tabDashboard.classList.toggle("hidden", tabId !== "dashboard");
+    this.el.tabLibrary.classList.toggle("hidden", tabId !== "library");
+
+    if (tabId === "dashboard") {
+      this.pauseTimer();
+      this.renderDashboard();
+    } else if (tabId === "library") {
+      this.pauseTimer();
+      this.renderLibrary();
+    }
+  }
+
+  updateTopBarStats() {
+    if (this.el.navStreak) this.el.navStreak.textContent = `${this.store.data.streak} Day Streak`;
+    if (this.el.navPoints) this.el.navPoints.textContent = `${this.store.data.totalPoints} Pts`;
+  }
+
+  /* ==========================================================================
+     REELS ENGINE
+     ========================================================================== */
   renderReels() {
-    this.el.feed.innerHTML = "";
-    REELS_EXERCISES.forEach((ex, idx) => {
-      const isLiked = this.state.data.likedIds.includes(ex.id);
-      const slide = document.createElement("article");
-      slide.className = "reel-slide";
+    // 1. Render Top Story Segments
+    this.el.storyBar.innerHTML = "";
+    EXERCISES_DATA.forEach((_, idx) => {
+      const seg = document.createElement("div");
+      seg.className = `story-segment ${idx < this.activeIndex ? 'done' : ''}`;
+      seg.innerHTML = `<div class="story-segment-bar" id="story-bar-${idx}"></div>`;
+      this.el.storyBar.appendChild(seg);
+    });
+
+    // 2. Render Reels Slides
+    this.el.reelsDeck.innerHTML = "";
+    EXERCISES_DATA.forEach((ex, idx) => {
+      const isLiked = this.store.data.likedIds.includes(ex.id);
+      const slide = document.createElement("div");
+      slide.className = "reel-item";
       slide.id = `reel-${idx}`;
       slide.dataset.index = idx;
 
       slide.innerHTML = `
-        <!-- Background 3D Movement Canvas -->
-        <div class="reel-canvas-stage">
+        <div class="reel-canvas-layer">
           <canvas id="canvas-reel-${idx}"></canvas>
         </div>
 
-        <div class="reel-gradient-top"></div>
-        <div class="reel-gradient-bottom"></div>
+        <div class="reel-vignette-top"></div>
+        <div class="reel-vignette-bottom"></div>
 
-        <!-- Right Side Action Rail -->
-        <aside class="reel-action-rail" aria-label="Exercise Actions">
-          
-          <!-- Play / Timer Countdown Button -->
-          <div class="reel-action-btn-wrap">
-            <button class="reel-action-btn reel-play-btn" id="btn-play-${idx}" type="button" aria-label="Start or pause exercise">
-              <svg class="play-btn-timer-ring" viewBox="0 0 60 60">
-                <circle id="timer-ring-${idx}" cx="30" cy="30" r="28"></circle>
+        <!-- Right Side Tool Rail -->
+        <aside class="reel-actions-column" aria-label="Exercise Tools">
+          <!-- Play / Timer Button -->
+          <div>
+            <button class="reel-tool-btn play-glow" id="btn-play-${idx}" type="button" aria-label="Start or pause timer">
+              <svg class="play-ring-svg" viewBox="0 0 54 54">
+                <circle id="timer-ring-${idx}" cx="27" cy="27" r="24"></circle>
               </svg>
-              <svg id="play-icon-${idx}" class="w-6 h-6" viewBox="0 0 24 24" fill="currentColor">
-                <polygon points="5 3 19 12 5 21 5 3"/>
-              </svg>
+              <svg id="play-icon-${idx}" class="w-5 h-5 fill-current" viewBox="0 0 24 24"><polygon points="5 3 19 12 5 21 5 3"/></svg>
             </button>
-            <span class="reel-action-label" id="timer-label-${idx}">${ex.mode === 'timer' ? `${ex.duration}s` : 'Reps'}</span>
+            <div class="reel-tool-label" id="timer-text-${idx}">${ex.mode === 'timer' ? `${ex.duration}s` : 'Reps'}</div>
           </div>
 
-          <!-- Like / Heart Button -->
-          <div class="reel-action-btn-wrap">
-            <button class="reel-action-btn ${isLiked ? 'is-liked' : ''}" id="btn-like-${idx}" type="button" aria-label="Save to favorites">
-              <svg class="w-6 h-6" viewBox="0 0 24 24" fill="${isLiked ? 'currentColor' : 'none'}" stroke="currentColor" stroke-width="2">
+          <!-- Like Button -->
+          <div>
+            <button class="reel-tool-btn ${isLiked ? 'liked' : ''}" id="btn-like-${idx}" type="button" aria-label="Bookmark move">
+              <svg class="w-5 h-5" viewBox="0 0 24 24" fill="${isLiked ? 'currentColor' : 'none'}" stroke="currentColor" stroke-width="2">
                 <path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z"/>
               </svg>
             </button>
-            <span class="reel-action-label" id="like-count-${idx}">${ex.likes + (isLiked ? 1 : 0)}</span>
+            <div class="reel-tool-label" id="like-count-${idx}">${ex.likes + (isLiked ? 1 : 0)}</div>
           </div>
 
-          <!-- Rep Stepper Tap Button (for Rep exercises) -->
+          <!-- Rep Stepper Button -->
           ${ex.mode === 'reps' ? `
-          <div class="reel-action-btn-wrap">
-            <button class="reel-action-btn" id="btn-rep-${idx}" type="button" aria-label="Count a repetition">
-              <span class="text-xs font-extrabold text-emerald-400">＋1</span>
+          <div>
+            <button class="reel-tool-btn" id="btn-rep-${idx}" type="button" aria-label="Count a repetition">
+              <span class="text-xs font-black text-emerald-400">＋1</span>
             </button>
-            <span class="reel-action-label" id="rep-rail-label-${idx}">0/${ex.targetReps}</span>
+            <div class="reel-tool-label" id="rep-rail-label-${idx}">0/${ex.targetReps}</div>
           </div>` : ''}
 
-          <!-- Info Sheet (Anatomy & Adaptations) -->
-          <div class="reel-action-btn-wrap">
-            <button class="reel-action-btn" id="btn-info-${idx}" type="button" aria-label="Open anatomy and accommodations">
-              <svg class="w-6 h-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                <circle cx="12" cy="12" r="10"/>
-                <line x1="12" y1="16" x2="12" y2="12"/>
-                <line x1="12" y1="8" x2="12.01" y2="8"/>
-              </svg>
-            </button>
-            <span class="reel-action-label">Info</span>
-          </div>
-
-          <!-- Sound / Voice Coach Toggle -->
-          <div class="reel-action-btn-wrap">
-            <button class="reel-action-btn" id="btn-sound-${idx}" type="button" aria-label="Toggle voice guidance">
+          <!-- Info Sheet Button -->
+          <div>
+            <button class="reel-tool-btn" id="btn-info-${idx}" type="button" aria-label="Open anatomy and adjustments">
               <svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/>
-                <path d="M19.07 4.93a10 10 0 0 1 0 14.14M15.54 8.46a5 5 0 0 1 0 7.07"/>
+                <circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/>
               </svg>
             </button>
-            <span class="reel-action-label">Voice</span>
+            <div class="reel-tool-label">Info</div>
           </div>
         </aside>
 
-        <!-- Bottom Overlay: Title, Caption & HUD -->
-        <div class="reel-bottom-overlay">
-          <div class="reel-badge-pill">
-            <span>●</span> ${ex.category} · ${ex.impactTag}
+        <!-- Bottom Caption Overlay -->
+        <div class="reel-caption-overlay">
+          <div class="flex items-center gap-2">
+            <span class="px-2.5 py-0.5 rounded-full text-[11px] font-bold tracking-wide uppercase bg-emerald-500/20 text-emerald-400 border border-emerald-500/30">
+              ${ex.category} · ${ex.impactTag}
+            </span>
           </div>
 
-          <h2 class="reel-title-h1">
+          <h2 class="text-xl font-heading font-extrabold text-white flex items-center gap-1.5 leading-tight">
             <span>${ex.title}</span>
-            <span class="reel-verified-badge" title="Medically safe exercise for seniors and high BMI">
-              <svg class="w-4 h-4 fill-sky-400" viewBox="0 0 24 24"><path d="M12 2C6.5 2 2 6.5 2 12s4.5 10 10 10 10-4.5 10-10S17.5 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/></svg>
+            <span class="text-sky-400" title="Medically safe for seniors and beginners">
+              <svg class="w-4 h-4 fill-current" viewBox="0 0 24 24"><path d="M12 2C6.5 2 2 6.5 2 12s4.5 10 10 10 10-4.5 10-10S17.5 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/></svg>
             </span>
           </h2>
 
-          <p class="reel-caption-text">${ex.caption}</p>
+          <p class="text-xs text-slate-300 leading-relaxed line-clamp-2">${ex.caption}</p>
 
-          <!-- Audio Waveform / Ticker -->
-          <div class="reel-audio-ticker">
-            <div class="reel-audio-disc"></div>
-            <span>${ex.audioTrack}</span>
+          <div class="audio-track-ticker">
+            <div class="audio-disc-icon"></div>
+            <span class="truncate">${ex.audioTrack}</span>
           </div>
 
-          <!-- Live Timer / Rep Pill -->
-          <div class="reel-hud-pill" id="hud-pill-${idx}">
-            <span id="hud-icon-${idx}">⏱</span>
+          <!-- Live Status HUD Pill -->
+          <div class="inline-flex items-center gap-2 px-3 py-1.5 rounded-xl bg-black/60 backdrop-blur-md border border-white/15 text-xs font-bold text-white w-fit" id="hud-pill-${idx}">
             <span id="hud-text-${idx}">${ex.mode === 'timer' ? `Ready • ${ex.duration}s timer` : `Ready • Tap ＋1 to count`}</span>
           </div>
         </div>
       `;
 
-      // Bind Individual Slide Actions
-      this.bindSlideEvents(slide, ex, idx);
-      this.el.feed.appendChild(slide);
+      this.bindReelSlideEvents(slide, ex, idx);
+      this.el.reelsDeck.appendChild(slide);
     });
   }
 
-  bindSlideEvents(slide, ex, idx) {
-    const btnPlay = slide.querySelector(`#btn-play-${idx}`);
-    btnPlay.addEventListener("click", () => this.handlePlayClick(idx));
+  bindReelSlideEvents(slide, ex, idx) {
+    const playBtn = slide.querySelector(`#btn-play-${idx}`);
+    playBtn.addEventListener("click", () => this.handlePlayClick(idx));
 
-    const btnLike = slide.querySelector(`#btn-like-${idx}`);
-    btnLike.addEventListener("click", () => this.handleLikeClick(ex, idx));
+    const likeBtn = slide.querySelector(`#btn-like-${idx}`);
+    likeBtn.addEventListener("click", () => this.toggleLike(ex, idx));
 
-    const btnInfo = slide.querySelector(`#btn-info-${idx}`);
-    btnInfo.addEventListener("click", () => this.openInfoSheet(ex));
+    const infoBtn = slide.querySelector(`#btn-info-${idx}`);
+    infoBtn.addEventListener("click", () => this.openDrawer(ex));
 
-    const btnSound = slide.querySelector(`#btn-sound-${idx}`);
-    btnSound.addEventListener("click", () => this.toggleVoiceCoach());
-
-    const btnRep = slide.querySelector(`#btn-rep-${idx}`);
-    if (btnRep) {
-      btnRep.addEventListener("click", () => this.countRep(ex, idx));
+    const repBtn = slide.querySelector(`#btn-rep-${idx}`);
+    if (repBtn) {
+      repBtn.addEventListener("click", () => this.countRep(ex, idx));
     }
   }
 
-  /* ==========================================================================
-     INTERSECTION OBSERVER (REEL DETECTOR)
-     ========================================================================== */
   initObserver() {
     const observer = new IntersectionObserver((entries) => {
-      entries.forEach((entry) => {
+      entries.forEach(entry => {
         if (entry.isIntersecting) {
-          const newIndex = parseInt(entry.target.dataset.index, 10);
-          if (newIndex !== this.activeIndex) {
-            this.switchActiveReel(newIndex);
+          const newIdx = parseInt(entry.target.dataset.index, 10);
+          if (newIdx !== this.activeIndex) {
+            this.switchReel(newIdx);
           }
         }
       });
     }, {
-      root: this.el.feed,
+      root: this.el.reelsDeck,
       threshold: 0.65
     });
 
-    document.querySelectorAll(".reel-slide").forEach((slide) => {
-      observer.observe(slide);
-    });
+    document.querySelectorAll(".reel-item").forEach(slide => observer.observe(slide));
   }
 
-  switchActiveReel(index) {
+  switchReel(index) {
     this.pauseTimer();
     this.activeIndex = index;
-    const ex = REELS_EXERCISES[index];
+    const ex = EXERCISES_DATA[index];
 
     // Update Story Segment Bars
     this.updateStorySegments();
 
-    // Update 3D Avatar Animation
+    // Update 3D Avatar Canvas
     if (this.avatar) {
       const activeCanvas = document.querySelector(`#canvas-reel-${index}`);
       if (activeCanvas && this.avatar.canvas !== activeCanvas) {
-        this.avatar = new ThreeReelAvatar(activeCanvas);
+        this.avatar = new MovementAvatar3D(activeCanvas);
       }
       this.avatar.setAnimation(ex.animType);
     }
 
-    // Reset local rep counter
     this.currentReps = 0;
-    this.showToast(`Swiped to: ${ex.title}`);
   }
 
   updateStorySegments() {
-    REELS_EXERCISES.forEach((_, i) => {
-      const seg = this.el.storyProgress.children[i];
+    EXERCISES_DATA.forEach((_, i) => {
+      const seg = this.el.storyBar.children[i];
       if (seg) {
-        seg.classList.toggle("completed", i < this.activeIndex);
-        const fill = seg.querySelector(".story-progress-segment-fill");
-        if (fill) fill.style.width = i < this.activeIndex ? "100%" : (i === this.activeIndex ? "0%" : "0%");
+        seg.classList.toggle("done", i < this.activeIndex);
+        const bar = seg.querySelector(".story-segment-bar");
+        if (bar) bar.style.width = i < this.activeIndex ? "100%" : "0%";
       }
     });
   }
 
-  /* ==========================================================================
-     TIMER ENGINE
-     ========================================================================== */
   handlePlayClick(index) {
     if (this.timerRunning) {
       this.pauseTimer();
@@ -845,7 +948,7 @@ class FitFeedReelsApp {
   }
 
   startTimer(index) {
-    const ex = REELS_EXERCISES[index];
+    const ex = EXERCISES_DATA[index];
     if (ex.mode !== "timer") return;
 
     this.timerRunning = true;
@@ -858,33 +961,33 @@ class FitFeedReelsApp {
     const hudText = document.getElementById(`hud-text-${index}`);
     if (hudText) hudText.textContent = `In Progress: ${this.timerSeconds}s remaining`;
 
-    this.voice.start(ex.title);
+    this.voice.announceStart(ex.title);
 
     clearInterval(this.timerInterval);
     this.timerInterval = setInterval(() => {
       this.timerSeconds--;
       if (hudText) hudText.textContent = `Moving: ${this.timerSeconds}s remaining`;
 
-      // Update Play Button Circular Ring
+      // Circular Ring update
       const ring = document.getElementById(`timer-ring-${index}`);
       if (ring) {
-        const circumference = 2 * Math.PI * 28;
-        const offset = circumference * (1 - this.timerSeconds / this.timerTotal);
+        const circumference = 2 * Math.PI * 24; // r=24 -> 150.8
+        const offset = 150.8 * (1 - this.timerSeconds / this.timerTotal);
         ring.style.strokeDashoffset = `${offset}`;
       }
 
-      // Update Story Segment Bar Fill
-      const storyFill = document.getElementById(`story-fill-${index}`);
-      if (storyFill) {
-        storyFill.style.width = `${((this.timerTotal - this.timerSeconds) / this.timerTotal) * 100}%`;
+      // Top Story Bar Fill
+      const storyBar = document.getElementById(`story-bar-${index}`);
+      if (storyBar) {
+        storyBar.style.width = `${((this.timerTotal - this.timerSeconds) / this.timerTotal) * 100}%`;
       }
 
       if (this.timerSeconds === Math.floor(this.timerTotal / 2)) {
-        this.voice.halfway();
+        this.voice.announceHalfway();
       }
 
       if (this.timerSeconds <= 0) {
-        this.finishReel(ex, index);
+        this.completeExercise(ex, index);
       }
     }, 1000);
   }
@@ -909,167 +1012,237 @@ class FitFeedReelsApp {
     if (label) label.textContent = `${this.currentReps}/${ex.targetReps}`;
 
     const hudText = document.getElementById(`hud-text-${index}`);
-    if (hudText) hudText.textContent = `Reps: ${this.currentReps} of ${ex.targetReps} completed`;
+    if (hudText) hudText.textContent = `Reps: ${this.currentReps} of ${ex.targetReps}`;
 
-    // Floating +1 pop indicator
     this.showToast(`＋1 Rep (${this.currentReps}/${ex.targetReps})`);
 
     if (this.currentReps >= ex.targetReps) {
-      this.finishReel(ex, index);
+      this.completeExercise(ex, index);
     }
   }
 
-  finishReel(ex, index) {
+  completeExercise(ex, index) {
     this.pauseTimer();
     const duration = ex.mode === "timer" ? ex.duration : 45;
-    const res = this.state.recordSession(ex, duration);
+    const res = this.store.recordExercise(ex, duration);
 
-    // 3D Confetti Explosion
+    // 3D Confetti Burst
     if (this.confetti) this.confetti.burst();
 
-    // Voice Celebration
-    this.voice.done(res.points);
+    // Voice announcement
+    this.voice.announceDone(res.points);
 
-    // UI Toast
-    this.showToast(`🎉 Reel Completed! +${res.points} pts | ${res.calories} kcal`);
-    this.updateStatsDisplay();
+    // Show Toast
+    this.showToast(`🎉 Completed ${ex.title}! +${res.points} pts | ${res.calories} kcal`);
 
-    // Mark Story Segment Completed
-    const seg = this.el.storyProgress.children[index];
-    if (seg) seg.classList.add("completed");
+    this.updateTopBarStats();
+    this.renderDashboard();
 
-    // Auto Advance to Next Reel after brief celebration
+    // Auto Advance to Next Reel after celebration
     setTimeout(() => {
-      this.scrollToNext();
+      this.scrollToNextReel();
     }, 1800);
   }
 
-  /* ==========================================================================
-     DRAWER SHEETS & ACTIONS
-     ========================================================================== */
-  openInfoSheet(ex) {
-    document.getElementById("sheet-ex-title").textContent = ex.title;
-    document.getElementById("sheet-muscles").textContent = ex.muscles;
-    document.getElementById("sheet-safety").textContent = ex.safety;
-
-    const list = document.getElementById("sheet-modifications");
-    list.innerHTML = "";
-    ex.modifications.forEach(mod => {
-      const li = document.createElement("li");
-      li.textContent = mod;
-      list.appendChild(li);
-    });
-
-    this.el.sheetBackdrop.classList.add("open");
-    this.el.infoSheet.classList.add("open");
-  }
-
-  openStatsSheet() {
-    this.updateStatsDisplay();
-    this.el.sheetBackdrop.classList.add("open");
-    this.el.statsSheet.classList.add("open");
-  }
-
-  closeAllSheets() {
-    this.el.sheetBackdrop.classList.remove("open");
-    this.el.infoSheet.classList.remove("open");
-    this.el.statsSheet.classList.remove("open");
-  }
-
-  updateStatsDisplay() {
-    document.getElementById("stats-total-reels").textContent = this.state.data.completedCount;
-    document.getElementById("stats-total-calories").textContent = `${this.state.data.totalCalories} kcal`;
-    document.getElementById("stats-total-points").textContent = this.state.data.totalPoints;
-    document.getElementById("stats-streak").textContent = `${this.state.data.streak} Days`;
-    if (this.el.streakPill) this.el.streakPill.textContent = `${this.state.data.streak} Day Streak`;
-
-    const historyBox = document.getElementById("stats-history-list");
-    if (!historyBox) return;
-    historyBox.innerHTML = "";
-    if (this.state.data.history.length === 0) {
-      historyBox.innerHTML = `<div class="text-sm text-slate-400 text-center py-4">No exercises finished yet today. Start your first reel!</div>`;
-      return;
-    }
-    this.state.data.history.slice(0, 6).forEach(h => {
-      const div = document.createElement("div");
-      div.className = "flex items-center justify-between p-2 rounded-xl bg-slate-800 text-xs";
-      div.innerHTML = `
-        <div>
-          <div class="font-bold text-white">${h.title}</div>
-          <div class="text-slate-400">${h.time} · ${h.category}</div>
-        </div>
-        <div class="text-right">
-          <div class="font-bold text-emerald-400">+${h.points} pts</div>
-          <div class="text-slate-400">${h.calories} kcal</div>
-        </div>
-      `;
-      historyBox.appendChild(div);
-    });
-  }
-
-  handleLikeClick(ex, idx) {
-    const isNowLiked = this.state.toggleLike(ex.id);
-    const btn = document.getElementById(`btn-like-${idx}`);
-    const count = document.getElementById(`like-count-${idx}`);
-    btn.classList.toggle("is-liked", isNowLiked);
-    count.textContent = ex.likes + (isNowLiked ? 1 : 0);
-    this.showToast(isNowLiked ? "Added to saved favorites ♥" : "Removed from favorites");
-  }
-
-  toggleVoiceCoach() {
-    this.state.data.voiceCoach = !this.state.data.voiceCoach;
-    this.state.save();
-    this.voice.enabled = this.state.data.voiceCoach;
-    this.showToast(this.voice.enabled ? "Voice coach audio ON" : "Voice coach MUTED");
-  }
-
-  scrollToNext() {
-    if (this.activeIndex < REELS_EXERCISES.length - 1) {
+  scrollToNextReel() {
+    if (this.activeIndex < EXERCISES_DATA.length - 1) {
       const nextSlide = document.getElementById(`reel-${this.activeIndex + 1}`);
       if (nextSlide) nextSlide.scrollIntoView({ behavior: "smooth" });
     }
   }
 
-  scrollToPrev() {
+  scrollToPrevReel() {
     if (this.activeIndex > 0) {
       const prevSlide = document.getElementById(`reel-${this.activeIndex - 1}`);
       if (prevSlide) prevSlide.scrollIntoView({ behavior: "smooth" });
     }
   }
 
-  bindGlobalEvents() {
-    // Backdrop Sheet Close
-    this.el.sheetBackdrop.addEventListener("click", () => this.closeAllSheets());
+  toggleLike(ex, idx) {
+    const isNowLiked = !this.store.data.likedIds.includes(ex.id);
+    if (isNowLiked) {
+      this.store.data.likedIds.push(ex.id);
+    } else {
+      const i = this.store.data.likedIds.indexOf(ex.id);
+      if (i > -1) this.store.data.likedIds.splice(i, 1);
+    }
+    this.store.save();
 
-    // Desktop Floater Buttons
-    if (this.el.btnUp) this.el.btnUp.addEventListener("click", () => this.scrollToPrev());
-    if (this.el.btnDown) this.el.btnDown.addEventListener("click", () => this.scrollToNext());
+    const btn = document.getElementById(`btn-like-${idx}`);
+    const count = document.getElementById(`like-count-${idx}`);
+    if (btn) btn.classList.toggle("liked", isNowLiked);
+    if (count) count.textContent = ex.likes + (isNowLiked ? 1 : 0);
 
-    // Stats Button in Header
-    document.getElementById("btn-open-stats").addEventListener("click", () => this.openStatsSheet());
+    this.showToast(isNowLiked ? "Saved to your favorites ♥" : "Removed from favorites");
+  }
 
-    // Keyboard Shortcuts (ArrowDown / ArrowUp for Reels Navigation)
-    window.addEventListener("keydown", (e) => {
-      if (e.code === "ArrowDown" || e.code === "PageDown") {
-        e.preventDefault();
-        this.scrollToNext();
-      } else if (e.code === "ArrowUp" || e.code === "PageUp") {
-        e.preventDefault();
-        this.scrollToPrev();
-      } else if (e.code === "Space") {
-        e.preventDefault();
-        const ex = REELS_EXERCISES[this.activeIndex];
-        if (ex.mode === "timer") this.handlePlayClick(this.activeIndex);
-        else this.countRep(ex, this.activeIndex);
-      } else if (e.key === "m" || e.key === "M") {
-        this.toggleVoiceCoach();
-      } else if (e.key === "i" || e.key === "I") {
-        const ex = REELS_EXERCISES[this.activeIndex];
-        this.openInfoSheet(ex);
-      } else if (e.key === "Escape") {
-        this.closeAllSheets();
+  toggleVoiceCoach() {
+    this.voice.enabled = !this.voice.enabled;
+    this.store.data.voiceEnabled = this.voice.enabled;
+    this.store.save();
+    this.showToast(this.voice.enabled ? "Voice coach audio ON" : "Voice coach MUTED");
+  }
+
+  /* ==========================================================================
+     DASHBOARD ENGINE
+     ========================================================================== */
+  renderDashboard() {
+    const d = this.store.data;
+    if (this.el.dashStreak) this.el.dashStreak.textContent = `${d.streak} Day${d.streak === 1 ? '' : 's'}`;
+    if (this.el.dashCalories) this.el.dashCalories.textContent = `${d.totalCalories} kcal`;
+    if (this.el.dashPoints) this.el.dashPoints.textContent = d.totalPoints;
+    if (this.el.dashCompleted) this.el.dashCompleted.textContent = d.completedCount;
+
+    // Daily Goal Ring
+    const doneToday = this.store.getTodayCompletedCount();
+    const target = d.dailyGoal || 3;
+    const percent = Math.min(100, Math.round((doneToday / target) * 100));
+    if (this.el.dashGoalBar) this.el.dashGoalBar.style.width = `${percent}%`;
+    if (this.el.dashGoalLabel) this.el.dashGoalLabel.textContent = `${doneToday} of ${target} completed today (${percent}%)`;
+
+    // 7-Day Weekly Chart
+    const weekData = this.store.getWeeklyData();
+    const totalWeek = weekData.reduce((acc, curr) => acc + curr.count, 0);
+    if (this.el.dashWeekTotal) this.el.dashWeekTotal.textContent = `${totalWeek} total moves`;
+
+    if (this.el.dashBars) {
+      this.el.dashBars.innerHTML = "";
+      const maxVal = Math.max(3, ...weekData.map(w => w.count));
+
+      weekData.forEach(w => {
+        const col = document.createElement("div");
+        col.className = `graph-col ${w.isToday ? 'today' : ''}`;
+        const heightPct = (w.count / maxVal) * 100;
+        col.innerHTML = `
+          <div class="graph-bar ${w.count === 0 ? 'empty' : ''}" style="height: ${Math.max(6, heightPct)}%;" title="${w.count} moves on ${w.name}"></div>
+          <span class="graph-day-label">${w.name}</span>
+        `;
+        this.el.dashBars.appendChild(col);
+      });
+    }
+
+    // History Log
+    if (this.el.dashHistory) {
+      this.el.dashHistory.innerHTML = "";
+      if (d.history.length === 0) {
+        this.el.dashHistory.innerHTML = `<div class="text-xs text-slate-500 text-center py-6">No completed moves recorded yet. Jump into reels!</div>`;
+        return;
       }
+      d.history.slice(0, 10).forEach(h => {
+        const row = document.createElement("div");
+        row.className = "flex items-center justify-between p-3 rounded-2xl bg-white/5 border border-white/5 text-xs";
+        const dateObj = new Date(h.timestamp);
+        const timeStr = dateObj.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" });
+        row.innerHTML = `
+          <div class="flex items-center gap-2.5">
+            <span class="w-6 h-6 rounded-full bg-emerald-500/20 text-emerald-400 font-bold flex items-center justify-center text-[10px]">✓</span>
+            <div>
+              <div class="font-bold text-white">${h.title}</div>
+              <div class="text-slate-400 text-[10px]">${h.category} · ${timeStr}</div>
+            </div>
+          </div>
+          <div class="text-right">
+            <div class="font-bold text-emerald-400">+${h.points} pts</div>
+            <div class="text-slate-500 text-[10px]">${h.calories} kcal</div>
+          </div>
+        `;
+        this.el.dashHistory.appendChild(row);
+      });
+    }
+  }
+
+  /* ==========================================================================
+     LIBRARY ENGINE (EXPLORER & SEARCH)
+     ========================================================================== */
+  renderLibrary() {
+    const query = this.el.libSearch ? this.el.libSearch.value.trim().toLowerCase() : "";
+    const activePill = document.querySelector(".filter-pill.active");
+    const filter = activePill ? activePill.dataset.filter : "all";
+
+    let list = EXERCISES_DATA;
+    if (filter !== "all") {
+      list = list.filter(e => e.filterTag === filter);
+    }
+    if (query) {
+      list = list.filter(e => e.title.toLowerCase().includes(query) || e.muscles.toLowerCase().includes(query) || e.caption.toLowerCase().includes(query));
+    }
+
+    if (!this.el.libGrid) return;
+    this.el.libGrid.innerHTML = "";
+
+    if (list.length === 0) {
+      this.el.libGrid.innerHTML = `<div class="col-span-full text-center py-8 text-xs text-slate-500">No exercises found matching your search.</div>`;
+      return;
+    }
+
+    list.forEach(ex => {
+      const card = document.createElement("div");
+      card.className = "library-exercise-card";
+      card.innerHTML = `
+        <div class="flex items-center justify-between mb-3">
+          <span class="px-2.5 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-wider bg-emerald-500/10 text-emerald-400 border border-emerald-500/30">
+            ${ex.category}
+          </span>
+          <span class="text-xs font-semibold text-slate-400">${ex.mode === 'timer' ? `${ex.duration}s` : `${ex.targetReps} reps`}</span>
+        </div>
+        <h3 class="font-heading font-extrabold text-base text-white mb-1">${ex.title}</h3>
+        <p class="text-xs text-slate-400 leading-relaxed mb-4 line-clamp-2">${ex.caption}</p>
+        <div class="mt-auto pt-3 border-t border-white/10 flex items-center justify-between">
+          <span class="text-[11px] font-semibold text-slate-500 truncate max-w-[130px]">${ex.muscles}</span>
+          <button class="px-3 py-1.5 rounded-xl bg-white/10 hover:bg-emerald-500 hover:text-slate-950 text-white font-bold text-xs transition-colors btn-play-in-reels" type="button" data-id="${ex.id}">
+            Play in Reels →
+          </button>
+        </div>
+      `;
+
+      card.querySelector(".btn-play-in-reels").addEventListener("click", () => {
+        const fullIdx = EXERCISES_DATA.findIndex(e => e.id === ex.id);
+        if (fullIdx > -1) {
+          this.switchTab("reels");
+          const targetSlide = document.getElementById(`reel-${fullIdx}`);
+          if (targetSlide) targetSlide.scrollIntoView({ behavior: "smooth" });
+        }
+      });
+
+      this.el.libGrid.appendChild(card);
     });
+
+    // Bind Filter Pills once
+    this.el.libFilterPills.forEach(pill => {
+      pill.onclick = () => {
+        this.el.libFilterPills.forEach(p => p.classList.remove("active", "bg-emerald-500", "text-slate-950"));
+        pill.classList.add("active", "bg-emerald-500", "text-slate-950");
+        this.renderLibrary();
+      };
+    });
+
+    if (this.el.libSearch) {
+      this.el.libSearch.oninput = () => this.renderLibrary();
+    }
+  }
+
+  /* ==========================================================================
+     DRAWER & TOAST HANDLERS
+     ========================================================================== */
+  openDrawer(ex) {
+    this.el.drawerTitle.textContent = ex.title;
+    this.el.drawerMuscles.textContent = ex.muscles;
+    this.el.drawerSafety.textContent = ex.safety;
+
+    this.el.drawerModifications.innerHTML = "";
+    ex.modifications.forEach(mod => {
+      const li = document.createElement("li");
+      li.textContent = mod;
+      this.el.drawerModifications.appendChild(li);
+    });
+
+    this.el.drawerBackdrop.classList.add("open");
+    this.el.infoDrawer.classList.add("open");
+  }
+
+  closeDrawer() {
+    this.el.drawerBackdrop.classList.remove("open");
+    this.el.infoDrawer.classList.remove("open");
   }
 
   showToast(text) {
@@ -1081,9 +1254,36 @@ class FitFeedReelsApp {
       this.el.toast.classList.remove("show");
     }, 2400);
   }
+
+  bindGlobalShortcuts() {
+    window.addEventListener("keydown", (e) => {
+      if (e.code === "ArrowDown" || e.code === "PageDown") {
+        if (!this.el.tabReels.classList.contains("hidden")) {
+          e.preventDefault();
+          this.scrollToNextReel();
+        }
+      } else if (e.code === "ArrowUp" || e.code === "PageUp") {
+        if (!this.el.tabReels.classList.contains("hidden")) {
+          e.preventDefault();
+          this.scrollToPrevReel();
+        }
+      } else if (e.code === "Space") {
+        if (!this.el.tabReels.classList.contains("hidden")) {
+          e.preventDefault();
+          const ex = EXERCISES_DATA[this.activeIndex];
+          if (ex.mode === "timer") this.handlePlayClick(this.activeIndex);
+          else this.countRep(ex, this.activeIndex);
+        }
+      } else if (e.key === "m" || e.key === "M") {
+        this.toggleVoiceCoach();
+      } else if (e.key === "Escape") {
+        this.closeDrawer();
+      }
+    });
+  }
 }
 
-// Initialize on DOM Ready
+// Global App Initialization
 document.addEventListener("DOMContentLoaded", () => {
-  window.fitFeed = new FitFeedReelsApp();
+  window.fitFeed = new FitFeedApp();
 });

@@ -3,27 +3,28 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
-  <meta name="theme-color" content="#000000">
-  <meta name="description" content="FitFeed — Instagram Reels style accessible low-impact movement app for seniors, beginners, and high BMI. Congressional App Challenge 2026.">
-  <title>FitFeed Reels — Accessible Gentle Movement</title>
+  <meta name="theme-color" content="#09090b">
+  <meta name="description" content="FitFeed — Accessible, low-impact interactive fitness app with vertical movement reels and comprehensive health analytics for seniors, beginners, and high BMI. Congressional App Challenge 2026.">
+  <title>FitFeed — Movement Reels & Health Dashboard</title>
 
-  <!-- Google Typography: DM Sans & Manrope -->
+  <!-- Typography: DM Sans & Manrope -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,600;0,9..40,800&family=Manrope:wght@700;800&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400&family=Manrope:wght@600;700;800&display=swap" rel="stylesheet">
 
   <!-- Tailwind CSS via CDN -->
   <script src="https://cdn.tailwindcss.com"></script>
   <script>
     tailwind.config = {
+      darkMode: 'class',
       theme: {
         extend: {
           fontFamily: {
             sans: ['"DM Sans"', 'system-ui', 'sans-serif'],
-            heading: ['"Manrope"', 'sans-serif'],
+            heading: ['"Manrope"', '"DM Sans"', 'sans-serif'],
           },
           colors: {
-            emerald: {
+            brand: {
               400: '#34d399',
               500: '#10b981',
               600: '#059669',
@@ -34,157 +35,338 @@
     }
   </script>
 
-  <!-- Three.js CDN for Interactive 3D Movement Avatar -->
+  <!-- Three.js CDN for Interactive 3D Avatar Kinematics -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
 
-  <!-- Custom Reels & 3D CSS -->
+  <!-- Custom Design System Styles -->
   <link rel="stylesheet" href="styles.css">
 </head>
-<body class="bg-black text-white overflow-hidden select-none">
+<body class="bg-[#09090b] text-slate-100 min-h-screen flex flex-col font-sans antialiased selection:bg-emerald-500 selection:text-white">
 
-  <!-- 3D Confetti Canvas Overlay -->
-  <canvas id="confetti-canvas"></canvas>
+  <!-- 3D Confetti Particle Canvas Overlay -->
+  <canvas id="celebration-canvas"></canvas>
 
-  <!-- Viewport Center Stage -->
-  <div class="reels-viewport-container">
-
-    <!-- Desktop Floater Controls (Visible on screens >900px) -->
-    <div class="desktop-nav-floater">
-      <button id="btn-desktop-up" class="desktop-nav-btn" type="button" title="Previous Exercise (Up Arrow)" aria-label="Previous Exercise">
-        <svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="18 15 12 9 6 15"/></svg>
-      </button>
-      <button id="btn-desktop-down" class="desktop-nav-btn" type="button" title="Next Exercise (Down Arrow)" aria-label="Next Exercise">
-        <svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"/></svg>
-      </button>
-      <div class="p-2.5 rounded-2xl bg-white/10 backdrop-blur-md text-[10px] text-slate-300 font-semibold text-center border border-white/10 max-w-[70px]">
-        Scroll or Up/Down
+  <!-- Top Application Bar -->
+  <header class="app-navbar py-3 px-4 sm:px-6">
+    <div class="max-w-7xl mx-auto flex items-center justify-between gap-4">
+      
+      <!-- Brand & Project Tag -->
+      <div class="flex items-center gap-3">
+        <a href="#" class="flex items-center gap-2.5">
+          <div class="w-9 h-9 rounded-xl bg-gradient-to-br from-emerald-400 to-teal-600 flex items-center justify-center text-white shadow-lg shadow-emerald-500/20">
+            <svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3">
+              <path d="M18 10h-1.26A8 8 0 1 0 9 20h9a5 5 0 0 0 0-10z"/>
+              <polyline points="12 6 12 12 16 14"/>
+            </svg>
+          </div>
+          <div>
+            <div class="flex items-center gap-1.5 leading-none">
+              <span class="font-heading font-extrabold text-lg text-white tracking-tight">FitFeed</span>
+              <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
+            </div>
+            <span class="text-[10px] text-slate-400 font-semibold uppercase tracking-wider">Congressional App Challenge</span>
+          </div>
+        </a>
       </div>
-    </div>
 
-    <!-- The Reels Smartphone Feed Frame -->
-    <div class="reels-feed no-scrollbar" id="reels-feed" role="feed" aria-label="Exercise Reels Feed">
-
-      <!-- Segmented Instagram Story Progress Bar (Top) -->
-      <div class="story-progress-container" id="story-progress-bar" aria-hidden="true">
-        <!-- Segments injected dynamically -->
-      </div>
-
-      <!-- Top Reel Header Overlay -->
-      <header class="reel-top-bar">
-        <div class="reel-brand-tag">
-          <span class="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-pulse"></span>
-          <span>fitfeed</span>
-        </div>
-
-        <!-- Filter Tabs -->
-        <div class="feed-tabs-row" role="tablist">
-          <button class="feed-tab-btn active" type="button" role="tab">For You</button>
-          <button class="feed-tab-btn" type="button" role="tab" onclick="window.fitFeed && window.fitFeed.showToast('Showing Chair-Friendly Moves')">Seated</button>
-        </div>
-
-        <!-- Stats Button & Daily Streak -->
-        <button id="btn-open-stats" type="button" class="flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-white/15 backdrop-blur-md border border-white/20 text-xs font-bold text-white hover:bg-white/25 transition-all shadow-sm" aria-label="Open your activity dashboard">
-          <span>🔥</span>
-          <span id="streak-badge-count">1 Day Streak</span>
+      <!-- Segmented View Switcher -->
+      <nav class="segmented-nav-track" role="tablist" aria-label="Main Navigation">
+        <button id="nav-btn-reels" class="segmented-nav-pill active" type="button" role="tab" aria-selected="true" data-tab="reels">
+          <svg class="w-4 h-4 text-emerald-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+          <span>Movement Reels</span>
         </button>
-      </header>
+        <button id="nav-btn-dashboard" class="segmented-nav-pill" type="button" role="tab" aria-selected="false" data-tab="dashboard">
+          <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>
+          <span>Dashboard</span>
+        </button>
+        <button id="nav-btn-library" class="segmented-nav-pill hidden sm:flex" type="button" role="tab" aria-selected="false" data-tab="library">
+          <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
+          <span>Library</span>
+        </button>
+      </nav>
 
-      <!-- Slides will be rendered here by script.js -->
+      <!-- Quick Metrics & Audio Actions -->
+      <div class="flex items-center gap-2">
+        <div class="hidden md:flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-white/5 border border-white/10 text-xs font-bold text-amber-400">
+          <span>🔥</span>
+          <span id="nav-streak-text">1 Day Streak</span>
+        </div>
+        <div class="hidden md:flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-white/5 border border-white/10 text-xs font-bold text-emerald-400">
+          <span>⭐</span>
+          <span id="nav-points-text">0 Pts</span>
+        </div>
+
+        <!-- Voice Coach Mute/Unmute -->
+        <button id="btn-global-voice" class="w-9 h-9 rounded-xl bg-white/5 border border-white/10 text-slate-300 hover:text-emerald-400 hover:border-emerald-500/40 flex items-center justify-center transition-all" type="button" title="Toggle Voice Coach Audio" aria-label="Toggle Voice Coach Audio">
+          <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/>
+            <path d="M19.07 4.93a10 10 0 0 1 0 14.14M15.54 8.46a5 5 0 0 1 0 7.07"/>
+          </svg>
+        </button>
+      </div>
 
     </div>
+  </header>
 
-    <!-- Bottom Sheet Backdrop -->
-    <div id="sheet-backdrop" class="bottom-sheet-backdrop" aria-hidden="true"></div>
+  <!-- Main Viewports Container -->
+  <main class="flex-1 w-full max-w-7xl mx-auto px-4 sm:px-6 py-4 flex flex-col items-center">
+    
+    <!-- ====================================================================
+         VIEW 1: MOVEMENT REELS (INSTAGRAM REELS VERTICAL FEED)
+         ==================================================================== -->
+    <section id="tab-reels" class="w-full flex justify-center" aria-label="Movement Reels Feed">
+      <div class="reels-stage-wrap relative">
+        
+        <!-- Desktop Navigation Arrows Floater -->
+        <div class="desktop-side-nav">
+          <button id="btn-side-up" class="side-arrow-btn" type="button" title="Previous Reel (Up Arrow)">
+            <svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="18 15 12 9 6 15"/></svg>
+          </button>
+          <button id="btn-side-down" class="side-arrow-btn" type="button" title="Next Reel (Down Arrow)">
+            <svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"/></svg>
+          </button>
+          <div class="p-2 rounded-xl bg-white/5 border border-white/10 text-[10px] text-slate-400 font-semibold text-center max-w-[54px] leading-tight">
+            Swipe or Keys
+          </div>
+        </div>
 
-    <!-- 1. Info Sheet Drawer (Anatomy & Adaptive Guidance) -->
-    <div id="info-sheet" class="bottom-sheet" role="dialog" aria-modal="true" aria-labelledby="sheet-ex-title">
-      <div class="sheet-drag-handle"></div>
-      <div class="flex items-center justify-between pb-3 border-b border-slate-800 mb-4">
+        <!-- Phone Frame Viewport -->
+        <div class="reels-phone-frame">
+          
+          <!-- Top Segmented Story Progress Bar -->
+          <div class="story-segments-header" id="reels-story-bar" aria-hidden="true">
+            <!-- Segments injected dynamically -->
+          </div>
+
+          <!-- Vertical Reels Snap Scroll Container -->
+          <div class="reels-scroll-deck no-scrollbar" id="reels-scroll-deck" role="feed">
+            <!-- Reels slides injected dynamically -->
+          </div>
+
+        </div>
+      </div>
+    </section>
+
+    <!-- ====================================================================
+         VIEW 2: ACTIVITY DASHBOARD & CHARTS (THE FULL HEALTH DASHBOARD)
+         ==================================================================== -->
+    <section id="tab-dashboard" class="w-full hidden space-y-6 max-w-5xl py-4" aria-label="Activity Dashboard">
+      
+      <!-- Dashboard Mission Header -->
+      <div class="p-6 sm:p-8 rounded-3xl bg-gradient-to-br from-emerald-950/70 via-slate-900 to-zinc-950 border border-emerald-500/20 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-6">
         <div>
-          <span class="text-[10px] font-extrabold uppercase tracking-wider text-emerald-400">Exercise Details</span>
-          <h3 id="sheet-ex-title" class="text-xl font-heading font-extrabold text-white">Seated Arm Swings</h3>
+          <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-emerald-500/10 border border-emerald-500/30 text-emerald-400 text-xs font-bold uppercase tracking-wider mb-2">
+            Local-First Health Tracking
+          </span>
+          <h2 class="font-heading font-extrabold text-2xl sm:text-3xl text-white">Movement Analytics & Milestones</h2>
+          <p class="text-sm text-slate-400 mt-1 max-w-xl">
+            Clinically validated MET energy expenditure and consistency tracking designed without intimidation or floor strain.
+          </p>
         </div>
-        <button type="button" class="w-8 h-8 rounded-full bg-slate-800 flex items-center justify-center text-slate-400 hover:text-white" onclick="window.fitFeed && window.fitFeed.closeAllSheets()">✕</button>
+        <button id="btn-quick-play-reels" class="px-5 py-3 rounded-2xl bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-heading font-bold text-sm flex items-center gap-2 shadow-lg shadow-emerald-500/20 transition-all shrink-0" type="button">
+          <svg class="w-4 h-4 fill-current" viewBox="0 0 24 24"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+          <span>Jump into Reels</span>
+        </button>
       </div>
 
-      <div class="space-y-4 text-sm">
-        <div class="p-3.5 rounded-xl bg-slate-800/80 border border-slate-700">
-          <div class="text-xs font-bold text-slate-400 uppercase tracking-wider mb-1">Target Muscles & Joints</div>
-          <div id="sheet-muscles" class="font-semibold text-white">Deltoids, Upper Trapezius & Rotator Cuff</div>
+      <!-- 4 Key Health Metric Cards -->
+      <div class="grid grid-cols-2 lg:grid-cols-4 gap-4">
+        <!-- Daily Streak -->
+        <div class="metric-card">
+          <div class="flex items-center justify-between mb-2">
+            <span class="text-xs font-bold text-slate-400 uppercase tracking-wider">Streak</span>
+            <div class="w-7 h-7 rounded-lg bg-amber-500/10 text-amber-400 flex items-center justify-center text-xs">🔥</div>
+          </div>
+          <div id="dash-streak-val" class="font-heading font-extrabold text-2xl sm:text-3xl text-white tabular-nums">1 Day</div>
+          <div class="text-[11px] text-slate-500 mt-1">Consistency score</div>
         </div>
 
+        <!-- Gentle Calorie Burn -->
+        <div class="metric-card">
+          <div class="flex items-center justify-between mb-2">
+            <span class="text-xs font-bold text-slate-400 uppercase tracking-wider">Energy Burn</span>
+            <div class="w-7 h-7 rounded-lg bg-emerald-500/10 text-emerald-400 flex items-center justify-center text-xs">⚡</div>
+          </div>
+          <div id="dash-calories-val" class="font-heading font-extrabold text-2xl sm:text-3xl text-white tabular-nums">0 kcal</div>
+          <div class="text-[11px] text-slate-500 mt-1">MET-calculated energy</div>
+        </div>
+
+        <!-- FitPoints Earned -->
+        <div class="metric-card">
+          <div class="flex items-center justify-between mb-2">
+            <span class="text-xs font-bold text-slate-400 uppercase tracking-wider">FitPoints</span>
+            <div class="w-7 h-7 rounded-lg bg-cyan-500/10 text-cyan-400 flex items-center justify-center text-xs">⭐</div>
+          </div>
+          <div id="dash-points-val" class="font-heading font-extrabold text-2xl sm:text-3xl text-emerald-400 tabular-nums">0</div>
+          <div class="text-[11px] text-slate-500 mt-1">Effort reward points</div>
+        </div>
+
+        <!-- Exercises Completed -->
+        <div class="metric-card">
+          <div class="flex items-center justify-between mb-2">
+            <span class="text-xs font-bold text-slate-400 uppercase tracking-wider">Completed</span>
+            <div class="w-7 h-7 rounded-lg bg-purple-500/10 text-purple-400 flex items-center justify-center text-xs">✓</div>
+          </div>
+          <div id="dash-completed-val" class="font-heading font-extrabold text-2xl sm:text-3xl text-white tabular-nums">0</div>
+          <div class="text-[11px] text-slate-500 mt-1">Reels finished</div>
+        </div>
+      </div>
+
+      <!-- Split Layout: 7-Day Chart & Daily Target -->
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+        
+        <!-- 7-Day Activity Trend Bar Chart (7 Cols) -->
+        <div class="lg:col-span-7 p-6 rounded-3xl bg-[#121215] border border-white/10 flex flex-col justify-between">
+          <div class="flex items-center justify-between mb-6">
+            <div>
+              <h3 class="font-heading font-bold text-lg text-white">7-Day Activity Trend</h3>
+              <p class="text-xs text-slate-400">Completed movement sessions per day</p>
+            </div>
+            <span class="px-3 py-1 rounded-full bg-emerald-500/10 border border-emerald-500/30 text-emerald-400 text-xs font-bold">This Week</span>
+          </div>
+
+          <!-- Dynamic Bar Graph Container -->
+          <div id="dash-weekly-bars" class="week-graph-container mb-3">
+            <!-- Bars dynamically injected -->
+          </div>
+
+          <div class="text-xs text-slate-500 flex items-center justify-between pt-3">
+            <span>Consistent micro-breaks improve vascular health.</span>
+            <span class="text-emerald-400 font-semibold" id="dash-week-total-text">0 total moves</span>
+          </div>
+        </div>
+
+        <!-- Daily Goal Tracker & Body Positive Focus (5 Cols) -->
+        <div class="lg:col-span-5 p-6 rounded-3xl bg-[#121215] border border-white/10 flex flex-col justify-between gap-5">
+          <div>
+            <div class="flex items-center justify-between mb-3">
+              <h3 class="font-heading font-bold text-lg text-white">Daily Target Ring</h3>
+              <span class="text-xs font-bold text-emerald-400">3 Moves / Day</span>
+            </div>
+            <p class="text-xs text-slate-400 mb-4">
+              A manageable daily commitment designed to keep joints mobile without fatigue.
+            </p>
+
+            <div class="w-full bg-white/5 h-3.5 rounded-full overflow-hidden p-0.5 border border-white/10 mb-2">
+              <div id="dash-goal-bar" class="h-full bg-emerald-400 rounded-full transition-all duration-500 shadow-sm shadow-emerald-400/50" style="width: 0%;"></div>
+            </div>
+            <div id="dash-goal-label" class="text-xs font-semibold text-slate-300">0 of 3 completed today (0%)</div>
+          </div>
+
+          <!-- Ergonomic Tip Banner -->
+          <div class="p-4 rounded-2xl bg-white/5 border border-white/10 flex items-start gap-3">
+            <span class="text-xl">🪑</span>
+            <div>
+              <div class="text-xs font-bold text-white mb-0.5">Zero Knee Pounding Guarantee</div>
+              <p class="text-[11px] text-slate-400 leading-relaxed">
+                Every exercise is selected for safety. If standing feels uncomfortable, switch to Seated-Only mode anytime.
+              </p>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- Activity History Feed -->
+      <div class="p-6 rounded-3xl bg-[#121215] border border-white/10">
+        <div class="flex items-center justify-between mb-4">
+          <div>
+            <h3 class="font-heading font-bold text-lg text-white">Session History Log</h3>
+            <p class="text-xs text-slate-400">Recorded privately on your browser</p>
+          </div>
+          <button id="btn-clear-history" class="text-xs font-semibold text-slate-500 hover:text-rose-400 transition-colors" type="button">Clear Data</button>
+        </div>
+
+        <div id="dash-history-container" class="space-y-2.5 max-h-64 overflow-y-auto pr-1">
+          <!-- History items injected dynamically -->
+        </div>
+      </div>
+
+    </section>
+
+    <!-- ====================================================================
+         VIEW 3: EXERCISE LIBRARY (SEARCHABLE DIRECTORY)
+         ==================================================================== -->
+    <section id="tab-library" class="w-full hidden space-y-6 max-w-5xl py-4" aria-label="Exercise Library">
+      
+      <div class="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-4">
         <div>
-          <h4 class="text-xs font-bold text-slate-400 uppercase tracking-wider mb-2 flex items-center gap-1.5">
-            <svg class="w-4 h-4 text-emerald-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4"/><path d="M12 8h.01"/></svg>
-            Wheelchair, Senior & High BMI Adaptations
-          </h4>
-          <ul id="sheet-modifications" class="space-y-2 text-slate-300 list-disc list-inside">
-            <!-- Modifications injected -->
-          </ul>
+          <h2 class="font-heading font-extrabold text-2xl text-white">Movement Library</h2>
+          <p class="text-xs text-slate-400">Search and filter gentle low-impact exercises</p>
         </div>
 
-        <div class="p-3.5 rounded-xl bg-amber-950/40 border border-amber-800/50 text-amber-200 text-xs">
-          <strong>Safety Note:</strong>
-          <span id="sheet-safety" class="block mt-1 text-amber-300/90">Never strain through pain. Stop immediately if pinching occurs.</span>
+        <!-- Search Bar -->
+        <div class="relative w-full sm:w-80">
+          <svg class="w-4 h-4 text-slate-400 absolute left-3.5 top-1/2 -translate-y-1/2 pointer-events-none" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+          <input id="lib-search-input" class="w-full pl-10 pr-4 py-2.5 rounded-2xl bg-white/5 border border-white/10 text-sm text-white placeholder-slate-500 focus:outline-none focus:border-emerald-400 transition-all" type="search" placeholder="Search exercises, muscles...">
         </div>
       </div>
+
+      <!-- Filter Pills -->
+      <div class="flex items-center gap-2 overflow-x-auto no-scrollbar pb-1" id="lib-filter-pills">
+        <button class="px-3.5 py-1.5 rounded-full text-xs font-bold bg-emerald-500 text-slate-950 transition-all filter-pill active" data-filter="all">All Movements</button>
+        <button class="px-3.5 py-1.5 rounded-full text-xs font-bold bg-white/5 hover:bg-white/10 text-slate-300 transition-all filter-pill" data-filter="seated">Seated Only</button>
+        <button class="px-3.5 py-1.5 rounded-full text-xs font-bold bg-white/5 hover:bg-white/10 text-slate-300 transition-all filter-pill" data-filter="spine">Spine & Posture</button>
+        <button class="px-3.5 py-1.5 rounded-full text-xs font-bold bg-white/5 hover:bg-white/10 text-slate-300 transition-all filter-pill" data-filter="strength">Supported Strength</button>
+        <button class="px-3.5 py-1.5 rounded-full text-xs font-bold bg-white/5 hover:bg-white/10 text-slate-300 transition-all filter-pill" data-filter="breath">Breathwork</button>
+      </div>
+
+      <!-- Exercise Cards Grid -->
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4" id="lib-cards-grid">
+        <!-- Cards dynamically injected -->
+      </div>
+
+    </section>
+
+  </main>
+
+  <!-- ========================================================================
+       DRAWER SHEETS & MODALS
+       ======================================================================== -->
+  
+  <!-- Sheet Backdrop -->
+  <div id="drawer-backdrop" class="drawer-backdrop" aria-hidden="true"></div>
+
+  <!-- 3D Anatomy & Adaptive Guidance Drawer -->
+  <div id="info-drawer" class="drawer-sheet" role="dialog" aria-modal="true" aria-labelledby="drawer-title">
+    <div class="drawer-handle"></div>
+    <div class="flex items-center justify-between pb-3 border-b border-white/10 mb-4">
+      <div>
+        <span class="text-[10px] font-extrabold uppercase tracking-wider text-emerald-400">Biomechanics & Adaptations</span>
+        <h3 id="drawer-title" class="text-xl font-heading font-extrabold text-white">Exercise Anatomy</h3>
+      </div>
+      <button id="btn-close-drawer" class="w-8 h-8 rounded-full bg-white/10 text-slate-400 hover:text-white flex items-center justify-center" type="button">✕</button>
     </div>
 
-    <!-- 2. Stats Dashboard Drawer -->
-    <div id="stats-sheet" class="bottom-sheet" role="dialog" aria-modal="true" aria-labelledby="stats-sheet-title">
-      <div class="sheet-drag-handle"></div>
-      <div class="flex items-center justify-between pb-3 border-b border-slate-800 mb-4">
-        <div>
-          <span class="text-[10px] font-extrabold uppercase tracking-wider text-emerald-400">Activity Dashboard</span>
-          <h3 id="stats-sheet-title" class="text-xl font-heading font-extrabold text-white">Your Movement Record</h3>
-        </div>
-        <button type="button" class="w-8 h-8 rounded-full bg-slate-800 flex items-center justify-center text-slate-400 hover:text-white" onclick="window.fitFeed && window.fitFeed.closeAllSheets()">✕</button>
+    <div class="space-y-4 text-sm">
+      <div class="p-3.5 rounded-2xl bg-white/5 border border-white/10">
+        <div class="text-xs font-bold text-slate-400 uppercase tracking-wider mb-1">Target Muscle Group</div>
+        <div id="drawer-muscles" class="font-semibold text-white">Deltoids & Rotator Cuff</div>
       </div>
 
-      <!-- 4 Core Metrics Grid -->
-      <div class="grid grid-cols-2 gap-3 mb-5">
-        <div class="p-3.5 rounded-2xl bg-slate-800/80 border border-slate-700">
-          <div class="text-[11px] font-bold text-slate-400 uppercase tracking-wider">Completed</div>
-          <div id="stats-total-reels" class="font-heading font-extrabold text-2xl text-white mt-1">0</div>
-          <div class="text-[10px] text-slate-400">Reels finished</div>
-        </div>
-
-        <div class="p-3.5 rounded-2xl bg-slate-800/80 border border-slate-700">
-          <div class="text-[11px] font-bold text-slate-400 uppercase tracking-wider">Energy Burn</div>
-          <div id="stats-total-calories" class="font-heading font-extrabold text-2xl text-white mt-1">0 kcal</div>
-          <div class="text-[10px] text-slate-400">Gentle MET burn</div>
-        </div>
-
-        <div class="p-3.5 rounded-2xl bg-slate-800/80 border border-slate-700">
-          <div class="text-[11px] font-bold text-slate-400 uppercase tracking-wider">FitPoints</div>
-          <div id="stats-total-points" class="font-heading font-extrabold text-2xl text-emerald-400 mt-1">0</div>
-          <div class="text-[10px] text-slate-400">Earned points</div>
-        </div>
-
-        <div class="p-3.5 rounded-2xl bg-slate-800/80 border border-slate-700">
-          <div class="text-[11px] font-bold text-slate-400 uppercase tracking-wider">Active Streak</div>
-          <div id="stats-streak" class="font-heading font-extrabold text-2xl text-amber-400 mt-1">1 Day</div>
-          <div class="text-[10px] text-slate-400">Showing up count</div>
-        </div>
+      <div>
+        <h4 class="text-xs font-bold text-slate-400 uppercase tracking-wider mb-2 flex items-center gap-1.5">
+          <svg class="w-4 h-4 text-emerald-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4"/><path d="M12 8h.01"/></svg>
+          Wheelchair & High BMI Modifications
+        </h4>
+        <ul id="drawer-modifications" class="space-y-2 text-slate-300 list-disc list-inside">
+          <!-- Injected dynamically -->
+        </ul>
       </div>
 
-      <!-- History Feed -->
-      <div class="mb-2">
-        <div class="text-xs font-bold text-slate-400 uppercase tracking-wider mb-2">Today's Completed Moves</div>
-        <div id="stats-history-list" class="space-y-2 max-h-48 overflow-y-auto pr-1">
-          <!-- History injected -->
-        </div>
+      <div class="p-3.5 rounded-2xl bg-amber-950/40 border border-amber-800/50 text-amber-200 text-xs">
+        <strong>Safety Rule:</strong>
+        <span id="drawer-safety" class="block mt-1 text-amber-300/90">Never force through pain. Stop immediately if discomfort occurs.</span>
       </div>
     </div>
-
-    <!-- Toast Notification -->
-    <div id="reel-toast" class="toast-pill" role="status" aria-live="polite">
-      Swiped!
-    </div>
-
   </div>
 
-  <!-- App Core Script -->
+  <!-- Toast Notice -->
+  <div id="toast-bubble" class="toast-bubble" role="status" aria-live="polite">
+    Logged!
+  </div>
+
+  <!-- Application Logic -->
   <script src="script.js"></script>
 </body>
 </html>

@@ -1,20 +1,48 @@
 /* ==========================================================================
-   FitFeed — Instagram Reels Style Accessible Fitness Web App
-   Congressional App Challenge Project
+   FitFeed — Premium Accessible Fitness Application
+   Engineered for Congressional App Challenge 2026
    Authors: Naihrit & Co-Developer
+   Design System: Bespoke Dark Tech / Linear / Apple Fitness Inspired
    ========================================================================== */
 
 :root {
-  --reel-width: 420px;
-  --reel-height: 840px;
-  --color-primary: #10b981;
-  --color-primary-glow: rgba(16, 185, 129, 0.4);
-  --color-heart: #ef4444;
-  --bg-dark: #000000;
-  --bg-card: #090d16;
+  --bg-app: #09090b;
+  --bg-surface: #121215;
+  --bg-surface-elevated: #18181b;
+  --bg-surface-hover: #27272a;
+  
+  --border-subtle: rgba(255, 255, 255, 0.08);
+  --border-strong: rgba(255, 255, 255, 0.16);
+  --border-focus: #10b981;
+  
+  --accent-emerald: #10b981;
+  --accent-emerald-glow: rgba(16, 185, 129, 0.35);
+  --accent-cyan: #06b6d4;
+  --accent-amber: #f59e0b;
+  --accent-rose: #f43f5e;
+  
+  --text-main: #f8fafc;
+  --text-secondary: #94a3b8;
+  --text-muted: #64748b;
+  
+  --font-sans: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "DM Sans", sans-serif;
+  --font-mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
 }
 
-/* Global Reset */
+/* Light Mode Overrides (Optional / Toggleable) */
+[data-theme="light"] {
+  --bg-app: #f8fafc;
+  --bg-surface: #ffffff;
+  --bg-surface-elevated: #f1f5f9;
+  --bg-surface-hover: #e2e8f0;
+  --border-subtle: rgba(0, 0, 0, 0.08);
+  --border-strong: rgba(0, 0, 0, 0.18);
+  --text-main: #0f172a;
+  --text-secondary: #475569;
+  --text-muted: #64748b;
+}
+
+/* Base Reset */
 *, *::before, *::after {
   box-sizing: border-box;
   margin: 0;
@@ -22,18 +50,20 @@
 }
 
 html, body {
-  width: 100%;
-  height: 100%;
-  overflow: hidden;
-  background-color: #050508;
-  color: #ffffff;
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  background-color: var(--bg-app);
+  color: var(--text-main);
+  font-family: var(--font-sans);
+  min-height: 100vh;
   -webkit-font-smoothing: antialiased;
-  -webkit-tap-highlight-color: transparent;
-  user-select: none;
+  -moz-osx-font-smoothing: grayscale;
 }
 
-/* Hide Scrollbars Everywhere */
+/* Tabular figures for timers, counters, stats */
+.tabular-nums {
+  font-variant-numeric: tabular-nums;
+}
+
+/* Hide scrollbars cleanly */
 .no-scrollbar::-webkit-scrollbar {
   display: none !important;
 }
@@ -43,49 +73,101 @@ html, body {
 }
 
 /* ==========================================================================
-   REELS FEED CONTAINER & SNAP SCROLLING
+   TOP APPLICATION BAR & SEGMENTED NAV SWITCHER
    ========================================================================== */
 
-.reels-viewport-container {
+.app-navbar {
+  position: sticky;
+  top: 0;
+  z-index: 50;
+  background: rgba(9, 9, 11, 0.85);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border-bottom: 1px solid var(--border-subtle);
+}
+
+.segmented-nav-track {
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid var(--border-subtle);
+  border-radius: 9999px;
+  padding: 3px;
+  display: flex;
+  align-items: center;
+  gap: 2px;
+}
+
+.segmented-nav-pill {
+  padding: 6px 14px;
+  border-radius: 9999px;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text-secondary);
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  transition: all 180ms cubic-bezier(0.4, 0, 0.2, 1);
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  white-space: nowrap;
+}
+
+.segmented-nav-pill:hover {
+  color: var(--text-main);
+}
+
+.segmented-nav-pill.active {
+  background: var(--bg-surface-elevated);
+  color: var(--text-main);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3), 0 0 0 1px var(--border-strong);
+}
+
+/* ==========================================================================
+   SECTION 1: REELS FEED (INSTAGRAM REELS STYLE)
+   ========================================================================== */
+
+.reels-stage-wrap {
   width: 100%;
-  height: 100vh;
-  height: 100dvh;
   display: flex;
   justify-content: center;
   align-items: center;
-  position: relative;
-  background: radial-gradient(circle at 50% 50%, #111827 0%, #030712 100%);
+  padding: 16px 0 32px;
 }
 
-.reels-feed {
+.reels-phone-frame {
   width: 100%;
-  max-width: var(--reel-width);
-  height: 100vh;
-  height: 100dvh;
-  max-height: var(--reel-height);
-  overflow-y: scroll;
-  scroll-snap-type: y mandatory;
-  scroll-behavior: smooth;
+  max-width: 420px;
+  height: min(840px, calc(100vh - 120px));
   position: relative;
-  background-color: var(--bg-dark);
-  box-shadow: 0 25px 60px -15px rgba(0, 0, 0, 0.9), 0 0 0 1px rgba(255, 255, 255, 0.1);
-  border-radius: 0;
+  background: #000000;
+  border-radius: 32px;
+  overflow: hidden;
+  box-shadow: 0 25px 60px -15px rgba(0, 0, 0, 0.9), 0 0 0 2px rgba(255, 255, 255, 0.1);
 }
 
-@media (min-width: 640px) {
-  .reels-feed {
-    border-radius: 36px;
-    height: 94vh;
-    border: 3px solid rgba(255, 255, 255, 0.12);
+@media (max-width: 640px) {
+  .reels-stage-wrap {
+    padding: 0;
+  }
+  .reels-phone-frame {
+    max-width: 100%;
+    height: calc(100vh - 72px);
+    border-radius: 0;
+    box-shadow: none;
   }
 }
 
-/* Individual Reel Slide */
-.reel-slide {
+.reels-scroll-deck {
   width: 100%;
-  height: 100vh;
-  height: 100dvh;
-  max-height: var(--reel-height);
+  height: 100%;
+  overflow-y: scroll;
+  scroll-snap-type: y mandatory;
+  scroll-behavior: smooth;
+}
+
+.reel-item {
+  width: 100%;
+  height: 100%;
   scroll-snap-align: start;
   scroll-snap-stop: always;
   position: relative;
@@ -93,17 +175,11 @@ html, body {
   flex-direction: column;
   justify-content: space-between;
   overflow: hidden;
-  background-color: var(--bg-card);
+  background: #08080c;
 }
 
-@media (min-width: 640px) {
-  .reel-slide {
-    height: 94vh;
-  }
-}
-
-/* Visual Stage / 3D Canvas in Background */
-.reel-canvas-stage {
+/* 3D Canvas Background inside Reel */
+.reel-canvas-layer {
   position: absolute;
   inset: 0;
   width: 100%;
@@ -111,14 +187,14 @@ html, body {
   z-index: 1;
 }
 
-.reel-canvas-stage canvas {
+.reel-canvas-layer canvas {
   width: 100% !important;
   height: 100% !important;
   display: block;
 }
 
-/* Dark Ambient Gradient Overlays for Video/Reels Contrast */
-.reel-gradient-top {
+/* Gradient Vignettes */
+.reel-vignette-top {
   position: absolute;
   top: 0;
   left: 0;
@@ -129,41 +205,38 @@ html, body {
   pointer-events: none;
 }
 
-.reel-gradient-bottom {
+.reel-vignette-bottom {
   position: absolute;
   bottom: 0;
   left: 0;
   right: 0;
   height: 280px;
-  background: linear-gradient(0deg, rgba(0, 0, 0, 0.95) 0%, rgba(0, 0, 0, 0.7) 50%, rgba(0, 0, 0, 0) 100%);
+  background: linear-gradient(0deg, rgba(0, 0, 0, 0.95) 0%, rgba(0, 0, 0, 0.7) 45%, rgba(0, 0, 0, 0) 100%);
   z-index: 5;
   pointer-events: none;
 }
 
-/* ==========================================================================
-   SEGMENTED STORY PROGRESS BAR (TOP)
-   ========================================================================== */
-
-.story-progress-container {
+/* Story Progress Bars */
+.story-segments-header {
   position: absolute;
-  top: 14px;
-  left: 14px;
-  right: 14px;
+  top: 12px;
+  left: 12px;
+  right: 12px;
   display: flex;
   gap: 4px;
-  z-index: 30;
+  z-index: 25;
 }
 
-.story-progress-segment {
+.story-segment {
   flex: 1;
   height: 3px;
-  background: rgba(255, 255, 255, 0.28);
+  background: rgba(255, 255, 255, 0.25);
   border-radius: 9999px;
   overflow: hidden;
   position: relative;
 }
 
-.story-progress-segment-fill {
+.story-segment-bar {
   position: absolute;
   top: 0;
   left: 0;
@@ -171,348 +244,158 @@ html, body {
   width: 0%;
   background: #ffffff;
   border-radius: inherit;
-  transition: width 200ms linear;
+  transition: width 150ms linear;
 }
 
-.story-progress-segment.completed .story-progress-segment-fill {
+.story-segment.done .story-segment-bar {
   width: 100%;
-  background: var(--color-primary);
+  background: var(--accent-emerald);
 }
 
-/* ==========================================================================
-   TOP REEL NAVIGATION BAR
-   ========================================================================== */
-
-.reel-top-bar {
-  position: absolute;
-  top: 26px;
-  left: 0;
-  right: 0;
-  padding: 0 16px;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  z-index: 30;
-}
-
-.reel-brand-tag {
-  font-weight: 800;
-  font-size: 19px;
-  letter-spacing: -0.5px;
-  display: flex;
-  align-items: center;
-  gap: 6px;
-  color: #ffffff;
-}
-
-.feed-tabs-row {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-}
-
-.feed-tab-btn {
-  font-size: 14px;
-  font-weight: 700;
-  color: rgba(255, 255, 255, 0.6);
-  background: none;
-  border: none;
-  padding: 4px 6px;
-  cursor: pointer;
-  transition: color 150ms ease;
-  position: relative;
-}
-
-.feed-tab-btn.active {
-  color: #ffffff;
-}
-
-.feed-tab-btn.active::after {
-  content: "";
-  position: absolute;
-  bottom: -2px;
-  left: 50%;
-  transform: translateX(-50%);
-  width: 16px;
-  height: 2px;
-  background-color: var(--color-primary);
-  border-radius: 9999px;
-}
-
-/* ==========================================================================
-   RIGHT ACTION RAIL (INSTAGRAM REELS STYLE)
-   ========================================================================== */
-
-.reel-action-rail {
+/* Right Action Rail */
+.reel-actions-column {
   position: absolute;
   right: 12px;
-  bottom: 84px;
+  bottom: 80px;
   display: flex;
   flex-direction: column;
   align-items: center;
   gap: 16px;
-  z-index: 25;
+  z-index: 20;
 }
 
-.reel-action-btn-wrap {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 4px;
-}
-
-.reel-action-btn {
+.reel-tool-btn {
   width: 48px;
   height: 48px;
   border-radius: 50%;
-  background: rgba(255, 255, 255, 0.14);
+  background: rgba(255, 255, 255, 0.12);
   backdrop-filter: blur(12px);
   -webkit-backdrop-filter: blur(12px);
-  border: 1px solid rgba(255, 255, 255, 0.2);
+  border: 1px solid rgba(255, 255, 255, 0.18);
   color: #ffffff;
   display: flex;
   align-items: center;
   justify-content: center;
   cursor: pointer;
-  transition: transform 180ms cubic-bezier(0.175, 0.885, 0.32, 1.275), background 180ms ease;
-  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
+  transition: transform 180ms ease, background 180ms ease;
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.4);
 }
 
-.reel-action-btn:hover {
-  transform: scale(1.12);
-  background: rgba(255, 255, 255, 0.25);
+.reel-tool-btn:hover {
+  transform: scale(1.1);
+  background: rgba(255, 255, 255, 0.22);
 }
 
-.reel-action-btn:active {
+.reel-tool-btn:active {
   transform: scale(0.92);
 }
 
-.reel-action-label {
-  font-size: 11px;
-  font-weight: 700;
-  color: rgba(255, 255, 255, 0.9);
-  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.8);
+.reel-tool-btn.play-glow {
+  background: var(--accent-emerald);
+  border-color: rgba(255, 255, 255, 0.4);
+  box-shadow: 0 0 25px var(--accent-emerald-glow);
 }
 
-/* Heart Pop Animation */
-.reel-action-btn.is-liked {
-  color: var(--color-heart);
-  background: rgba(239, 68, 68, 0.25);
-  border-color: rgba(239, 68, 68, 0.5);
-  animation: heartPop 350ms cubic-bezier(0.175, 0.885, 0.32, 1.275);
+.reel-tool-btn.liked {
+  color: var(--accent-rose);
+  background: rgba(244, 63, 94, 0.25);
+  border-color: rgba(244, 63, 94, 0.5);
+  animation: heartPop 300ms ease;
 }
 
 @keyframes heartPop {
   0% { transform: scale(1); }
-  50% { transform: scale(1.35); }
+  50% { transform: scale(1.3); }
   100% { transform: scale(1); }
 }
 
-/* Big Play/Pause Start Button in Action Rail */
-.reel-play-btn {
-  width: 54px;
-  height: 54px;
-  background: var(--color-primary);
-  border-color: rgba(255, 255, 255, 0.4);
-  box-shadow: 0 0 20px var(--color-primary-glow);
+.reel-tool-label {
+  font-size: 11px;
+  font-weight: 700;
+  color: rgba(255, 255, 255, 0.9);
+  text-align: center;
+  margin-top: 3px;
+  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.8);
 }
 
-.reel-play-btn:hover {
-  background: #059669;
-}
-
-/* Timer Circular Ring on Play Button */
-.play-btn-timer-ring {
+/* Play Button Circular Timer SVG */
+.play-ring-svg {
   position: absolute;
   inset: -3px;
-  width: 60px;
-  height: 60px;
+  width: 54px;
+  height: 54px;
   transform: rotate(-90deg);
   pointer-events: none;
 }
 
-.play-btn-timer-ring circle {
+.play-ring-svg circle {
   fill: none;
-  stroke: var(--color-primary);
-  stroke-width: 3.5;
-  stroke-dasharray: 188.4;
+  stroke: var(--accent-emerald);
+  stroke-width: 3;
+  stroke-dasharray: 169.6;
   stroke-dashoffset: 0;
   transition: stroke-dashoffset 200ms linear;
 }
 
-/* ==========================================================================
-   BOTTOM OVERLAY (CAPTION, AUDIO TICKER & HUD)
-   ========================================================================== */
-
-.reel-bottom-overlay {
+/* Bottom Overlay Caption & Ticker */
+.reel-caption-overlay {
   position: absolute;
   bottom: 0;
   left: 0;
-  right: 68px; /* Leave space for action rail */
+  right: 68px;
   padding: 0 16px 20px;
-  z-index: 20;
+  z-index: 15;
   display: flex;
   flex-direction: column;
-  gap: 10px;
-}
-
-.reel-badge-pill {
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-  padding: 4px 10px;
-  border-radius: 9999px;
-  background: rgba(16, 185, 129, 0.2);
-  border: 1px solid rgba(16, 185, 129, 0.4);
-  color: #34d399;
-  font-size: 11px;
-  font-weight: 700;
-  text-transform: uppercase;
-  letter-spacing: 0.5px;
-  width: fit-content;
-}
-
-.reel-title-h1 {
-  font-size: 21px;
-  font-weight: 800;
-  letter-spacing: -0.5px;
-  line-height: 1.2;
-  color: #ffffff;
-  display: flex;
-  align-items: center;
-  gap: 6px;
-}
-
-.reel-verified-badge {
-  color: #38bdf8;
-  display: inline-flex;
-}
-
-.reel-caption-text {
-  font-size: 13px;
-  line-height: 1.45;
-  color: rgba(255, 255, 255, 0.88);
-  display: -webkit-box;
-  -webkit-line-clamp: 2;
-  -webkit-box-orient: vertical;
-  overflow: hidden;
-  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.8);
-}
-
-/* Audio Marquee Ticker */
-.reel-audio-ticker {
-  display: flex;
-  align-items: center;
   gap: 8px;
+}
+
+.audio-track-ticker {
+  display: flex;
+  align-items: center;
+  gap: 7px;
   font-size: 12px;
   font-weight: 600;
-  color: rgba(255, 255, 255, 0.8);
+  color: rgba(255, 255, 255, 0.85);
 }
 
-.reel-audio-disc {
-  width: 24px;
-  height: 24px;
+.audio-disc-icon {
+  width: 20px;
+  height: 20px;
   border-radius: 50%;
-  border: 2px solid #ffffff;
-  background: radial-gradient(circle, #059669 30%, #0f172a 70%);
-  animation: spinDisc 3s linear infinite;
+  border: 1.5px solid rgba(255, 255, 255, 0.8);
+  background: radial-gradient(circle, #10b981 30%, #1e293b 70%);
+  animation: spinDisc 3.5s linear infinite;
 }
 
 @keyframes spinDisc {
   100% { transform: rotate(360deg); }
 }
 
-/* Timer / Reps HUD Pill */
-.reel-hud-pill {
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-  padding: 6px 14px;
-  background: rgba(0, 0, 0, 0.65);
-  backdrop-filter: blur(10px);
-  border: 1px solid rgba(255, 255, 255, 0.18);
-  border-radius: 12px;
-  font-size: 13px;
-  font-weight: 700;
-  width: fit-content;
-  color: #ffffff;
-}
-
-/* ==========================================================================
-   BOTTOM SHEETS (INFO & STATS DRAWERS)
-   ========================================================================== */
-
-.bottom-sheet-backdrop {
+/* Desktop Up/Down Arrow Floater */
+.desktop-side-nav {
   position: absolute;
-  inset: 0;
-  background: rgba(0, 0, 0, 0.7);
-  backdrop-filter: blur(6px);
-  z-index: 50;
-  opacity: 0;
-  pointer-events: none;
-  transition: opacity 250ms ease;
-}
-
-.bottom-sheet-backdrop.open {
-  opacity: 1;
-  pointer-events: auto;
-}
-
-.bottom-sheet {
-  position: absolute;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  background: #111827;
-  border-top: 1px solid rgba(255, 255, 255, 0.15);
-  border-radius: 28px 28px 0 0;
-  padding: 24px 20px 32px;
-  z-index: 60;
-  transform: translateY(100%);
-  transition: transform 300ms cubic-bezier(0.2, 0.85, 0.4, 1.15);
-  max-height: 80vh;
-  overflow-y: auto;
-}
-
-.bottom-sheet.open {
-  transform: translateY(0);
-}
-
-.sheet-drag-handle {
-  width: 44px;
-  height: 4px;
-  border-radius: 9999px;
-  background: rgba(255, 255, 255, 0.3);
-  margin: 0 auto 16px;
-}
-
-/* ==========================================================================
-   DESKTOP FLOATING SIDEBAR / CONTROLS
-   ========================================================================== */
-
-.desktop-nav-floater {
-  display: none;
-  position: absolute;
-  right: calc(50% - var(--reel-width) / 2 - 80px);
+  right: -68px;
   top: 50%;
   transform: translateY(-50%);
+  display: flex;
   flex-direction: column;
   gap: 12px;
   z-index: 40;
 }
 
-@media (min-width: 900px) {
-  .desktop-nav-floater {
-    display: flex;
+@media (max-width: 900px) {
+  .desktop-side-nav {
+    display: none;
   }
 }
 
-.desktop-nav-btn {
-  width: 46px;
-  height: 46px;
+.side-arrow-btn {
+  width: 44px;
+  height: 44px;
   border-radius: 50%;
-  background: rgba(255, 255, 255, 0.12);
-  border: 1px solid rgba(255, 255, 255, 0.18);
+  background: rgba(255, 255, 255, 0.1);
+  border: 1px solid var(--border-subtle);
   color: #ffffff;
   display: flex;
   align-items: center;
@@ -521,16 +404,155 @@ html, body {
   transition: all 180ms ease;
 }
 
-.desktop-nav-btn:hover {
-  background: var(--color-primary);
+.side-arrow-btn:hover {
+  background: var(--accent-emerald);
   transform: scale(1.1);
 }
 
 /* ==========================================================================
-   3D CONFETTI & TOAST
+   SECTION 2: ACTIVITY DASHBOARD & CHARTS
    ========================================================================== */
 
-#confetti-canvas {
+.metric-card {
+  background: var(--bg-surface);
+  border: 1px solid var(--border-subtle);
+  border-radius: 20px;
+  padding: 22px;
+  position: relative;
+  overflow: hidden;
+  transition: transform 200ms ease, border-color 200ms ease;
+}
+
+.metric-card:hover {
+  transform: translateY(-2px);
+  border-color: var(--border-strong);
+}
+
+/* 7-Day Visual Activity Graph */
+.week-graph-container {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  height: 180px;
+  padding-bottom: 24px;
+  border-bottom: 1px solid var(--border-subtle);
+  gap: 12px;
+}
+
+.graph-col {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  height: 100%;
+  justify-content: flex-end;
+}
+
+.graph-bar {
+  width: 100%;
+  max-width: 36px;
+  background: var(--accent-emerald);
+  border-radius: 8px 8px 0 0;
+  transition: height 400ms cubic-bezier(0.4, 0, 0.2, 1);
+  min-height: 6px;
+}
+
+.graph-bar.empty {
+  background: rgba(255, 255, 255, 0.08);
+}
+
+.graph-col.today .graph-bar {
+  box-shadow: 0 0 16px var(--accent-emerald-glow);
+}
+
+.graph-day-label {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--text-muted);
+}
+
+.graph-col.today .graph-day-label {
+  color: var(--accent-emerald);
+  font-weight: 800;
+}
+
+/* ==========================================================================
+   SECTION 3: MOVEMENT LIBRARY CARDS
+   ========================================================================== */
+
+.library-exercise-card {
+  background: var(--bg-surface);
+  border: 1px solid var(--border-subtle);
+  border-radius: 20px;
+  padding: 22px;
+  display: flex;
+  flex-direction: column;
+  transition: all 200ms ease;
+  position: relative;
+}
+
+.library-exercise-card:hover {
+  transform: translateY(-2px);
+  border-color: var(--border-strong);
+  box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.5);
+}
+
+/* ==========================================================================
+   BOTTOM SHEETS & MODALS
+   ========================================================================== */
+
+.drawer-backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.7);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  z-index: 100;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 250ms ease;
+}
+
+.drawer-backdrop.open {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.drawer-sheet {
+  position: fixed;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%) translateY(100%);
+  width: 100%;
+  max-width: 480px;
+  background: #121215;
+  border-top: 1px solid var(--border-strong);
+  border-radius: 28px 28px 0 0;
+  padding: 24px 20px 32px;
+  z-index: 110;
+  transition: transform 300ms cubic-bezier(0.2, 0.85, 0.4, 1.15);
+  max-height: 80vh;
+  overflow-y: auto;
+}
+
+.drawer-sheet.open {
+  transform: translateX(-50%) translateY(0);
+}
+
+.drawer-handle {
+  width: 44px;
+  height: 4px;
+  border-radius: 9999px;
+  background: rgba(255, 255, 255, 0.25);
+  margin: 0 auto 16px;
+}
+
+/* ==========================================================================
+   CONFETTI & TOAST
+   ========================================================================== */
+
+#celebration-canvas {
   position: fixed;
   inset: 0;
   width: 100vw;
@@ -539,26 +561,26 @@ html, body {
   z-index: 9999;
 }
 
-.toast-pill {
-  position: absolute;
-  top: 70px;
+.toast-bubble {
+  position: fixed;
+  bottom: 24px;
   left: 50%;
-  transform: translateX(-50%) translateY(-20px);
+  transform: translateX(-50%) translateY(20px);
   background: rgba(16, 185, 129, 0.95);
   backdrop-filter: blur(8px);
   color: #ffffff;
-  padding: 8px 18px;
+  padding: 10px 22px;
   border-radius: 9999px;
   font-size: 13px;
   font-weight: 700;
-  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.4);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
   opacity: 0;
   pointer-events: none;
   transition: all 250ms cubic-bezier(0.2, 0.85, 0.4, 1.2);
-  z-index: 100;
+  z-index: 1000;
 }
 
-.toast-pill.show {
+.toast-bubble.show {
   opacity: 1;
   transform: translateX(-50%) translateY(0);
 }
